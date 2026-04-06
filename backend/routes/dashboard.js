@@ -30,9 +30,15 @@ const getCategoryColor = (name) => {
   return CATEGORY_COLORS[name.toLowerCase()] || '#6366f1';
 };
 
+// Normalize Type to uppercase and Amount_GBP to number in every pipeline
+const normStage = {
+  $addFields: {
+    _typeNorm: { $toUpper: '$Type' },
+    _amount: { $toDouble: '$Amount_GBP' },
+  },
+};
+
 // @route   GET /api/dashboard/home
-// @desc    Home dashboard: totalBalance, cashflow, categories, accounts, recent
-// @access  Private
 router.get('/home', async (req, res) => {
   try {
     const userId = req.userId;
@@ -48,19 +54,10 @@ router.get('/home', async (req, res) => {
 
     // Monthly income/expense
     const monthlyAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: startOfMonth, $lte: endOfMonth },
-          Type: { $in: ['INCOME', 'EXPENSE'] },
-        },
-      },
-      {
-        $group: {
-          _id: '$Type',
-          total: { $sum: '$Amount_GBP' },
-        },
-      },
+      { $match: { userid: userId, Date: { $gte: startOfMonth, $lte: endOfMonth } } },
+      normStage,
+      { $match: { _typeNorm: { $in: ['INCOME', 'EXPENSE'] } } },
+      { $group: { _id: '$_typeNorm', total: { $sum: '$_amount' } } },
     ]);
 
     let monthlyIncome = 0;
@@ -73,20 +70,10 @@ router.get('/home', async (req, res) => {
 
     // Categories (expense) for current month
     const catAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: startOfMonth, $lte: endOfMonth },
-          Type: 'EXPENSE',
-        },
-      },
-      {
-        $group: {
-          _id: '$Category',
-          total: { $sum: { $abs: '$Amount_GBP' } },
-          count: { $sum: 1 },
-        },
-      },
+      { $match: { userid: userId, Date: { $gte: startOfMonth, $lte: endOfMonth } } },
+      normStage,
+      { $match: { _typeNorm: 'EXPENSE' } },
+      { $group: { _id: '$Category', total: { $sum: { $abs: '$_amount' } }, count: { $sum: 1 } } },
       { $sort: { total: -1 } },
       { $limit: 8 },
     ]);
@@ -109,24 +96,13 @@ router.get('/home', async (req, res) => {
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().slice(0, 10);
-      sparkline.push({ date: dateStr, value: 0 });
+      sparkline.push({ date: d.toISOString().slice(0, 10), value: 0 });
     }
-    const sparkDates = sparkline.map(s => s.date);
     const sparkAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: sparkDates[0], $lte: sparkDates[sparkDates.length - 1] },
-          Type: { $in: ['INCOME', 'EXPENSE'] },
-        },
-      },
-      {
-        $group: {
-          _id: { date: { $substr: ['$Date', 0, 10] }, type: '$Type' },
-          total: { $sum: '$Amount_GBP' },
-        },
-      },
+      { $match: { userid: userId, Date: { $gte: sparkline[0].date, $lte: sparkline[6].date } } },
+      normStage,
+      { $match: { _typeNorm: { $in: ['INCOME', 'EXPENSE'] } } },
+      { $group: { _id: { date: { $substr: ['$Date', 0, 10] }, type: '$_typeNorm' }, total: { $sum: '$_amount' } } },
     ]);
     sparkAgg.forEach(s => {
       const entry = sparkline.find(x => x.date === s._id.date);
@@ -137,14 +113,8 @@ router.get('/home', async (req, res) => {
     });
 
     res.json({
-      totalBalance,
-      monthlyIncome,
-      monthlyExpense,
-      monthlyNet,
-      accounts,
-      cashflowCategories,
-      recentTransactions,
-      sparkline,
+      totalBalance, monthlyIncome, monthlyExpense, monthlyNet,
+      accounts, cashflowCategories, recentTransactions, sparkline,
       monthLabel: `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`,
     });
   } catch (error) {
@@ -154,7 +124,6 @@ router.get('/home', async (req, res) => {
 });
 
 // @route   GET /api/dashboard/analytics?month=YYYY-MM
-// @access  Private
 router.get('/analytics', async (req, res) => {
   try {
     const userId = req.userId;
@@ -165,32 +134,21 @@ router.get('/analytics', async (req, res) => {
     const lastDay = new Date(year, month, 0).getDate();
     const endDate = `${monthParam}-${String(lastDay).padStart(2, '0')}`;
 
-    // Previous month
     const prevDate = new Date(year, month - 2, 1);
     const prevMonthStr = toMonthStr(prevDate);
     const prevLastDay = new Date(year, month - 1, 0).getDate();
     const prevStartDate = `${prevMonthStr}-01`;
     const prevEndDate = `${prevMonthStr}-${String(prevLastDay).padStart(2, '0')}`;
 
-    // Daily transactions for current month
+    // Daily transactions
     const dailyAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: startDate, $lte: endDate },
-          Type: { $in: ['INCOME', 'EXPENSE'] },
-        },
-      },
-      {
-        $group: {
-          _id: { date: { $substr: ['$Date', 0, 10] }, type: '$Type' },
-          total: { $sum: { $abs: '$Amount_GBP' } },
-        },
-      },
+      { $match: { userid: userId, Date: { $gte: startDate, $lte: endDate } } },
+      normStage,
+      { $match: { _typeNorm: { $in: ['INCOME', 'EXPENSE'] } } },
+      { $group: { _id: { date: { $substr: ['$Date', 0, 10] }, type: '$_typeNorm' }, total: { $sum: { $abs: '$_amount' } } } },
       { $sort: { '_id.date': 1 } },
     ]);
 
-    // Build daily series
     const dailyMap = {};
     dailyAgg.forEach(d => {
       const key = d._id.date;
@@ -200,36 +158,23 @@ router.get('/analytics', async (req, res) => {
     });
 
     const dailySeries = [];
-    let cumIncome = 0;
-    let cumExpense = 0;
+    let cumIncome = 0, cumExpense = 0;
     for (let day = 1; day <= lastDay; day++) {
       const dateStr = `${monthParam}-${String(day).padStart(2, '0')}`;
       const dayData = dailyMap[dateStr] || { income: 0, expense: 0 };
       cumIncome += dayData.income;
       cumExpense += dayData.expense;
-      dailySeries.push({
-        date: dateStr,
-        day,
-        income: dayData.income,
-        expense: dayData.expense,
-        cumIncome,
-        cumExpense,
-      });
+      dailySeries.push({ date: dateStr, day, income: dayData.income, expense: dayData.expense, cumIncome, cumExpense });
     }
 
-    // Cashflow for current month
+    // Cashflow
     const cashflowAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: startDate, $lte: endDate },
-          Type: { $in: ['INCOME', 'EXPENSE'] },
-        },
-      },
-      { $group: { _id: '$Type', total: { $sum: { $abs: '$Amount_GBP' } } } },
+      { $match: { userid: userId, Date: { $gte: startDate, $lte: endDate } } },
+      normStage,
+      { $match: { _typeNorm: { $in: ['INCOME', 'EXPENSE'] } } },
+      { $group: { _id: '$_typeNorm', total: { $sum: { $abs: '$_amount' } } } },
     ]);
-    let cfIncome = 0;
-    let cfExpense = 0;
+    let cfIncome = 0, cfExpense = 0;
     cashflowAgg.forEach(g => {
       if (g._id === 'INCOME') cfIncome = g.total;
       else if (g._id === 'EXPENSE') cfExpense = g.total;
@@ -237,30 +182,23 @@ router.get('/analytics', async (req, res) => {
     const cashflow = { income: cfIncome, expense: cfExpense, net: cfIncome - cfExpense };
 
     // Averages
-    const daysInMonth = lastDay;
-    const weeksInMonth = daysInMonth / 7;
     const averages = {
-      dayIncome: cfIncome / daysInMonth,
-      dayExpense: cfExpense / daysInMonth,
-      weekIncome: cfIncome / weeksInMonth,
-      weekExpense: cfExpense / weeksInMonth,
+      dayIncome: cfIncome / lastDay,
+      dayExpense: cfExpense / lastDay,
+      weekIncome: cfIncome / (lastDay / 7),
+      weekExpense: cfExpense / (lastDay / 7),
       monthIncome: cfIncome,
       monthExpense: cfExpense,
     };
 
-    // Previous month cashflow
+    // Previous month
     const prevAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: prevStartDate, $lte: prevEndDate },
-          Type: { $in: ['INCOME', 'EXPENSE'] },
-        },
-      },
-      { $group: { _id: '$Type', total: { $sum: { $abs: '$Amount_GBP' } } } },
+      { $match: { userid: userId, Date: { $gte: prevStartDate, $lte: prevEndDate } } },
+      normStage,
+      { $match: { _typeNorm: { $in: ['INCOME', 'EXPENSE'] } } },
+      { $group: { _id: '$_typeNorm', total: { $sum: { $abs: '$_amount' } } } },
     ]);
-    let prevIncome = 0;
-    let prevExpense = 0;
+    let prevIncome = 0, prevExpense = 0;
     prevAgg.forEach(g => {
       if (g._id === 'INCOME') prevIncome = g.total;
       else if (g._id === 'EXPENSE') prevExpense = g.total;
@@ -268,17 +206,11 @@ router.get('/analytics', async (req, res) => {
 
     const diffIncome = cfIncome - prevIncome;
     const diffExpense = cfExpense - prevExpense;
-    const pctIncome = prevIncome > 0 ? ((diffIncome / prevIncome) * 100).toFixed(1) : '0.0';
-    const pctExpense = prevExpense > 0 ? ((diffExpense / prevExpense) * 100).toFixed(1) : '0.0';
-
     const compare = {
       prevMonth: `${MONTH_NAMES[prevDate.getMonth()]} ${prevDate.getFullYear()}`,
-      prevIncome,
-      prevExpense,
-      diffIncome,
-      diffExpense,
-      pctIncome,
-      pctExpense,
+      prevIncome, prevExpense, diffIncome, diffExpense,
+      pctIncome: prevIncome > 0 ? (diffIncome / prevIncome) * 100 : 0,
+      pctExpense: prevExpense > 0 ? (diffExpense / prevExpense) * 100 : 0,
     };
 
     res.json({ dailySeries, cashflow, averages, compare, monthLabel: `${MONTH_NAMES[month - 1]} ${year}` });
@@ -289,7 +221,6 @@ router.get('/analytics', async (req, res) => {
 });
 
 // @route   GET /api/dashboard/categories?month=YYYY-MM
-// @access  Private
 router.get('/categories', async (req, res) => {
   try {
     const userId = req.userId;
@@ -300,26 +231,18 @@ router.get('/categories', async (req, res) => {
     const endDate = `${monthParam}-${String(lastDay).padStart(2, '0')}`;
 
     const expCats = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: startDate, $lte: endDate },
-          Type: 'EXPENSE',
-        },
-      },
-      { $group: { _id: '$Category', total: { $sum: { $abs: '$Amount_GBP' } }, count: { $sum: 1 } } },
+      { $match: { userid: userId, Date: { $gte: startDate, $lte: endDate } } },
+      normStage,
+      { $match: { _typeNorm: 'EXPENSE' } },
+      { $group: { _id: '$Category', total: { $sum: { $abs: '$_amount' } }, count: { $sum: 1 } } },
       { $sort: { total: -1 } },
     ]);
 
     const incomeAgg = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: startDate, $lte: endDate },
-          Type: 'INCOME',
-        },
-      },
-      { $group: { _id: null, total: { $sum: { $abs: '$Amount_GBP' } } } },
+      { $match: { userid: userId, Date: { $gte: startDate, $lte: endDate } } },
+      normStage,
+      { $match: { _typeNorm: 'INCOME' } },
+      { $group: { _id: null, total: { $sum: { $abs: '$_amount' } } } },
     ]);
 
     const totalExpense = expCats.reduce((s, c) => s + c.total, 0);
@@ -340,7 +263,7 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-// @route   GET /api/dashboard/monthly — kept for backward compat
+// @route   GET /api/dashboard/monthly
 router.get('/monthly', async (req, res) => {
   try {
     const userId = req.userId;
@@ -349,15 +272,11 @@ router.get('/monthly', async (req, res) => {
     const sixMonthsAgoStr = sixMonthsAgo.toISOString().slice(0, 10);
 
     const rawData = await Transaction.aggregate([
-      {
-        $match: {
-          userid: userId,
-          Date: { $gte: sixMonthsAgoStr },
-          Type: { $in: ['INCOME', 'EXPENSE'] },
-        },
-      },
+      { $match: { userid: userId, Date: { $gte: sixMonthsAgoStr } } },
+      normStage,
+      { $match: { _typeNorm: { $in: ['INCOME', 'EXPENSE'] } } },
       { $addFields: { monthYear: { $substr: ['$Date', 0, 7] } } },
-      { $group: { _id: { month: '$monthYear', type: '$Type' }, total: { $sum: '$Amount_GBP' } } },
+      { $group: { _id: { month: '$monthYear', type: '$_typeNorm' }, total: { $sum: '$_amount' } } },
       { $sort: { '_id.month': 1 } },
     ]);
 

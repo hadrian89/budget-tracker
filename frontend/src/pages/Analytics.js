@@ -19,13 +19,16 @@ const formatShort = (v) => {
 };
 
 const pctStr = (v) => {
-  if (v === null || v === undefined || !isFinite(v)) return '—';
-  return `${v > 0 ? '+' : ''}${v.toFixed(0)}%`;
+  if (v === null || v === undefined) return '—';
+  const num = parseFloat(v);
+  if (!isFinite(num)) return '—';
+  return `${num > 0 ? '+' : ''}${num.toFixed(0)}%`;
 };
 
 const pctClass = (v) => {
-  if (!v) return '';
-  return v >= 0 ? 'text-green' : 'text-red';
+  if (v === null || v === undefined) return '';
+  const num = parseFloat(v);
+  return num >= 0 ? 'text-green' : 'text-red';
 };
 
 const TAB_OPTIONS = ['Income', 'Expenses', 'Total'];
@@ -239,11 +242,11 @@ export default function Analytics() {
           </div>
 
           {/* Compare card */}
-          {compare.prevMonthLabel && (
+          {compare.prevMonth && (
             <div className="an-card">
               <div className="an-card-header">
                 <span className="an-card-title">Compare</span>
-                <span className="an-card-subtitle">vs. {compare.prevMonthLabel}</span>
+                <span className="an-card-subtitle">vs. {compare.prevMonth}</span>
               </div>
               <table className="an-table">
                 <thead>

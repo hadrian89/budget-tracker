@@ -16,10 +16,11 @@ router.get('/stats', async (req, res) => {
 
     const stats = await Transaction.aggregate([
       { $match: { userid: userId } },
+      { $addFields: { _typeNorm: { $toUpper: '$Type' }, _amount: { $toDouble: '$Amount_GBP' } } },
       {
         $group: {
-          _id: '$Type',
-          total: { $sum: '$Amount_GBP' },
+          _id: '$_typeNorm',
+          total: { $sum: '$_amount' },
           count: { $sum: 1 },
         },
       },
@@ -72,7 +73,7 @@ router.get('/', async (req, res) => {
     const filter = { userid: userId };
 
     if (type && type !== 'all') {
-      filter.Type = type.toUpperCase();
+      filter.Type = { $regex: new RegExp(`^${type}$`, 'i') };
     }
 
     if (category && category !== 'all') {
