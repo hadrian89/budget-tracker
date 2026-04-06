@@ -107,7 +107,7 @@ const Transactions = () => {
     } catch {}
   }, []);
 
-  useEffect(() => { fetchTransactions(1, appliedSearch, appliedFilters); }, [appliedSearch, appliedFilters]);
+  useEffect(() => { fetchTransactions(1, appliedSearch, appliedFilters); }, [fetchTransactions, appliedSearch, appliedFilters]);
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
 
   const handleSearchSubmit = (e) => {
