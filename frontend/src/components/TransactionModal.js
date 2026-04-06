@@ -19,7 +19,7 @@ const nowDate = () => new Date().toISOString().slice(0, 10);
 
 const initialForm = {
   Date: nowDate(),
-  Type: 'EXPENSE',
+  Type: 'Expense',
   Account: '',
   Currency: 'GBP',
   Amount: '',
@@ -73,7 +73,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
     if (transaction) {
       setForm({
         Date: toDateOnly(transaction.Date),
-        Type: transaction.Type || 'EXPENSE',
+        Type: transaction.Type || 'Expense',
         Account: transaction.Account || '',
         Currency: transaction.Currency || 'GBP',
         Amount: Math.abs(transaction.Amount) || '',
@@ -108,7 +108,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
       return;
     }
 
-    const signedAmount = form.Type === 'EXPENSE' ? -Math.abs(amount) : Math.abs(amount);
+    const signedAmount = form.Type === 'Expense' ? -Math.abs(amount) : Math.abs(amount);
 
     const payload = {
       Date: form.Date,
@@ -141,9 +141,9 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
   if (!isOpen) return null;
 
   const typeColors = {
-    EXPENSE:  { bg: 'rgba(182,0,81,0.1)',    color: 'var(--tertiary)' },
-    INCOME:   { bg: 'rgba(0,135,90,0.12)',   color: '#00875a' },
-    TRANSFER: { bg: 'rgba(91,91,95,0.1)',    color: 'var(--primary)' },
+    Expense:  { bg: 'rgba(182,0,81,0.1)',    color: 'var(--tertiary)' },
+    Income:   { bg: 'rgba(0,135,90,0.12)',   color: '#00875a' },
+    Transfer: { bg: 'rgba(91,91,95,0.1)',    color: 'var(--primary)' },
   };
 
   return (
@@ -165,7 +165,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
           <div className="form-group">
             <label className="form-label">Type *</label>
             <div style={{ display: 'flex', gap: 8 }}>
-              {['EXPENSE', 'INCOME', 'TRANSFER'].map((t) => {
+              {['Expense', 'Income', 'Transfer'].map((t) => {
                 const active = form.Type === t;
                 const tc = typeColors[t];
                 return (
@@ -187,7 +187,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
                       color: active ? tc.color : 'var(--outline)',
                     }}
                   >
-                    {t === 'EXPENSE' ? '↓ Expense' : t === 'INCOME' ? '↑ Income' : '⇄ Transfer'}
+                    {t === 'Expense' ? '↓ Expense' : t === 'Income' ? '↑ Income' : '⇄ Transfer'}
                   </button>
                 );
               })}

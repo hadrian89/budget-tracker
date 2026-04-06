@@ -56,9 +56,9 @@ const getCategoryEmoji = (cat) => {
 };
 
 const TYPE_ICON_COLORS = {
-  INCOME:   { bg: 'rgba(0,135,90,0.1)',   emoji: getCategoryEmoji },
-  EXPENSE:  { bg: 'rgba(182,0,81,0.1)',   emoji: getCategoryEmoji },
-  TRANSFER: { bg: 'rgba(91,91,95,0.08)',  emoji: () => '🔄' },
+  Income:   { bg: 'rgba(0,135,90,0.1)',   emoji: getCategoryEmoji },
+  Expense:  { bg: 'rgba(182,0,81,0.1)',   emoji: getCategoryEmoji },
+  Transfer: { bg: 'rgba(91,91,95,0.08)',  emoji: () => '🔄' },
 };
 
 const PIE_COLORS = ['#5b5b5f', '#008080', '#b60051', '#747778', '#abadae', '#4f4f53', '#595c5d', '#dfe3e4'];
@@ -387,10 +387,10 @@ const Dashboard = () => {
         ) : (
           <div className="recent-list">
             {recent.slice(0, 8).map((tx) => {
-              const isIncome = tx.Type === 'INCOME';
-              const isTransfer = tx.Type === 'TRANSFER';
-              const colorConf = TYPE_ICON_COLORS[tx.Type] || TYPE_ICON_COLORS.EXPENSE;
-              const emoji = tx.Type === 'TRANSFER' ? '🔄' : getCategoryEmoji(tx.Category);
+              const isIncome = tx.Type === 'Income';
+              const isTransfer = tx.Type === 'Transfer';
+              const colorConf = TYPE_ICON_COLORS[tx.Type] || TYPE_ICON_COLORS.Expense;
+              const emoji = tx.Type === 'Transfer' ? '🔄' : getCategoryEmoji(tx.Category);
               const amountClass = isIncome ? 'recent-item-amount--income' : isTransfer ? 'recent-item-amount--transfer' : 'recent-item-amount--expense';
               const sign = isIncome ? '+' : isTransfer ? '' : '−';
 

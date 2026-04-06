@@ -146,8 +146,8 @@ const Transactions = () => {
     appliedFilters.category !== 'all' || appliedFilters.startDate || appliedFilters.endDate;
 
   // Compute summary
-  const totalIncome  = transactions.filter(t => t.Type === 'INCOME').reduce((s, t) => s + Math.abs(t.Amount_GBP || 0), 0);
-  const totalExpense = transactions.filter(t => t.Type === 'EXPENSE').reduce((s, t) => s + Math.abs(t.Amount_GBP || 0), 0);
+  const totalIncome  = transactions.filter(t => t.Type === 'Income').reduce((s, t) => s + Math.abs(t.Amount_GBP || 0), 0);
+  const totalExpense = transactions.filter(t => t.Type === 'Expense').reduce((s, t) => s + Math.abs(t.Amount_GBP || 0), 0);
   const net = totalIncome - totalExpense;
 
   const iconMap = buildIconMap(categories);
@@ -189,9 +189,9 @@ const Transactions = () => {
           onChange={(e) => setFilters(f => ({ ...f, type: e.target.value }))}
         >
           <option value="all">All Types</option>
-          <option value="EXPENSE">Expense</option>
-          <option value="INCOME">Income</option>
-          <option value="TRANSFER">Transfer</option>
+          <option value="Expense">Expense</option>
+          <option value="Income">Income</option>
+          <option value="Transfer">Transfer</option>
         </select>
         <select
           className="tx-filter-select"
@@ -264,8 +264,8 @@ const Transactions = () => {
           {grouped.map(([dateKey, txs]) => {
             const { weekday: day, dateStr } = formatDayLabel(dateKey);
             const dayNet = txs.reduce((s, t) => {
-              if (t.Type === 'INCOME')  return s + Math.abs(t.Amount_GBP || 0);
-              if (t.Type === 'EXPENSE') return s - Math.abs(t.Amount_GBP || 0);
+              if (t.Type === 'Income')  return s + Math.abs(t.Amount_GBP || 0);
+              if (t.Type === 'Expense') return s - Math.abs(t.Amount_GBP || 0);
               return s;
             }, 0);
 
@@ -282,8 +282,8 @@ const Transactions = () => {
                 </div>
 
                 {txs.map((tx) => {
-                  const isIncome   = tx.Type === 'INCOME';
-                  const isTransfer = tx.Type === 'TRANSFER';
+                  const isIncome   = tx.Type === 'Income';
+                  const isTransfer = tx.Type === 'Transfer';
                   const emoji = isTransfer ? '🔄' : getCategoryEmoji(tx.Category, iconMap);
                   const iconBg = isIncome
                     ? 'rgba(0,135,90,0.12)'
