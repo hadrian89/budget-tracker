@@ -53,7 +53,7 @@ const transactionSchema = new mongoose.Schema(
     },
   },
   {
-    collection: 'budget_tracker_transactions_new',
+    collection: 'budget_tracker_transactions',
     timestamps: false,
   }
 );

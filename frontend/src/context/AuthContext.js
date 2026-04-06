@@ -10,8 +10,8 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize from localStorage on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('budgetflow_token');
-    const storedUser = localStorage.getItem('budgetflow_user');
+    const storedToken = localStorage.getItem('walleto_token');
+    const storedUser = localStorage.getItem('walleto_user');
 
     if (storedToken && storedUser) {
       try {
@@ -19,23 +19,23 @@ export const AuthProvider = ({ children }) => {
         setToken(storedToken);
         setUser(parsedUser);
       } catch (e) {
-        localStorage.removeItem('budgetflow_token');
-        localStorage.removeItem('budgetflow_user');
+        localStorage.removeItem('walleto_token');
+        localStorage.removeItem('walleto_user');
       }
     }
     setLoading(false);
   }, []);
 
   const persistAuth = (tokenValue, userData) => {
-    localStorage.setItem('budgetflow_token', tokenValue);
-    localStorage.setItem('budgetflow_user', JSON.stringify(userData));
+    localStorage.setItem('walleto_token', tokenValue);
+    localStorage.setItem('walleto_user', JSON.stringify(userData));
     setToken(tokenValue);
     setUser(userData);
   };
 
   const clearAuth = () => {
-    localStorage.removeItem('budgetflow_token');
-    localStorage.removeItem('budgetflow_user');
+    localStorage.removeItem('walleto_token');
+    localStorage.removeItem('walleto_user');
     setToken(null);
     setUser(null);
   };
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axiosInstance.get('/api/auth/me');
       const { user: userData } = response.data;
       setUser(userData);
-      localStorage.setItem('budgetflow_user', JSON.stringify(userData));
+      localStorage.setItem('walleto_user', JSON.stringify(userData));
     } catch (error) {
       logout();
     }

@@ -53,21 +53,23 @@ export default function CategoriesPage() {
       const ms = toMonthStr(month);
       const [analyticsRes, txRes, catRes] = await Promise.all([
         axiosInstance.get(`/api/dashboard/analytics?month=${ms}`),
-        axiosInstance.get(`/api/transactions?startDate=${ms}-01&endDate=${ms}-31&type=EXPENSE&limit=1000`),
+        axiosInstance.get(`/api/transactions?startDate=${ms}-01&endDate=${ms}-31&Type=Expense&limit=1000`),
         axiosInstance.get('/api/categories'),
       ]);
 
       const { cashflow } = analyticsRes.data;
       setTotalExpense(cashflow?.expense || 0);
       setTotalIncome(cashflow?.income || 0);
-
+      // console.log("catRes", catRes.data.categories);
       // Build lookup: category name → { icon, color }
       const managedMap = {};
       (catRes.data.categories || []).forEach((c) => {
         managedMap[c.name] = { icon: c.icon || '📦', color: c.color || null };
       });
+      console.log(managedMap)
 
       const txs = txRes.data.transactions || [];
+      console.log(txs)
       const map = {};
       txs.forEach((tx) => {
         const cat = tx.Category || 'Uncategorized';
@@ -78,6 +80,7 @@ export default function CategoriesPage() {
         map[cat].amount += Math.abs(tx.Amount_GBP || 0);
         map[cat].count += 1;
       });
+      console.log(map);
       setCatData(Object.values(map).sort((a, b) => b.amount - a.amount));
     } catch (e) {
       console.error(e);

@@ -225,6 +225,7 @@ export default function AccountsPage() {
                 <input
                   className="form-input-sm"
                   value={form.name}
+                  disabled={editAccount}
                   onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                   placeholder="e.g. UK Bank account"
                 />

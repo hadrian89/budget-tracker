@@ -86,7 +86,7 @@ const Sidebar = () => {
         <div className="sidebar-logo-icon-wrap">
           <BrandIcon />
         </div>
-        <span className="sidebar-logo-text">BudgetFlow</span>
+        <span className="sidebar-logo-text">Walleto</span>
       </div>
 
       <nav className="sidebar-nav">

@@ -1,5 +1,5 @@
 /**
- * Date utilities for BudgetFlow.
+ * Date utilities for Walleto.
  *
  * Stored format in DB: YYYY-MM-DD  (pure date, no time)
  * Display format:      DD/MM/YYYY

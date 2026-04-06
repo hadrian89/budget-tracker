@@ -1,6 +1,6 @@
-# BudgetFlow Frontend
+# Walleto Frontend
 
-React 18 single-page application for BudgetFlow budget tracking.
+React 18 single-page application for Walleto budget tracking.
 
 ## Prerequisites
 

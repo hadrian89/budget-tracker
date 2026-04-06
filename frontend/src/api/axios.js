@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 // Request interceptor to attach JWT token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('budgetflow_token');
+    const token = localStorage.getItem('walleto_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,8 +30,8 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid - clear storage and redirect
-      localStorage.removeItem('budgetflow_token');
-      localStorage.removeItem('budgetflow_user');
+      localStorage.removeItem('walleto_token');
+      localStorage.removeItem('walleto_user');
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }

@@ -14,7 +14,7 @@ const Header = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  const title = pageTitles[location.pathname] || 'BudgetFlow';
+  const title = pageTitles[location.pathname] || 'Walleto';
 
   const getInitials = (name) => {
     if (!name) return 'U';

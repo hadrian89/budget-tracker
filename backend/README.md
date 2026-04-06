@@ -1,6 +1,6 @@
-# BudgetFlow Backend
+# Walleto Backend
 
-Node.js + Express + MongoDB REST API for BudgetFlow budget tracking application.
+Node.js + Express + MongoDB REST API for Walleto budget tracking application.
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ The server will start on **http://localhost:5001**
 
 ```
 MONGO_URI=mongodb+srv://...
-JWT_SECRET=budgetflow_jwt_secret_2024
+JWT_SECRET=Walleto_jwt_secret_2024
 PORT=5001
 ```
 

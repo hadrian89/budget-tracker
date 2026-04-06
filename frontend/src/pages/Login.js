@@ -66,7 +66,7 @@ export default function Login() {
               <div className="auth-brand-icon">
                 <BrandIconSvg />
               </div>
-              <span className="auth-brand-name">BudgetFlow</span>
+              <span className="auth-brand-name">Walleto</span>
             </div>
             <h2 className="auth-left-headline">
               Track every penny,<br />achieve <em>financial clarity.</em>

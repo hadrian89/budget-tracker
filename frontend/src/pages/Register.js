@@ -79,13 +79,13 @@ const Register = () => {
               <div className="auth-brand-icon">
                 <BrandIconSvg />
               </div>
-              <span className="auth-brand-name">BudgetFlow</span>
+              <span className="auth-brand-name">Walleto</span>
             </div>
             <h2 className="auth-left-headline">
               Start your journey to <em>financial freedom.</em>
             </h2>
             <p className="auth-left-sub">
-              Join thousands who have taken control of their finances with BudgetFlow&apos;s elegant tracking tools.
+              Join thousands who have taken control of their finances with Walleto&apos;s elegant tracking tools.
             </p>
           </div>
           <div className="auth-left-image">
