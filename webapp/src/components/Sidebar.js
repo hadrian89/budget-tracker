@@ -66,7 +66,7 @@ const navItems = [
   { to: '/accounts',        label: 'Accounts',     icon: <AccountsIcon /> },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -81,7 +81,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
       <div className="sidebar-logo">
         <div className="sidebar-logo-icon-wrap">
           <BrandIcon />
@@ -95,6 +95,7 @@ const Sidebar = () => {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onClose}
             className={({ isActive }) =>
               `sidebar-nav-item${isActive ? ' sidebar-nav-item--active' : ''}`
             }

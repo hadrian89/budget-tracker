@@ -429,21 +429,21 @@
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .accounts-page {
-    padding: 16px;
-  }
+  .accounts-page { padding: 16px; }
 
-  .acc-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+  .acc-grid { grid-template-columns: 1fr 1fr; }
 
-  .acc-type-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .acc-type-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Always show account actions on touch */
+  .acc-actions { opacity: 1; }
+
+  .acc-modal { border-radius: var(--radius-xl); max-height: 92vh; }
+  .confirm-dialog { padding: 20px; }
 }
 
 @media (max-width: 480px) {
-  .acc-grid {
-    grid-template-columns: 1fr;
-  }
+  .accounts-page { padding: 10px; }
+  .acc-grid { grid-template-columns: 1fr; }
+  .acc-page-header { flex-direction: column; align-items: flex-start; }
 }

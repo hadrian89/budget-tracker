@@ -499,14 +499,52 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .dashboard {
     padding: 16px;
+    gap: 16px;
+  }
+  .balance-card {
+    padding: 22px;
+    border-radius: var(--radius-xl);
+  }
+  .chart-card {
+    padding: 18px;
+    border-radius: var(--radius-xl);
+    gap: 14px;
+  }
+  .recent-section {
+    padding: 18px;
+    border-radius: var(--radius-xl);
+  }
+  .accounts-panel {
+    border-radius: var(--radius-xl);
+  }
+  .recent-item-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 12px;
+    gap: 12px;
   }
   .dashboard-stats {
     grid-template-columns: 1fr;
   }
   .balance-amount {
-    font-size: 32px;
+    font-size: 30px;
+  }
+  .balance-card {
+    padding: 18px;
+  }
+  .cashflow-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .recent-item-amount {
+    font-size: 13px;
   }
 }

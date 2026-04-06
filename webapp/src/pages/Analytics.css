@@ -233,6 +233,21 @@
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .analytics-page { padding: 16px; }
+  .analytics-page { padding: 16px; gap: 14px; }
   .an-header { flex-direction: column; align-items: flex-start; }
+  .an-chart-card { padding: 16px; border-radius: var(--radius-xl); }
+  .an-card { padding: 16px 18px; border-radius: var(--radius-xl); }
+
+  /* Make tabs full-width on mobile */
+  .an-tabs { width: 100%; }
+  .an-tab { flex: 1; padding: 8px 10px; text-align: center; }
+
+  /* Scrollable table on small screens */
+  .an-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .an-table { min-width: 320px; }
+}
+
+@media (max-width: 480px) {
+  .analytics-page { padding: 10px; }
+  .an-chart-card { padding: 12px; }
 }

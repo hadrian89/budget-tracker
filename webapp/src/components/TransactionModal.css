@@ -421,9 +421,23 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 560px) {
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
   .modal {
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    animation: slideUpSheet 0.25s ease;
+  }
+
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
   }
 
   .modal-row {
@@ -432,5 +446,23 @@
 
   .modal-form {
     padding: 16px;
+    gap: 14px;
   }
+
+  .modal-header {
+    padding: 16px 16px 12px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-overlay { padding: 0; }
+  .modal { max-height: 95vh; }
 }
