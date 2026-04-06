@@ -1,0 +1,110 @@
+/* ============================================================
+   StatCard — Luminaire Design
+   ============================================================ */
+
+.stat-card {
+  background: var(--surface-lowest);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 56px rgba(44, 47, 48, 0.07);
+}
+
+.stat-card-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Color variants */
+.stat-card-icon--success {
+  background: rgba(0, 135, 90, 0.1);
+  color: #00875a;
+}
+
+.stat-card-icon--danger {
+  background: rgba(179, 27, 37, 0.1);
+  color: var(--error);
+}
+
+.stat-card-icon--accent {
+  background: rgba(91, 91, 95, 0.08);
+  color: var(--primary);
+}
+
+.stat-card-icon--warning {
+  background: rgba(182, 0, 81, 0.08);
+  color: var(--tertiary);
+}
+
+.stat-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--outline);
+  margin-bottom: 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+.stat-card-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--on-bg);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-card-trend {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Loading skeleton */
+.stat-card-skeleton {
+  height: 28px;
+  border-radius: 8px;
+  width: 80%;
+  background: linear-gradient(
+    90deg,
+    var(--surface-low)  25%,
+    var(--surface-high) 50%,
+    var(--surface-low)  75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}

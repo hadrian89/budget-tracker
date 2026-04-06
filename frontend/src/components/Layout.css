@@ -1,0 +1,23 @@
+/* ============================================================
+   Layout — Luminaire Design
+   ============================================================ */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.layout-main {
+  margin-left: 260px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+.page-header {
+  padding: 28px 32px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}

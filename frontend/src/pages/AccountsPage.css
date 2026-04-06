@@ -1,0 +1,449 @@
+/* ============================================================
+   AccountsPage — Luminaire Design
+   ============================================================ */
+
+.accounts-page {
+  padding: 28px 32px;
+}
+
+/* ── Page header ───────────────────────────────────────────── */
+.acc-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.acc-page-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--on-bg);
+  margin-bottom: 4px;
+}
+
+.acc-page-subtitle {
+  font-size: 13px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+}
+
+.acc-page-subtitle strong {
+  color: #00875a;
+  font-weight: 700;
+}
+
+/* ── Error ─────────────────────────────────────────────────── */
+.acc-error {
+  background: rgba(179, 27, 37, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--error);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 20px;
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.acc-empty {
+  text-align: center;
+  padding: 60px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.acc-empty p {
+  color: var(--outline);
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Cards grid ────────────────────────────────────────────── */
+.acc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.acc-card {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-xl);
+  padding: 20px 20px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+  box-shadow: var(--shadow-sm);
+}
+
+.acc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(44, 47, 48, 0.08);
+}
+
+.acc-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.acc-icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acc-icon {
+  font-size: 22px;
+}
+
+.acc-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.acc-card:hover .acc-actions {
+  opacity: 1;
+}
+
+.acc-action-btn {
+  background: var(--surface-low);
+  border: none;
+  color: var(--outline);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.acc-action-btn:hover {
+  background: var(--surface-container);
+  color: var(--primary);
+}
+
+.acc-action-btn--danger:hover {
+  background: rgba(179, 27, 37, 0.1);
+  color: var(--error);
+}
+
+.acc-card-body {
+  margin-bottom: 16px;
+}
+
+.acc-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--on-surface);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acc-type-badge {
+  display: inline-block;
+}
+
+.acc-type-badge span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--outline);
+  background: var(--surface-low);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: 'Inter', sans-serif;
+}
+
+.acc-card-footer {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.acc-balance {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--on-bg);
+  letter-spacing: -0.02em;
+}
+
+.acc-currency {
+  font-size: 12px;
+  color: var(--outline);
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+
+.acc-color-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* ── Modal ─────────────────────────────────────────────────── */
+.acc-modal {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-float);
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.acc-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid rgba(171, 173, 174, 0.12);
+  position: sticky;
+  top: 0;
+  background: var(--surface-lowest);
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.acc-modal-header h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.acc-modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.acc-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(171, 173, 174, 0.12);
+  position: sticky;
+  bottom: 0;
+  background: var(--surface-lowest);
+  flex-shrink: 0;
+}
+
+/* ── Type selector ─────────────────────────────────────────── */
+.acc-type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.acc-type-btn {
+  background: var(--surface-low);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 10px 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: var(--outline);
+  transition: all 0.15s;
+}
+
+.acc-type-btn:hover {
+  border-color: rgba(91, 91, 95, 0.2);
+  color: var(--on-surface);
+}
+
+.acc-type-btn--active {
+  border-color: var(--primary);
+  background: rgba(91, 91, 95, 0.08);
+  color: var(--primary);
+}
+
+.acc-type-btn-icon {
+  font-size: 20px;
+}
+
+/* ── Balance prefix input ──────────────────────────────────── */
+.acc-form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.acc-prefix-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.acc-prefix {
+  position: absolute;
+  left: 12px;
+  color: var(--outline);
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.acc-prefix-input .form-input-sm {
+  padding-left: 26px;
+}
+
+/* ── Preview ───────────────────────────────────────────────── */
+.acc-preview {
+  background: var(--surface-low);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.acc-preview-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.acc-preview-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--on-surface);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-bottom: 2px;
+}
+
+.acc-preview-balance {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ── Confirm dialog ────────────────────────────────────────── */
+.confirm-dialog {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-float);
+  padding: 28px;
+  max-width: 380px;
+  width: 100%;
+}
+
+.confirm-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin-bottom: 10px;
+}
+
+.confirm-text {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ── Subcat chips (used by categories modal) ───────────────── */
+.subcats-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.subcat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-container);
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  font-family: 'Inter', sans-serif;
+}
+
+.subcat-chip button {
+  background: none;
+  border: none;
+  color: var(--outline);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.subcat-chip button:hover {
+  color: var(--error);
+}
+
+.subcat-add-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .accounts-page {
+    padding: 16px;
+  }
+
+  .acc-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .acc-type-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .acc-grid {
+    grid-template-columns: 1fr;
+  }
+}

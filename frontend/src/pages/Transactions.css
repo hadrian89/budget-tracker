@@ -1,0 +1,427 @@
+/* ============================================================
+   Transactions — Luminaire Design
+   ============================================================ */
+
+.transactions-page {
+  padding: 28px 32px;
+}
+
+/* ── Page header ───────────────────────────────────────────── */
+.tx-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.tx-page-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  color: var(--on-bg);
+  line-height: 1.2;
+}
+
+.tx-page-subtitle {
+  font-size: 13px;
+  color: var(--outline);
+  margin-top: 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Search bar ────────────────────────────────────────────── */
+.tx-search-bar {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-full);
+  padding: 12px 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  margin-bottom: 16px;
+}
+
+.tx-search-icon {
+  color: var(--outline);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tx-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+}
+
+.tx-search-input::placeholder {
+  color: var(--outline-variant);
+}
+
+/* ── Filters row ───────────────────────────────────────────── */
+.tx-filters-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.tx-filter-select {
+  background: var(--surface-lowest);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+
+.tx-filter-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(91,91,95,0.15);
+}
+
+.tx-filter-date {
+  background: var(--surface-lowest);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+  box-shadow: var(--shadow-sm);
+}
+
+.tx-filter-date:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(91,91,95,0.15);
+}
+
+.tx-filter-apply {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tx-filter-apply:hover { background: var(--primary-dim); }
+
+.tx-filter-clear {
+  background: rgba(179,27,37,0.07);
+  color: var(--error);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tx-filter-clear:hover { background: rgba(179,27,37,0.12); }
+
+/* ── Month picker row ──────────────────────────────────────── */
+.tx-month-row {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-lg);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Summary row ───────────────────────────────────────────── */
+.tx-summary-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tx-summary-income {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #00875a;
+}
+
+.tx-summary-sep {
+  color: var(--outline-variant);
+  font-size: 13px;
+}
+
+.tx-summary-expense {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--tertiary);
+}
+
+.tx-summary-net {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--on-surface);
+}
+
+/* ── Error ─────────────────────────────────────────────────── */
+.tx-error {
+  background: rgba(179,27,37,0.08);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  color: var(--error);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.tx-error button {
+  background: var(--error);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Day group ─────────────────────────────────────────────── */
+.tx-day-group {
+  margin-bottom: 8px;
+}
+
+.tx-day-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 12px 4px 6px;
+  border-bottom: 1px solid rgba(171,173,174,0.15);
+  margin-bottom: 4px;
+}
+
+.tx-day-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--on-surface);
+}
+
+.tx-day-date {
+  font-size: 11px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+  margin-top: 2px;
+}
+
+.tx-day-sum {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+}
+.tx-day-sum--positive { color: #00875a; }
+.tx-day-sum--negative { color: var(--tertiary); }
+
+/* ── Transaction item ──────────────────────────────────────── */
+.tx-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 4px;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tx-item:hover {
+  background: var(--surface-low);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.tx-item-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.tx-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tx-item-category {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+}
+
+.tx-item-sub {
+  font-size: 11px;
+  color: var(--outline);
+  margin-top: 2px;
+  font-family: 'Inter', sans-serif;
+}
+
+.tx-item-account {
+  font-size: 11px;
+  color: var(--tertiary);
+  font-family: 'Inter', sans-serif;
+}
+
+.tx-item-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tx-item-amount {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+.tx-item-amount--income   { color: #00875a; }
+.tx-item-amount--expense  { color: var(--tertiary); }
+.tx-item-amount--transfer { color: var(--outline); }
+
+.tx-item-time {
+  font-size: 11px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+}
+
+.tx-item-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.tx-item:hover .tx-item-actions { opacity: 1; }
+
+/* ── Empty state ───────────────────────────────────────────── */
+.tx-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: var(--outline);
+  gap: 12px;
+  text-align: center;
+}
+
+.tx-empty p {
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Pagination ────────────────────────────────────────────── */
+.tx-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 4px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tx-pagination-info {
+  font-size: 13px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+}
+
+.tx-pagination-controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.tx-page-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-lowest);
+  border: none;
+  color: var(--outline);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  box-shadow: var(--shadow-sm);
+}
+.tx-page-btn:hover:not(:disabled) {
+  background: var(--surface-container);
+  color: var(--primary);
+}
+.tx-page-btn--active {
+  background: var(--primary);
+  color: white;
+}
+.tx-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── FAB ───────────────────────────────────────────────────── */
+.tx-fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(91,91,95,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 50;
+  font-size: 24px;
+  font-weight: 300;
+}
+.tx-fab:hover {
+  background: var(--primary-dim);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(91,91,95,0.35);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .transactions-page { padding: 16px; }
+  .tx-page-header { flex-direction: column; gap: 12px; }
+  .tx-filters-row { gap: 6px; }
+}

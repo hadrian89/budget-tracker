@@ -1,0 +1,300 @@
+/* ============================================================
+   CategoriesPage — Luminaire Design
+   ============================================================ */
+
+.categories-page {
+  padding: 28px 32px;
+}
+
+/* ── Page header ───────────────────────────────────────────── */
+.cat-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cat-page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Chart card ────────────────────────────────────────────── */
+.cat-chart-card {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-card);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.cat-donut-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Center overlay label */
+.cat-donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.cat-donut-expense {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--on-bg);
+  line-height: 1.2;
+}
+
+.cat-donut-income {
+  font-size: 12px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+  margin-top: 2px;
+}
+
+.cat-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--outline);
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Category list ─────────────────────────────────────────── */
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cat-list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cat-list-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cat-list-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.cat-list-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+}
+
+.cat-list-amount {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--on-surface);
+}
+
+.cat-list-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cat-list-bar-bg {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--surface-low);
+  overflow: hidden;
+}
+
+.cat-list-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.cat-list-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ── Tooltip ───────────────────────────────────────────────── */
+.cat-tooltip {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  box-shadow: var(--shadow-float);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+.cat-tooltip-icon  { font-size: 16px; }
+.cat-tooltip-name  { color: var(--on-surface-variant); font-weight: 500; }
+.cat-tooltip-val   { color: var(--on-surface); font-weight: 700; margin-left: 4px; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+/* ── Manage modal ──────────────────────────────────────────── */
+.cat-modal {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-float);
+  max-width: 600px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.cat-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid rgba(171,173,174,0.12);
+  flex-shrink: 0;
+}
+
+.cat-modal-header h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--on-surface);
+}
+
+.cat-form-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(171,173,174,0.12);
+}
+
+.cat-form-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--on-surface-variant);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cat-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cat-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cat-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* ── Manage list ───────────────────────────────────────────── */
+.cat-manage-list {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cat-manage-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.cat-manage-item:hover {
+  background: var(--surface-low);
+}
+
+.cat-manage-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.cat-manage-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-manage-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+}
+
+.cat-manage-subs {
+  font-size: 11px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+  display: block;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-manage-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .categories-page { padding: 16px; }
+  .cat-page-header { flex-direction: column; align-items: flex-start; }
+  .cat-form-row { flex-direction: column; }
+}
