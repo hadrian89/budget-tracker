@@ -9,21 +9,30 @@ const CloseIcon = () => (
   </svg>
 );
 
+// Extract YYYY-MM-DD from any date string (strips time)
+const toDateOnly = (str) => {
+  if (!str) return '';
+  return String(str).split('T')[0].split(' ')[0];
+};
+
+const nowDate = () => new Date().toISOString().slice(0, 10);
+
 const initialForm = {
-  Date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+  Date: nowDate(),
   Type: 'EXPENSE',
   Account: '',
   Currency: 'GBP',
   Amount: '',
   Category: '',
   Subcategory: '',
+  Notes: '',
 };
 
 const FALLBACK_CATEGORIES = [
   'Food & Dining', 'Shopping', 'Transport', 'Entertainment',
   'Bills & Utilities', 'Health & Fitness', 'Travel', 'Education',
   'Personal Care', 'Home', 'Salary', 'Investments', 'Other Income', 'Uncategorized',
-];
+].map((n) => ({ name: n, subcategories: [], icon: '📦' }));
 
 const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
   const [form, setForm] = useState(initialForm);
@@ -38,43 +47,44 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
   // Load accounts and categories when modal opens
   useEffect(() => {
     if (!isOpen) return;
-
     Promise.all([
       axiosInstance.get('/api/categories').catch(() => ({ data: { categories: [] } })),
       axiosInstance.get('/api/accounts').catch(() => ({ data: { accounts: [] } })),
     ]).then(([catRes, accRes]) => {
       const cats = catRes.data.categories || [];
-      setCategories(cats.length ? cats : FALLBACK_CATEGORIES.map((n) => ({ name: n, subcategories: [] })));
+      setCategories(cats.length ? cats : FALLBACK_CATEGORIES);
       setAccounts(accRes.data.accounts || []);
     });
   }, [isOpen]);
 
-  // Update subcategories when category changes
+  // Update subcategory options when category changes
   useEffect(() => {
     const cat = categories.find((c) => c.name === form.Category);
     setSubcategories(cat?.subcategories || []);
-  }, [form.Category, categories]);
-
-  useEffect(() => {
-    if (isOpen) {
-      if (transaction) {
-        setForm({
-          Date: transaction.Date || '',
-          Type: transaction.Type || 'EXPENSE',
-          Account: transaction.Account || '',
-          Currency: transaction.Currency || 'GBP',
-          Amount: Math.abs(transaction.Amount) || '',
-          Category: transaction.Category || '',
-          Subcategory: transaction.Subcategory || '',
-        });
-      } else {
-        setForm({
-          ...initialForm,
-          Date: new Date().toISOString().slice(0, 16).replace('T', ' '),
-        });
-      }
-      setError('');
+    // Clear subcategory if it no longer belongs to the selected category
+    if (cat && cat.subcategories?.length > 0 && form.Subcategory && !cat.subcategories.includes(form.Subcategory)) {
+      setForm((p) => ({ ...p, Subcategory: '' }));
     }
+  }, [form.Category, categories]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Populate form when editing or reset when adding
+  useEffect(() => {
+    if (!isOpen) return;
+    if (transaction) {
+      setForm({
+        Date: toDateOnly(transaction.Date),
+        Type: transaction.Type || 'EXPENSE',
+        Account: transaction.Account || '',
+        Currency: transaction.Currency || 'GBP',
+        Amount: Math.abs(transaction.Amount) || '',
+        Category: transaction.Category || '',
+        Subcategory: transaction.Subcategory || '',
+        Notes: transaction.Notes || '',
+      });
+    } else {
+      setForm({ ...initialForm, Date: nowDate() });
+    }
+    setError('');
   }, [isOpen, transaction]);
 
   const handleChange = (e) => {
@@ -109,6 +119,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
       Amount_GBP: signedAmount,
       Category: form.Category || 'Uncategorized',
       Subcategory: form.Subcategory || '',
+      Notes: form.Notes || '',
     };
 
     setLoading(true);
@@ -129,6 +140,12 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
 
   if (!isOpen) return null;
 
+  const typeColors = {
+    EXPENSE:  { bg: 'rgba(182,0,81,0.1)',    color: 'var(--tertiary)' },
+    INCOME:   { bg: 'rgba(0,135,90,0.12)',   color: '#00875a' },
+    TRANSFER: { bg: 'rgba(91,91,95,0.1)',    color: 'var(--primary)' },
+  };
+
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal">
@@ -148,45 +165,44 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
           <div className="form-group">
             <label className="form-label">Type *</label>
             <div style={{ display: 'flex', gap: 8 }}>
-              {['EXPENSE', 'INCOME', 'TRANSFER'].map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setForm((p) => ({ ...p, Type: t }))}
-                  style={{
-                    flex: 1,
-                    padding: '10px 0',
-                    borderRadius: 10,
-                    border: 'none',
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s',
-                    background: form.Type === t
-                      ? t === 'INCOME' ? 'rgba(0,135,90,0.12)' : t === 'EXPENSE' ? 'rgba(182,0,81,0.1)' : 'rgba(91,91,95,0.1)'
-                      : 'var(--surface-low)',
-                    color: form.Type === t
-                      ? t === 'INCOME' ? '#00875a' : t === 'EXPENSE' ? 'var(--tertiary)' : 'var(--primary)'
-                      : 'var(--outline)',
-                  }}
-                >
-                  {t === 'EXPENSE' ? '↓ Expense' : t === 'INCOME' ? '↑ Income' : '⇄ Transfer'}
-                </button>
-              ))}
+              {['EXPENSE', 'INCOME', 'TRANSFER'].map((t) => {
+                const active = form.Type === t;
+                const tc = typeColors[t];
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, Type: t }))}
+                    style={{
+                      flex: 1,
+                      padding: '10px 0',
+                      borderRadius: 10,
+                      border: 'none',
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
+                      background: active ? tc.bg : 'var(--surface-low)',
+                      color: active ? tc.color : 'var(--outline)',
+                    }}
+                  >
+                    {t === 'EXPENSE' ? '↓ Expense' : t === 'INCOME' ? '↑ Income' : '⇄ Transfer'}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Date */}
+          {/* Date picker */}
           <div className="form-group">
             <label className="form-label">Date & Time *</label>
             <input
-              type="text"
+              type="date"
               name="Date"
               className="form-input"
               value={form.Date}
               onChange={handleChange}
-              placeholder="YYYY-MM-DD HH:MM:SS"
               required
             />
           </div>
@@ -269,8 +285,8 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
               >
                 <option value="">Select category...</option>
                 {categories.map((cat) => (
-                  <option key={cat.name || cat} value={cat.name || cat}>
-                    {cat.icon ? `${cat.icon} ` : ''}{cat.name || cat}
+                  <option key={cat.name} value={cat.name}>
+                    {cat.icon ? `${cat.icon} ` : ''}{cat.name}
                   </option>
                 ))}
               </select>
@@ -296,10 +312,23 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
                   className="form-input"
                   value={form.Subcategory}
                   onChange={handleChange}
-                  placeholder="e.g. Groceries"
+                  placeholder="Optional"
                 />
               )}
             </div>
+          </div>
+
+          {/* Notes */}
+          <div className="form-group">
+            <label className="form-label">Notes</label>
+            <textarea
+              name="Notes"
+              className="form-input form-textarea"
+              value={form.Notes}
+              onChange={handleChange}
+              placeholder="Add a note (optional)..."
+              rows={2}
+            />
           </div>
 
           <div className="modal-actions">
@@ -307,11 +336,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
               Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? (
-                <span className="btn-spinner" />
-              ) : (
-                isEditing ? 'Save Changes' : 'Add Transaction'
-              )}
+              {loading ? <span className="btn-spinner" /> : isEditing ? 'Save Changes' : 'Add Transaction'}
             </button>
           </div>
         </form>

@@ -41,6 +41,11 @@ const transactionSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    Notes: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     userid: {
       type: String,
       required: [true, 'User ID is required'],
@@ -48,7 +53,7 @@ const transactionSchema = new mongoose.Schema(
     },
   },
   {
-    collection: 'wallets',
+    collection: 'budget_tracker_transactions_new',
     timestamps: false,
   }
 );

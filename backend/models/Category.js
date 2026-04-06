@@ -29,7 +29,7 @@ const categorySchema = new mongoose.Schema(
     },
   },
   {
-    collection: 'categories',
+    collection: 'budget_tracker_categories',
     timestamps: true,
   }
 );

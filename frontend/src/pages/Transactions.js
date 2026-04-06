@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../api/axios';
 import TransactionModal from '../components/TransactionModal';
 import './Transactions.css';
+import { toDateKey, formatDayHeader } from '../utils/dateUtils';
 
 // ── Icons ────────────────────────────────────────────────────
 const SearchIcon = () => (
@@ -37,36 +38,16 @@ const fmt = (v) => {
   return `£${Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
-const getTime = (dateStr) => {
-  if (!dateStr) return '';
-  const parts = String(dateStr).split(' ');
-  return parts[1] ? parts[1].slice(0, 5) : '';
+const getDateKey = (dateStr) => toDateKey(dateStr) || 'Unknown';
+const formatDayLabel = (dateKey) => formatDayHeader(dateKey);
+
+const buildIconMap = (cats) => {
+  const map = {};
+  cats.forEach((c) => { if (c.category && c.icon) map[c.category] = c.icon; });
+  return map;
 };
 
-const getDateKey = (dateStr) => {
-  if (!dateStr) return 'Unknown';
-  return String(dateStr).split(' ')[0] || 'Unknown';
-};
-
-const formatDayLabel = (dateKey) => {
-  try {
-    const d = new Date(dateKey + 'T00:00:00');
-    return {
-      day: d.toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit' }),
-      monthYear: d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
-    };
-  } catch { return { day: dateKey, monthYear: '' }; }
-};
-
-const getCategoryEmoji = (cat) => {
-  const map = {
-    'Food & Dining': '🍔', 'Shopping': '🛍️', 'Transport': '🚗',
-    'Entertainment': '🎉', 'Bills & Utilities': '📄', 'Health & Fitness': '💊',
-    'Travel': '✈️', 'Education': '🎓', 'Salary': '💰', 'Investments': '📈',
-    'Other Income': '💵', 'Personal Care': '🪥', 'Home': '🏠',
-  };
-  return map[cat] || '📦';
-};
+const getCategoryEmoji = (cat, iconMap) => iconMap[cat] || '📦';
 
 // Group transactions by date
 const groupByDate = (txs) => {
@@ -169,6 +150,7 @@ const Transactions = () => {
   const totalExpense = transactions.filter(t => t.Type === 'EXPENSE').reduce((s, t) => s + Math.abs(t.Amount_GBP || 0), 0);
   const net = totalIncome - totalExpense;
 
+  const iconMap = buildIconMap(categories);
   const grouped = groupByDate(transactions);
 
   return (
@@ -280,7 +262,7 @@ const Transactions = () => {
       ) : (
         <>
           {grouped.map(([dateKey, txs]) => {
-            const { day, monthYear } = formatDayLabel(dateKey);
+            const { weekday: day, dateStr } = formatDayLabel(dateKey);
             const dayNet = txs.reduce((s, t) => {
               if (t.Type === 'INCOME')  return s + Math.abs(t.Amount_GBP || 0);
               if (t.Type === 'EXPENSE') return s - Math.abs(t.Amount_GBP || 0);
@@ -292,7 +274,7 @@ const Transactions = () => {
                 <div className="tx-day-header">
                   <div>
                     <p className="tx-day-label">{day}</p>
-                    <p className="tx-day-date">{monthYear}</p>
+                    <p className="tx-day-date">{dateStr}</p>
                   </div>
                   <span className={`tx-day-sum ${dayNet >= 0 ? 'tx-day-sum--positive' : 'tx-day-sum--negative'}`}>
                     {dayNet >= 0 ? '+' : '−'}{fmt(dayNet)}
@@ -302,7 +284,7 @@ const Transactions = () => {
                 {txs.map((tx) => {
                   const isIncome   = tx.Type === 'INCOME';
                   const isTransfer = tx.Type === 'TRANSFER';
-                  const emoji = isTransfer ? '🔄' : getCategoryEmoji(tx.Category);
+                  const emoji = isTransfer ? '🔄' : getCategoryEmoji(tx.Category, iconMap);
                   const iconBg = isIncome
                     ? 'rgba(0,135,90,0.12)'
                     : isTransfer
@@ -326,6 +308,9 @@ const Transactions = () => {
                           {tx.Subcategory ? ` · ${tx.Subcategory}` : ''}
                         </p>
                         <p className="tx-item-account">🏦 {tx.Account}</p>
+                        {tx.Notes && (
+                          <p className="tx-item-notes">{tx.Notes}</p>
+                        )}
                       </div>
                       <div className="tx-item-right">
                         <div className="tx-item-actions">
@@ -347,7 +332,6 @@ const Transactions = () => {
                         <p className={`tx-item-amount ${amtClass}`}>
                           {sign}{fmt(tx.Amount_GBP)}
                         </p>
-                        <p className="tx-item-time">{getTime(tx.Date)}</p>
                       </div>
                     </div>
                   );

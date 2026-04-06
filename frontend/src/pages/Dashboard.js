@@ -7,6 +7,7 @@ import {
 import axiosInstance from '../api/axios';
 import StatCard from '../components/StatCard';
 import './Dashboard.css';
+import { formatDate } from '../utils/dateUtils';
 
 // ── Icons ────────────────────────────────────────────────────
 const IncomeIcon = () => (
@@ -42,13 +43,7 @@ const fmtShort = (v) => {
   return `£${abs.toFixed(0)}`;
 };
 
-const getTime = (dateStr) => {
-  if (!dateStr) return '';
-  try {
-    const parts = dateStr.split(' ');
-    return parts[1] ? parts[1].slice(0, 5) : '';
-  } catch { return ''; }
-};
+// formatDate imported from dateUtils
 
 const getCategoryEmoji = (cat) => {
   const map = {
@@ -414,7 +409,7 @@ const Dashboard = () => {
                     <p className={`recent-item-amount ${amountClass}`}>
                       {sign}{fmt(tx.Amount_GBP)}
                     </p>
-                    <p className="recent-item-time">{getTime(tx.Date)}</p>
+                    <p className="recent-item-time">{formatDate(tx.Date)}</p>
                   </div>
                 </div>
               );

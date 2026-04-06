@@ -39,7 +39,8 @@ router.get('/home', async (req, res) => {
     const now = new Date();
     const monthStr = toMonthStr(now);
     const startOfMonth = `${monthStr}-01`;
-    const endOfMonth = `${monthStr}-31`;
+    const [_y, _m] = monthStr.split('-').map(Number);
+    const endOfMonth = `${monthStr}-${String(new Date(_y, _m, 0).getDate()).padStart(2, '0')}`;
 
     // Accounts
     const accounts = await Account.find({ userid: userId }).lean();
@@ -176,7 +177,7 @@ router.get('/analytics', async (req, res) => {
       {
         $match: {
           userid: userId,
-          Date: { $gte: startDate, $lte: endDate + ' 23:59:59' },
+          Date: { $gte: startDate, $lte: endDate },
           Type: { $in: ['INCOME', 'EXPENSE'] },
         },
       },
@@ -221,7 +222,7 @@ router.get('/analytics', async (req, res) => {
       {
         $match: {
           userid: userId,
-          Date: { $gte: startDate, $lte: endDate + ' 23:59:59' },
+          Date: { $gte: startDate, $lte: endDate },
           Type: { $in: ['INCOME', 'EXPENSE'] },
         },
       },
@@ -252,7 +253,7 @@ router.get('/analytics', async (req, res) => {
       {
         $match: {
           userid: userId,
-          Date: { $gte: prevStartDate, $lte: prevEndDate + ' 23:59:59' },
+          Date: { $gte: prevStartDate, $lte: prevEndDate },
           Type: { $in: ['INCOME', 'EXPENSE'] },
         },
       },
@@ -302,7 +303,7 @@ router.get('/categories', async (req, res) => {
       {
         $match: {
           userid: userId,
-          Date: { $gte: startDate, $lte: endDate + ' 23:59:59' },
+          Date: { $gte: startDate, $lte: endDate },
           Type: 'EXPENSE',
         },
       },
@@ -314,7 +315,7 @@ router.get('/categories', async (req, res) => {
       {
         $match: {
           userid: userId,
-          Date: { $gte: startDate, $lte: endDate + ' 23:59:59' },
+          Date: { $gte: startDate, $lte: endDate },
           Type: 'INCOME',
         },
       },

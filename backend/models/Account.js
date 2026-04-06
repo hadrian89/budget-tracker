@@ -41,7 +41,7 @@ const accountSchema = new mongoose.Schema(
     },
   },
   {
-    collection: 'userlists',
+    collection: 'budget_tracker_accounts',
   }
 );
 

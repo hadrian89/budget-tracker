@@ -51,19 +51,30 @@ export default function CategoriesPage() {
     setLoading(true);
     try {
       const ms = toMonthStr(month);
-      const res = await axiosInstance.get(`/api/dashboard/analytics?month=${ms}`);
-      const { cashflow } = res.data;
+      const [analyticsRes, txRes, catRes] = await Promise.all([
+        axiosInstance.get(`/api/dashboard/analytics?month=${ms}`),
+        axiosInstance.get(`/api/transactions?startDate=${ms}-01&endDate=${ms}-31&type=EXPENSE&limit=1000`),
+        axiosInstance.get('/api/categories'),
+      ]);
+
+      const { cashflow } = analyticsRes.data;
       setTotalExpense(cashflow?.expense || 0);
       setTotalIncome(cashflow?.income || 0);
 
-      const txRes = await axiosInstance.get(
-        `/api/transactions?startDate=${ms}-01&endDate=${ms}-31&type=EXPENSE&limit=1000`
-      );
+      // Build lookup: category name → { icon, color }
+      const managedMap = {};
+      (catRes.data.categories || []).forEach((c) => {
+        managedMap[c.name] = { icon: c.icon || '📦', color: c.color || null };
+      });
+
       const txs = txRes.data.transactions || [];
       const map = {};
       txs.forEach((tx) => {
         const cat = tx.Category || 'Uncategorized';
-        if (!map[cat]) map[cat] = { name: cat, amount: 0, count: 0 };
+        if (!map[cat]) {
+          const mc = managedMap[cat] || {};
+          map[cat] = { name: cat, amount: 0, count: 0, icon: mc.icon || '📦', color: mc.color || null };
+        }
         map[cat].amount += Math.abs(tx.Amount_GBP || 0);
         map[cat].count += 1;
       });
@@ -150,8 +161,8 @@ export default function CategoriesPage() {
 
   const enriched = catData.map((c, i) => ({
     ...c,
-    color: PRESET_COLORS[i % PRESET_COLORS.length],
-    icon: '📦',
+    color: c.color || PRESET_COLORS[i % PRESET_COLORS.length],
+    icon: c.icon || '📦',
   }));
 
   const grandTotal = enriched.reduce((s, c) => s + c.amount, 0);

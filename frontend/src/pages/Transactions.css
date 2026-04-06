@@ -291,6 +291,18 @@
   font-family: 'Inter', sans-serif;
 }
 
+.tx-item-notes {
+  font-size: 11px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+  margin-top: 2px;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
 .tx-item-right {
   text-align: right;
   display: flex;

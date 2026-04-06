@@ -82,7 +82,7 @@ router.get('/', async (req, res) => {
     if (startDate || endDate) {
       filter.Date = {};
       if (startDate) filter.Date.$gte = startDate;
-      if (endDate) filter.Date.$lte = endDate + ' 23:59:59';
+      if (endDate) filter.Date.$lte = endDate;
     }
 
     if (search) {
@@ -90,6 +90,7 @@ router.get('/', async (req, res) => {
         { Category: { $regex: search, $options: 'i' } },
         { Subcategory: { $regex: search, $options: 'i' } },
         { Account: { $regex: search, $options: 'i' } },
+        { Notes: { $regex: search, $options: 'i' } },
       ];
     }
 
@@ -139,7 +140,7 @@ router.post(
 
     try {
       const userId = req.userId;
-      const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory } = req.body;
+      const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory, Notes } = req.body;
 
       const amountNum = parseFloat(Amount);
       const amount_gbp = Currency === 'GBP' ? amountNum : amountNum;
@@ -153,6 +154,7 @@ router.post(
         Amount_GBP: amount_gbp,
         Category: Category || 'Uncategorized',
         Subcategory: Subcategory || '',
+        Notes: Notes || '',
         userid: userId,
       });
 
@@ -182,7 +184,7 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Transaction not found or access denied' });
     }
 
-    const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory } = req.body;
+    const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory, Notes } = req.body;
 
     if (txDate !== undefined) transaction.Date = txDate;
     if (Type !== undefined) transaction.Type = Type.toUpperCase();
@@ -194,6 +196,7 @@ router.put('/:id', async (req, res) => {
     }
     if (Category !== undefined) transaction.Category = Category;
     if (Subcategory !== undefined) transaction.Subcategory = Subcategory;
+    if (Notes !== undefined) transaction.Notes = Notes;
 
     await transaction.save();
 
