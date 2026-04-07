@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
+const Transaction = require('../models/Transaction');
+const Account = require('../models/Account');
+const Category = require('../models/Category');
+const Bill = require('../models/Bill');
 
 // Helper to generate JWT
 const generateToken = (userId) => {
@@ -51,6 +55,7 @@ router.post(
           name: user.name,
           email: user.email,
           createdAt: user.createdAt,
+          settings: user.settings,
         },
       });
     } catch (error) {
@@ -101,6 +106,7 @@ router.post(
           name: user.name,
           email: user.email,
           createdAt: user.createdAt,
+          settings: user.settings,
         },
       });
     } catch (error) {
@@ -121,10 +127,126 @@ router.get('/me', auth, async (req, res) => {
         name: req.user.name,
         email: req.user.email,
         createdAt: req.user.createdAt,
+        settings: req.user.settings,
       },
     });
   } catch (error) {
     console.error('Get me error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/auth/profile
+// @desc    Update name and/or email
+// @access  Private
+router.put(
+  '/profile',
+  auth,
+  [
+    body('name').optional().trim().notEmpty().withMessage('Name cannot be empty'),
+    body('email').optional().isEmail().normalizeEmail().withMessage('Valid email required'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+
+    const { name, email } = req.body;
+    try {
+      const user = req.user;
+
+      if (email && email !== user.email) {
+        const exists = await User.findOne({ email });
+        if (exists) return res.status(400).json({ message: 'Email already in use' });
+        user.email = email;
+      }
+      if (name) user.name = name;
+
+      await user.save();
+      res.json({
+        message: 'Profile updated',
+        user: { id: user._id, name: user.name, email: user.email, createdAt: user.createdAt, settings: user.settings },
+      });
+    } catch (error) {
+      console.error('Profile update error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
+// @route   PUT /api/auth/password
+// @desc    Change password
+// @access  Private
+router.put(
+  '/password',
+  auth,
+  [
+    body('currentPassword').notEmpty().withMessage('Current password is required'),
+    body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    try {
+      const user = await User.findById(req.user._id);
+      const isMatch = await user.comparePassword(currentPassword);
+      if (!isMatch) return res.status(400).json({ message: 'Current password is incorrect' });
+
+      user.password = newPassword;
+      await user.save();
+      res.json({ message: 'Password changed successfully' });
+    } catch (error) {
+      console.error('Password change error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
+// @route   PUT /api/auth/settings
+// @desc    Update app preferences (currency, dateFormat, theme)
+// @access  Private
+router.put('/settings', auth, async (req, res) => {
+  const allowed = ['currency', 'dateFormat', 'theme'];
+  try {
+    const user = req.user;
+    allowed.forEach((key) => {
+      if (req.body[key] !== undefined) user.settings[key] = req.body[key];
+    });
+    await user.save();
+    res.json({
+      message: 'Settings updated',
+      settings: user.settings,
+    });
+  } catch (error) {
+    console.error('Settings update error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/auth/account
+// @desc    Permanently delete account and all user data
+// @access  Private
+router.delete('/account', auth, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Delete all user data across collections
+    await Promise.all([
+      Transaction.deleteMany({ userId }).catch(() => {}),
+      Account.deleteMany({ userId }).catch(() => {}),
+      Category.deleteMany({ userId }).catch(() => {}),
+      Bill.deleteMany({ userId }).catch(() => {}),
+    ]);
+
+    await User.findByIdAndDelete(userId);
+    res.json({ message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Account delete error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

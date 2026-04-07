@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -11,6 +10,7 @@ import CategoriesPage from './pages/CategoriesPage';
 import Analytics from './pages/Analytics';
 import AccountsPage from './pages/AccountsPage';
 import BillsPage from './pages/BillsPage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -35,6 +35,7 @@ function App() {
             <Route path="transactions" element={<Transactions />} />
             <Route path="accounts" element={<AccountsPage />} />
             <Route path="bills" element={<BillsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

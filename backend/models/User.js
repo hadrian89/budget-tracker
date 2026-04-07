@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  settings: {
+    currency:   { type: String, default: 'GBP' },
+    dateFormat: { type: String, default: 'en-GB' },
+    theme:      { type: String, default: 'light' },
+  },
 });
 
 // Hash password before saving
