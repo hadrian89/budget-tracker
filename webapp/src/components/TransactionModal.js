@@ -73,7 +73,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
     if (transaction) {
       setForm({
         Date: toDateOnly(transaction.Date),
-        Type: transaction.Type || 'Expense',
+        Type: transaction.Type ? transaction.Type.charAt(0).toUpperCase() + transaction.Type.slice(1).toLowerCase() : 'Expense',
         Account: transaction.Account || '',
         Currency: transaction.Currency || 'GBP',
         Amount: Math.abs(transaction.Amount) || '',
