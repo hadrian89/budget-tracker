@@ -12,6 +12,7 @@ const app = express();
 const ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'http://192.168.0.5:3000',
   'https://weblybox.vercel.app',
   ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []),
 ];
@@ -42,6 +43,7 @@ app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/accounts', require('./routes/accounts'));
 app.use('/api/categories', require('./routes/categories'));
+app.use('/api/bills', require('./routes/bills'));
 
 // Health check
 app.get('/api/health', (req, res) => {

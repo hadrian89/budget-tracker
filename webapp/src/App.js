@@ -10,6 +10,7 @@ import Transactions from './pages/Transactions';
 import CategoriesPage from './pages/CategoriesPage';
 import Analytics from './pages/Analytics';
 import AccountsPage from './pages/AccountsPage';
+import BillsPage from './pages/BillsPage';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="transactions" element={<Transactions />} />
             <Route path="accounts" element={<AccountsPage />} />
+            <Route path="bills" element={<BillsPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
