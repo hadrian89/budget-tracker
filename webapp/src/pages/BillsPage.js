@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../api/axios';
 import './BillsPage.css';
 
@@ -46,11 +46,6 @@ function getDueStatus(bill) {
   if (due < today)   return { status: 'overdue',   label: `Overdue by ${Math.abs(diffDays)}d`,  color: '#b31b25' };
   if (due <= remind) return { status: 'due-soon',  label: diffDays === 0 ? 'Due today' : `Due in ${diffDays}d`, color: '#c47a00' };
   return               { status: 'upcoming',    label: `Due ${fmtDate(bill.nextDueDate)}`, color: '#747778' };
-}
-
-function toMonthlyEquivalent(amount, frequency) {
-  const map = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, yearly: 1/12, 'one-time': 0 };
-  return amount * (map[frequency] ?? 1);
 }
 
 // ── Empty form ────────────────────────────────────────────────────────────────
