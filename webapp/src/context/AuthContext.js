@@ -84,6 +84,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('walleto_user', JSON.stringify(userData));
   };
 
+  const oauthLogin = async (provider, accessToken) => {
+    try {
+      const response = await axiosInstance.post(`/api/auth/${provider}`, { accessToken });
+      const { token: newToken, user: userData } = response.data;
+      persistAuth(newToken, userData);
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.message || `${provider} login failed`;
+      return { success: false, message };
+    }
+  };
+
   const value = {
     user,
     token,
@@ -94,6 +106,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     refreshUser,
     updateUser,
+    oauthLogin,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
+
+const FB_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID;
 
 const BrandIconSvg = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -37,11 +40,46 @@ export default function Login() {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState('');
 
-  const { login } = useAuth();
+  const { login, oauthLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
+
+  // Load Facebook SDK
+  useEffect(() => {
+    if (!FB_APP_ID || document.getElementById('facebook-jssdk')) return;
+    window.fbAsyncInit = () => {
+      window.FB.init({ appId: FB_APP_ID, cookie: true, xfbml: false, version: 'v18.0' });
+    };
+    const script = document.createElement('script');
+    script.id = 'facebook-jssdk';
+    script.src = 'https://connect.facebook.net/en_US/sdk.js';
+    document.body.appendChild(script);
+  }, []);
+
+  const handleOAuth = async (provider, accessToken) => {
+    setOauthLoading(provider);
+    setError('');
+    const result = await oauthLogin(provider, accessToken);
+    setOauthLoading('');
+    if (result.success) navigate(from, { replace: true });
+    else setError(result.message);
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: (res) => handleOAuth('google', res.access_token),
+    onError: () => setError('Google sign-in failed. Please try again.'),
+  });
+
+  const handleFacebookLogin = () => {
+    if (!window.FB) return setError('Facebook SDK not ready. Please refresh the page.');
+    window.FB.login((response) => {
+      if (response.authResponse) handleOAuth('facebook', response.authResponse.accessToken);
+      else setError('Facebook sign-in was cancelled.');
+    }, { scope: 'email,public_profile' });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,6 +127,32 @@ export default function Login() {
           <div className="auth-right-inner">
             <h1 className="auth-title">Welcome back</h1>
             <p className="auth-subtitle">Sign in to your account to continue</p>
+
+            {/* OAuth buttons */}
+            <div className="oauth-buttons">
+              <button
+                type="button"
+                className="oauth-btn oauth-btn--google"
+                onClick={() => googleLogin()}
+                disabled={!!oauthLoading}
+              >
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                {oauthLoading === 'google' ? 'Signing in…' : 'Continue with Google'}
+              </button>
+              {FB_APP_ID && (
+                <button
+                  type="button"
+                  className="oauth-btn oauth-btn--facebook"
+                  onClick={handleFacebookLogin}
+                  disabled={!!oauthLoading}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  {oauthLoading === 'facebook' ? 'Signing in…' : 'Continue with Facebook'}
+                </button>
+              )}
+            </div>
+
+            <div className="auth-divider"><span>or</span></div>
 
             <form className="auth-form" onSubmit={handleSubmit}>
               {error && (
