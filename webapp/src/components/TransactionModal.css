@@ -26,9 +26,12 @@
   border-radius: var(--radius-card);
   width: 100%;
   max-width: 560px;
+  max-height: 90vh;
   box-shadow: var(--shadow-float);
   animation: slideUp 0.2s ease;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideUp {
@@ -77,6 +80,8 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .modal-row {
@@ -469,9 +474,14 @@
 
 /* ── Account radio cards ───────────────────────────────────── */
 .acc-radio-list {
-  display: flex;
+  display: block;
   flex-direction: column;
   gap: 8px;
+}
+.acc-radio-list label{
+  width: 45%;
+  display: inline-flex;
+  margin: 5px;
 }
 
 .acc-radio-card {
