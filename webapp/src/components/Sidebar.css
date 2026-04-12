@@ -120,6 +120,30 @@
   min-height: 16px;
 }
 
+/* ── Theme toggle ──────────────────────────────────────────── */
+.sidebar-theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% - 40px);
+  margin: 0 20px 8px;
+  background: var(--surface-low);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sidebar-theme-btn:hover {
+  background: var(--surface-container);
+  color: var(--primary);
+}
+.sidebar-theme-icon { font-size: 15px; }
+
 /* ── User section ──────────────────────────────────────────── */
 .sidebar-user {
   padding: 16px 20px;

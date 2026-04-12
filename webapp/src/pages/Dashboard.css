@@ -32,6 +32,97 @@
   cursor: pointer;
 }
 
+/* ── Quick Add ─────────────────────────────────────────────── */
+.quick-add-section {
+  background: var(--surface-lowest);
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+}
+
+.quick-add-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.quick-add-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--on-surface-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.quick-add-manage-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+.quick-add-manage-btn:hover { text-decoration: underline; }
+
+.quick-add-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.quick-add-empty {
+  font-size: 13px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+}
+
+.quick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-container);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 7px 14px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-surface);
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+.quick-chip:hover {
+  background: var(--surface-high);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+.quick-chip:active { transform: translateY(0); }
+
+.quick-chip-icon { font-size: 15px; line-height: 1; }
+.quick-chip-label { color: var(--on-surface); }
+.quick-chip-amount {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--on-surface-muted);
+  background: var(--surface-lowest);
+  border-radius: var(--radius-full);
+  padding: 1px 7px;
+}
+
+.quick-chip--new {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--outline);
+  padding: 5px 12px;
+  border-style: dashed;
+}
+.quick-chip--new:hover { color: var(--primary); border-color: var(--primary); }
+
 /* ── Stat cards row ────────────────────────────────────────── */
 .dashboard-stats {
   display: grid;

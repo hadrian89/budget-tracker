@@ -212,6 +212,7 @@ function PreferencesTab({ user, updateUser }) {
   const [currency,   setCurrency]   = useState(saved.currency   || 'GBP');
   const [dateFormat, setDateFormat] = useState(saved.dateFormat || 'en-GB');
   const [gbpToInr,   setGbpToInr]  = useState(String(saved.gbpToInr ?? 125.25));
+  const [theme,      setTheme]      = useState(saved.theme || 'light');
   const [saving, setSaving]         = useState(false);
   const [alert, setAlert]           = useState({ type: '', message: '' });
 
@@ -224,7 +225,7 @@ function PreferencesTab({ user, updateUser }) {
     setSaving(true);
     setAlert({ type: '', message: '' });
     try {
-      const res = await api.put('/api/auth/settings', { currency, dateFormat, gbpToInr: rate });
+      const res = await api.put('/api/auth/settings', { currency, dateFormat, gbpToInr: rate, theme });
       updateUser({ ...user, settings: res.data.settings });
       setAlert({ type: 'success', message: 'Preferences saved.' });
     } catch (err) {
@@ -276,6 +277,25 @@ function PreferencesTab({ user, updateUser }) {
             placeholder="e.g. 125.25"
           />
           <p className="form-hint">Used to convert INR account balances to GBP for total balance. Currently: <strong>1 GBP = {parseFloat(gbpToInr) || 125.25} INR</strong></p>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">APPEARANCE</label>
+          <div className="theme-selector">
+            {[['light', '☀️', 'Light'], ['dark', '🌙', 'Dark']].map(([val, icon, label]) => (
+              <button
+                key={val}
+                type="button"
+                className={`theme-btn${theme === val ? ' theme-btn--active' : ''}`}
+                onClick={() => {
+                  setTheme(val);
+                  document.documentElement.setAttribute('data-theme', val);
+                }}
+              >
+                {icon} {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="settings-form-footer">

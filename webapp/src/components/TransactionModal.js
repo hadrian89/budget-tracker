@@ -35,7 +35,7 @@ const FALLBACK_CATEGORIES = [
   'Personal Care', 'Home', 'Salary', 'Investments', 'Other Income', 'Uncategorized',
 ].map((n) => ({ name: n, subcategories: [], icon: '📦' }));
 
-const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
+const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) => {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -91,7 +91,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
         Notes: transaction.Notes || '',
       });
     } else {
-      setForm({ ...initialForm, Date: nowDate() });
+      setForm({ ...initialForm, Date: nowDate(), ...(prefill || {}) });
     }
     setError('');
   }, [isOpen, transaction]);

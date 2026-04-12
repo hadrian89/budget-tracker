@@ -37,6 +37,16 @@ const userSchema = new mongoose.Schema({
     lastUpdate: { type: Date },
     lastDevice: { type: String, default: '' },
   },
+  quickAdd: [{
+    label:       { type: String, required: true },
+    icon:        { type: String, default: '📦' },
+    type:        { type: String, default: 'Expense' },
+    amount:      { type: Number, default: null },
+    category:    { type: String, default: '' },
+    subcategory: { type: String, default: '' },
+    account:     { type: String, default: '' },
+    notes:       { type: String, default: '' },
+  }],
 });
 
 // Hash password before saving

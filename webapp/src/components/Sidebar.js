@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import axiosInstance from '../api/axios';
 import './Sidebar.css';
 
 const DashboardIcon = () => (
@@ -86,8 +87,17 @@ const navItems = [
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
+
+  const isDark = user?.settings?.theme === 'dark';
+
+  const toggleTheme = async () => {
+    const next = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    updateUser({ ...user, settings: { ...user?.settings, theme: next } });
+    try { await axiosInstance.put('/api/auth/settings', { theme: next }); } catch {}
+  };
 
   const handleLogout = () => {
     logout();
@@ -126,6 +136,11 @@ const Sidebar = ({ isOpen, onClose }) => {
       </nav>
 
       <div className="sidebar-spacer" />
+
+      <button className="sidebar-theme-btn" onClick={toggleTheme} title={isDark ? 'Switch to Light' : 'Switch to Dark'}>
+        <span className="sidebar-theme-icon">{isDark ? '☀️' : '🌙'}</span>
+        <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+      </button>
 
       <div className="sidebar-user">
         <div className="sidebar-user-info">

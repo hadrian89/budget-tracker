@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import axiosInstance from '../api/axios';
 import StatCard from '../components/StatCard';
+import TransactionModal from '../components/TransactionModal';
 import './Dashboard.css';
 import { formatDate } from '../utils/dateUtils';
 
@@ -97,6 +98,8 @@ const SparkTooltip = ({ active, payload }) => {
   );
 };
 
+const QUICK_ADD_ICONS = ['🛒','☕','🍕','🚌','⛽','💊','🎬','🏋️','📚','🐾','🍺','🧴','🍔','✈️','🎮','🛍️'];
+
 // ── Dashboard ────────────────────────────────────────────────
 const Dashboard = () => {
   const [homeData, setHomeData] = useState(null);
@@ -104,6 +107,18 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activePie, setActivePie] = useState(0);
+
+  // Quick Add
+  const [presets, setPresets] = useState([]);
+  const [manageOpen, setManageOpen] = useState(false);
+  const [editPreset, setEditPreset] = useState(null);
+  const [presetForm, setPresetForm] = useState({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', account: '', notes: '' });
+  const [presetSaving, setPresetSaving] = useState(false);
+  const [presetError, setPresetError] = useState('');
+  const [txOpen, setTxOpen] = useState(false);
+  const [txPrefill, setTxPrefill] = useState(null);
+  const [quickCats, setQuickCats] = useState([]);
+  const [quickAccounts, setQuickAccounts] = useState([]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -146,6 +161,87 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  // ── Quick Add ──────────────────────────────────────────────
+  const fetchPresets = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get('/api/auth/quick-add');
+      setPresets(res.data.presets || []);
+    } catch {}
+  }, []);
+
+  useEffect(() => { fetchPresets(); }, [fetchPresets]);
+
+  const openManage = async () => {
+    setManageOpen(true);
+    setEditPreset(null);
+    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', account: '', notes: '' });
+    setPresetError('');
+    try {
+      const [catRes, accRes] = await Promise.all([
+        axiosInstance.get('/api/categories'),
+        axiosInstance.get('/api/accounts'),
+      ]);
+      setQuickCats(catRes.data.categories || []);
+      setQuickAccounts(accRes.data.accounts || []);
+    } catch {}
+  };
+
+  const startEditPreset = (p) => {
+    setEditPreset(p);
+    setPresetForm({
+      label: p.label, icon: p.icon, type: p.type,
+      amount: p.amount != null ? String(p.amount) : '',
+      category: p.category || '', account: p.account || '', notes: p.notes || '',
+    });
+    setPresetError('');
+  };
+
+  const resetPresetForm = () => {
+    setEditPreset(null);
+    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', account: '', notes: '' });
+    setPresetError('');
+  };
+
+  const handlePresetSave = async () => {
+    if (!presetForm.label.trim()) { setPresetError('Label is required.'); return; }
+    setPresetSaving(true);
+    setPresetError('');
+    try {
+      const payload = { ...presetForm, amount: presetForm.amount ? parseFloat(presetForm.amount) : null };
+      let res;
+      if (editPreset) {
+        res = await axiosInstance.put(`/api/auth/quick-add/${editPreset._id}`, payload);
+      } else {
+        res = await axiosInstance.post('/api/auth/quick-add', payload);
+      }
+      setPresets(res.data.presets);
+      resetPresetForm();
+    } catch (e) {
+      setPresetError(e.response?.data?.message || 'Failed to save.');
+    } finally {
+      setPresetSaving(false);
+    }
+  };
+
+  const handlePresetDelete = async (id) => {
+    try {
+      const res = await axiosInstance.delete(`/api/auth/quick-add/${id}`);
+      setPresets(res.data.presets);
+      if (editPreset?._id === id) resetPresetForm();
+    } catch {}
+  };
+
+  const handleQuickAdd = (p) => {
+    setTxPrefill({
+      Type: p.type || 'Expense',
+      Category: p.category || '',
+      Account: p.account || '',
+      Amount: p.amount ? String(p.amount) : '',
+      Notes: p.notes || '',
+    });
+    setTxOpen(true);
+  };
 
   const totalBalance    = homeData?.totalBalance    ?? 0;
   const monthlyIncome   = homeData?.monthlyIncome   ?? 0;
@@ -193,6 +289,27 @@ const Dashboard = () => {
           color={netPositive ? 'success' : 'danger'}
           loading={loading}
         />
+      </div>
+
+      {/* Quick Add */}
+      <div className="quick-add-section">
+        <div className="quick-add-header">
+          <span className="quick-add-title">Quick Add</span>
+          <button className="quick-add-manage-btn" onClick={openManage}>Manage</button>
+        </div>
+        <div className="quick-add-chips">
+          {presets.length === 0 && (
+            <span className="quick-add-empty">No shortcuts yet — click Manage to add one.</span>
+          )}
+          {presets.map((p) => (
+            <button key={p._id} className="quick-chip" onClick={() => handleQuickAdd(p)}>
+              <span className="quick-chip-icon">{p.icon}</span>
+              <span className="quick-chip-label">{p.label}</span>
+              {p.amount ? <span className="quick-chip-amount">£{p.amount}</span> : null}
+            </button>
+          ))}
+          <button className="quick-chip quick-chip--new" onClick={openManage} title="Add shortcut">＋</button>
+        </div>
       </div>
 
       {/* Hero bento: balance card + accounts panel */}
@@ -447,6 +564,147 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Quick Add manage modal */}
+      {manageOpen && (
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setManageOpen(false)}>
+          <div className="cat-modal">
+            <div className="cat-modal-header">
+              <h2>Quick Add Shortcuts</h2>
+              <button className="modal-close-btn" onClick={() => { setManageOpen(false); resetPresetForm(); }}>✕</button>
+            </div>
+
+            {/* Form */}
+            <div className="cat-form-section">
+              <p className="cat-form-title">{editPreset ? 'Edit Shortcut' : 'New Shortcut'}</p>
+              {presetError && <div className="form-error">{presetError}</div>}
+
+              <div className="cat-form-row">
+                {/* Icon picker */}
+                <div className="form-group-sm">
+                  <label className="form-label-sm">Icon</label>
+                  <div className="icon-picker">
+                    {QUICK_ADD_ICONS.map((ic) => (
+                      <button
+                        key={ic} type="button"
+                        className={`icon-btn${presetForm.icon === ic ? ' icon-btn--active' : ''}`}
+                        onClick={() => setPresetForm((p) => ({ ...p, icon: ic }))}
+                      >{ic}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="cat-form-fields">
+                  <div className="form-group-sm">
+                    <label className="form-label-sm">Label *</label>
+                    <input
+                      className="form-input-sm"
+                      value={presetForm.label}
+                      onChange={(e) => setPresetForm((p) => ({ ...p, label: e.target.value }))}
+                      placeholder="e.g. Grocery run"
+                    />
+                  </div>
+
+                  <div className="form-group-sm">
+                    <label className="form-label-sm">Type</label>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      {['Expense', 'Income'].map((t) => (
+                        <button
+                          key={t} type="button"
+                          className={`icon-btn${presetForm.type === t ? ' icon-btn--active' : ''}`}
+                          style={{ flex: 1, fontSize: 12, padding: '6px 0' }}
+                          onClick={() => setPresetForm((p) => ({ ...p, type: t }))}
+                        >{t}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="form-group-sm">
+                    <label className="form-label-sm">Default Amount (£) — optional</label>
+                    <input
+                      className="form-input-sm"
+                      type="number" min="0" step="0.01"
+                      value={presetForm.amount}
+                      onChange={(e) => setPresetForm((p) => ({ ...p, amount: e.target.value }))}
+                      placeholder="Leave blank to enter at time of adding"
+                    />
+                  </div>
+
+                  <div className="form-group-sm">
+                    <label className="form-label-sm">Category — optional</label>
+                    <select
+                      className="form-input-sm"
+                      value={presetForm.category}
+                      onChange={(e) => setPresetForm((p) => ({ ...p, category: e.target.value }))}
+                    >
+                      <option value="">None</option>
+                      {quickCats.map((c) => (
+                        <option key={c.name} value={c.name}>{c.icon} {c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group-sm">
+                    <label className="form-label-sm">Account — optional</label>
+                    <select
+                      className="form-input-sm"
+                      value={presetForm.account}
+                      onChange={(e) => setPresetForm((p) => ({ ...p, account: e.target.value }))}
+                    >
+                      <option value="">Default (primary)</option>
+                      {quickAccounts.map((a) => (
+                        <option key={a._id} value={a.name}>{a.icon || '🏦'} {a.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="cat-form-actions">
+                {editPreset && (
+                  <button className="btn btn-ghost" onClick={resetPresetForm} type="button">Cancel</button>
+                )}
+                <button className="btn btn-primary" onClick={handlePresetSave} disabled={presetSaving}>
+                  {presetSaving ? <span className="btn-spinner" /> : (editPreset ? 'Save Changes' : 'Add Shortcut')}
+                </button>
+              </div>
+            </div>
+
+            {/* Existing presets list */}
+            {presets.length > 0 && (
+              <div className="cat-manage-list">
+                <p className="cat-form-title">Your Shortcuts</p>
+                {presets.map((p) => (
+                  <div key={p._id} className="cat-manage-item">
+                    <div className="cat-manage-icon" style={{ background: 'var(--surface-container)' }}>
+                      <span>{p.icon}</span>
+                    </div>
+                    <div className="cat-manage-info">
+                      <span className="cat-manage-name">{p.label}</span>
+                      <span className="cat-manage-subs">
+                        {p.type}{p.amount ? ` · £${p.amount}` : ''}{p.category ? ` · ${p.category}` : ''}
+                      </span>
+                    </div>
+                    <div className="cat-manage-actions">
+                      <button className="action-btn" onClick={() => startEditPreset(p)} title="Edit">✏️</button>
+                      <button className="action-btn action-btn--delete" onClick={() => handlePresetDelete(p._id)} title="Delete">🗑️</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Transaction modal (from quick add) */}
+      <TransactionModal
+        isOpen={txOpen}
+        onClose={() => { setTxOpen(false); setTxPrefill(null); }}
+        transaction={null}
+        prefill={txPrefill}
+        onSuccess={() => { fetchData(); setTxOpen(false); setTxPrefill(null); }}
+      />
 
       {/* Recent transactions */}
       <div className="recent-section">

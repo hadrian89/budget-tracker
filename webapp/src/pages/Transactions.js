@@ -77,6 +77,7 @@ const Transactions = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [exporting, setExporting] = useState(false);
 
   const fetchTransactions = useCallback(async (page = 1, srch = appliedSearch, filts = appliedFilters) => {
     setLoading(true);
@@ -142,6 +143,49 @@ const Transactions = () => {
     }
   };
 
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({
+        limit: 10000,
+        ...(appliedSearch && { search: appliedSearch }),
+        ...(appliedFilters.type !== 'all' && { type: appliedFilters.type }),
+        ...(appliedFilters.category !== 'all' && { category: appliedFilters.category }),
+        ...(appliedFilters.startDate && { startDate: appliedFilters.startDate }),
+        ...(appliedFilters.endDate && { endDate: appliedFilters.endDate }),
+      });
+      const res = await axiosInstance.get(`/api/transactions?${params}`);
+      const txs = res.data.transactions || [];
+      const cols = ['Date', 'Type', 'Account', 'To Account', 'Category', 'Subcategory', 'Amount (GBP)', 'Notes'];
+      const rows = txs.map((t) => [
+        t.Date || '',
+        t.Type || '',
+        t.Account || '',
+        t.ToAccount || '',
+        t.Category || '',
+        t.Subcategory || '',
+        Math.abs(t.Amount_GBP || 0).toFixed(2),
+        t.Notes || '',
+      ]);
+      const csv = [cols, ...rows]
+        .map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','))
+        .join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `walleto-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      setError('Failed to export transactions.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const hasFilters = appliedSearch || appliedFilters.type !== 'all' ||
     appliedFilters.category !== 'all' || appliedFilters.startDate || appliedFilters.endDate;
 
@@ -162,6 +206,14 @@ const Transactions = () => {
           <p className="tx-page-subtitle">
             {pagination.total.toLocaleString()} transaction{pagination.total !== 1 ? 's' : ''} found
           </p>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-ghost btn-sm" onClick={handleExport} disabled={exporting}>
+            {exporting ? <span className="btn-spinner" style={{ borderColor: 'rgba(91,91,95,0.25)', borderTopColor: 'var(--primary)' }} /> : '↓ Export CSV'}
+          </button>
+          <button className="btn btn-primary btn-sm" onClick={() => { setEditingTx(null); setModalOpen(true); }}>
+            + Add Transaction
+          </button>
         </div>
       </div>
 

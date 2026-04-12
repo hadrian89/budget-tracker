@@ -319,6 +319,65 @@ router.put('/settings', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/auth/quick-add
+router.get('/quick-add', auth, async (req, res) => {
+  try {
+    res.json({ presets: req.user.quickAdd || [] });
+  } catch (e) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/auth/quick-add
+router.post('/quick-add', auth, async (req, res) => {
+  try {
+    const { label, icon, type, amount, category, subcategory, account, notes } = req.body;
+    if (!label) return res.status(400).json({ message: 'Label is required' });
+    req.user.quickAdd.push({
+      label, icon: icon || '📦', type: type || 'Expense',
+      amount: amount ? parseFloat(amount) : null,
+      category: category || '', subcategory: subcategory || '',
+      account: account || '', notes: notes || '',
+    });
+    await req.user.save();
+    res.json({ presets: req.user.quickAdd });
+  } catch (e) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/auth/quick-add/:id
+router.put('/quick-add/:id', auth, async (req, res) => {
+  try {
+    const preset = req.user.quickAdd.id(req.params.id);
+    if (!preset) return res.status(404).json({ message: 'Preset not found' });
+    const { label, icon, type, amount, category, subcategory, account, notes } = req.body;
+    if (label !== undefined) preset.label = label;
+    if (icon !== undefined) preset.icon = icon;
+    if (type !== undefined) preset.type = type;
+    if (amount !== undefined) preset.amount = amount ? parseFloat(amount) : null;
+    if (category !== undefined) preset.category = category;
+    if (subcategory !== undefined) preset.subcategory = subcategory;
+    if (account !== undefined) preset.account = account;
+    if (notes !== undefined) preset.notes = notes;
+    await req.user.save();
+    res.json({ presets: req.user.quickAdd });
+  } catch (e) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/auth/quick-add/:id
+router.delete('/quick-add/:id', auth, async (req, res) => {
+  try {
+    req.user.quickAdd = req.user.quickAdd.filter((p) => p._id.toString() !== req.params.id);
+    await req.user.save();
+    res.json({ presets: req.user.quickAdd });
+  } catch (e) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // @route   DELETE /api/auth/account
 // @desc    Permanently delete account and all user data
 // @access  Private

@@ -10,6 +10,35 @@
   max-width: 900px;
 }
 
+/* ── Theme selector ────────────────────────────────────────── */
+.theme-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--surface-low);
+  color: var(--on-surface-variant);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.theme-btn:hover {
+  border-color: var(--outline);
+  color: var(--on-surface);
+}
+.theme-btn--active {
+  border-color: var(--primary);
+  background: var(--surface-container);
+  color: var(--primary);
+}
+
 /* ── Header ────────────────────────────────────────────────── */
 .settings-title {
   font-family: 'Plus Jakarta Sans', sans-serif;

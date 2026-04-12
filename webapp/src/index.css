@@ -38,6 +38,9 @@
   --cat-pink: #b60051;
   --cat-blue: #5b5b5f;
 
+  /* Border */
+  --border: var(--surface-container);
+
   /* Radii */
   --radius-card: 32px;
   --radius-xl: 24px;
@@ -50,6 +53,43 @@
   --shadow-card: 0 24px 48px rgba(44, 47, 48, 0.05);
   --shadow-float: 0 32px 64px -16px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0 4px 16px rgba(44, 47, 48, 0.04);
+}
+
+/* ── Dark Theme ────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg: #0f1012;
+  --surface: #0f1012;
+  --surface-lowest: #17191c;
+  --surface-low: #1f2124;
+  --surface-container: #28292d;
+  --surface-high: #313438;
+  --surface-highest: #3a3d41;
+
+  --on-bg: #e2e4e8;
+  --on-surface: #e2e4e8;
+  --on-surface-variant: #9a9da3;
+  --outline: #676a70;
+  --outline-variant: #3e4145;
+
+  --border: #28292d;
+
+  --shadow-card: 0 24px 48px rgba(0, 0, 0, 0.45);
+  --shadow-float: 0 32px 64px -16px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="dark"] .icon-btn--active {
+  box-shadow: 0 0 0 2px var(--surface-lowest), 0 0 0 4px var(--primary);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  color-scheme: dark;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */

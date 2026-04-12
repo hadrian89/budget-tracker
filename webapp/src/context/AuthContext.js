@@ -18,6 +18,9 @@ export const AuthProvider = ({ children }) => {
         const parsedUser = JSON.parse(storedUser);
         setToken(storedToken);
         setUser(parsedUser);
+        // Apply saved theme immediately before first render
+        const theme = parsedUser?.settings?.theme || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
       } catch (e) {
         localStorage.removeItem('walleto_token');
         localStorage.removeItem('walleto_user');
@@ -82,6 +85,9 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (userData) => {
     setUser(userData);
     localStorage.setItem('walleto_user', JSON.stringify(userData));
+    // Apply theme if it changed
+    const theme = userData?.settings?.theme || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
   };
 
   const oauthLogin = async (provider, accessToken) => {
