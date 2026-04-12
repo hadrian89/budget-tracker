@@ -6,23 +6,27 @@ const Account = require('../models/Account');
 const auth = require('../middleware/auth');
 
 // ── Balance helper ────────────────────────────────────────────────────────────
-// direction: +1 to apply a transaction, -1 to reverse it
-async function adjustAccountBalance(userId, accountName, type, amount, direction) {
-  if (!accountName) return;
-  const account = await Account.findOne({
-    userid: userId,
-    name: { $regex: new RegExp(`^${accountName.trim()}$`, 'i') },
-  });
-  if (!account) return;
+// Applies or reverses a transaction's effect on account balances.
+// direction: +1 to apply, -1 to reverse
+async function applyTransactionBalance(userId, tx, direction) {
+  const amt = Math.abs(parseFloat(tx.Amount_GBP) || 0);
 
-  const amt = Math.abs(parseFloat(amount) || 0);
-  let delta = 0;
-  if (type === 'INCOME')   delta =  amt;   // income → balance up
-  if (type === 'EXPENSE')  delta = -amt;   // expense → balance down
-  if (type === 'TRANSFER') delta = -amt;   // transfer out → balance down
+  const findAccount = (name) =>
+    name
+      ? Account.findOne({ userid: userId, name: { $regex: new RegExp(`^${name.trim()}$`, 'i') } })
+      : null;
 
-  account.balance = (account.balance || 0) + delta * direction;
-  await account.save();
+  if (tx.Type === 'INCOME') {
+    const acc = await findAccount(tx.Account);
+    if (acc) { acc.balance = (acc.balance || 0) + amt * direction; await acc.save(); }
+  } else if (tx.Type === 'EXPENSE') {
+    const acc = await findAccount(tx.Account);
+    if (acc) { acc.balance = (acc.balance || 0) - amt * direction; await acc.save(); }
+  } else if (tx.Type === 'TRANSFER') {
+    const [src, dst] = await Promise.all([findAccount(tx.Account), findAccount(tx.ToAccount)]);
+    if (src) { src.balance = (src.balance || 0) - amt * direction; await src.save(); }
+    if (dst) { dst.balance = (dst.balance || 0) + amt * direction; await dst.save(); }
+  }
 }
 
 // All routes require authentication
@@ -162,15 +166,21 @@ router.post(
 
     try {
       const userId = req.userId;
-      const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory, Notes } = req.body;
+      const { Date: txDate, Type, Account, ToAccount, Currency, Amount, Category, Subcategory, Notes } = req.body;
+
+      const typeUpper = Type.toUpperCase();
+      if (typeUpper === 'TRANSFER' && !ToAccount) {
+        return res.status(400).json({ message: 'Destination account is required for transfers' });
+      }
 
       const amountNum = parseFloat(Amount);
-      const amount_gbp = Currency === 'GBP' ? amountNum : amountNum;
+      const amount_gbp = amountNum;
 
       const transaction = new Transaction({
         Date: txDate,
-        Type: Type.toUpperCase(),
+        Type: typeUpper,
         Account,
+        ToAccount: typeUpper === 'TRANSFER' ? (ToAccount || '') : '',
         Currency: Currency || 'GBP',
         Amount: amountNum,
         Amount_GBP: amount_gbp,
@@ -181,7 +191,7 @@ router.post(
       });
 
       await transaction.save();
-      await adjustAccountBalance(userId, Account, transaction.Type, transaction.Amount_GBP, +1);
+      await applyTransactionBalance(userId, transaction, +1);
 
       res.status(201).json({
         message: 'Transaction created successfully',
@@ -208,9 +218,9 @@ router.put('/:id', async (req, res) => {
     }
 
     // Reverse old transaction's effect before applying changes
-    await adjustAccountBalance(userId, transaction.Account, transaction.Type, transaction.Amount_GBP, -1);
+    await applyTransactionBalance(userId, transaction, -1);
 
-    const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory, Notes } = req.body;
+    const { Date: txDate, Type, Account, ToAccount, Currency, Amount, Category, Subcategory, Notes } = req.body;
 
     if (txDate !== undefined) transaction.Date = txDate;
     if (Type !== undefined) transaction.Type = Type.toUpperCase();
@@ -223,11 +233,12 @@ router.put('/:id', async (req, res) => {
     if (Category !== undefined) transaction.Category = Category;
     if (Subcategory !== undefined) transaction.Subcategory = Subcategory;
     if (Notes !== undefined) transaction.Notes = Notes;
+    transaction.ToAccount = transaction.Type === 'TRANSFER' ? (ToAccount || '') : '';
 
     await transaction.save();
 
     // Apply new transaction's effect
-    await adjustAccountBalance(userId, transaction.Account, transaction.Type, transaction.Amount_GBP, +1);
+    await applyTransactionBalance(userId, transaction, +1);
 
     res.json({
       message: 'Transaction updated successfully',
@@ -252,8 +263,8 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Transaction not found or access denied' });
     }
 
-    // Reverse the deleted transaction's effect on the account balance
-    await adjustAccountBalance(userId, transaction.Account, transaction.Type, transaction.Amount_GBP, -1);
+    // Reverse the deleted transaction's effect on account balances
+    await applyTransactionBalance(userId, transaction, -1);
 
     res.json({ message: 'Transaction deleted successfully' });
   } catch (error) {

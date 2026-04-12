@@ -21,6 +21,7 @@ const initialForm = {
   Date: nowDate(),
   Type: 'Expense',
   Account: '',
+  ToAccount: '',
   Currency: 'GBP',
   Amount: '',
   Category: '',
@@ -54,11 +55,10 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
       const cats = catRes.data.categories || [];
       setCategories(cats.length ? cats : FALLBACK_CATEGORIES);
       const all = accRes.data.accounts || [];
-      // Show only primary accounts; fall back to all if none are marked primary
-      const primaries = all.filter((a) => a.isPrimary);
-      setAccounts(primaries.length ? primaries : all);
+      setAccounts(all);
       // Auto-select when adding a new transaction
       if (!transaction) {
+        const primaries = all.filter((a) => a.isPrimary);
         const first = (primaries.length ? primaries : all)[0];
         if (first) setForm((p) => ({ ...p, Account: p.Account || first.name }));
       }
@@ -83,6 +83,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
         Date: toDateOnly(transaction.Date),
         Type: transaction.Type ? transaction.Type.charAt(0).toUpperCase() + transaction.Type.slice(1).toLowerCase() : 'Expense',
         Account: transaction.Account || '',
+        ToAccount: transaction.ToAccount || '',
         Currency: transaction.Currency || 'GBP',
         Amount: Math.abs(transaction.Amount) || '',
         Category: transaction.Category || '',
@@ -110,6 +111,17 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
       return;
     }
 
+    if (form.Type === 'Transfer') {
+      if (!form.ToAccount) {
+        setError('Please select a destination account for the transfer.');
+        return;
+      }
+      if (form.ToAccount === form.Account) {
+        setError('Source and destination accounts must be different.');
+        return;
+      }
+    }
+
     const amount = parseFloat(form.Amount);
     if (isNaN(amount) || amount <= 0) {
       setError('Please enter a valid positive amount.');
@@ -122,7 +134,8 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
       Date: form.Date,
       Type: form.Type.toUpperCase(),
       Account: form.Account,
-      Currency: "GBP",//form.Currency,
+      ToAccount: form.Type === 'Transfer' ? form.ToAccount : '',
+      Currency: "GBP",
       Amount: signedAmount,
       Amount_GBP: signedAmount,
       Category: form.Category || 'Uncategorized',
@@ -215,51 +228,96 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
             />
           </div>
 
-          {/* Account */}
-          <div className="form-group">
-            <label className="form-label">Account *</label>
-            {accounts.length > 0 ? (
-              <div className="acc-radio-list">
-                {accounts.map((acc) => {
-                  const selected = form.Account === acc.name;
-                  return (
-                    <label
-                      key={acc._id}
-                      className={`acc-radio-card${selected ? ' acc-radio-card--selected' : ''}`}
-                      style={{ '--acc-clr': acc.color || '#6366f1' }}
-                    >
-                      <input
-                        type="radio"
-                        name="Account"
-                        value={acc.name}
-                        checked={selected}
-                        onChange={handleChange}
-                        required
-                      />
-                      <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
-                      <div className="acc-radio-info">
-                        <span className="acc-radio-name">{acc.name}</span>
-                        <span className="acc-radio-bal">
-                          {(acc.balance || 0).toLocaleString('en-GB', { style: 'currency', currency: acc.currency || 'GBP' })}
-                        </span>
-                      </div>
-                      {acc.isPrimary && <span className="acc-radio-star" title="Primary">★</span>}
-                    </label>
-                  );
-                })}
+          {/* Account — for non-transfer show only primaries (fallback: all); for transfer show all */}
+          {form.Type !== 'Transfer' ? (
+            <div className="form-group">
+              <label className="form-label">Account *</label>
+              {accounts.length > 0 ? (
+                <div className="acc-radio-list">
+                  {(accounts.filter((a) => a.isPrimary).length ? accounts.filter((a) => a.isPrimary) : accounts).map((acc) => {
+                    const selected = form.Account === acc.name;
+                    return (
+                      <label
+                        key={acc._id}
+                        className={`acc-radio-card${selected ? ' acc-radio-card--selected' : ''}`}
+                        style={{ '--acc-clr': acc.color || '#6366f1' }}
+                      >
+                        <input type="radio" name="Account" value={acc.name} checked={selected} onChange={handleChange} required />
+                        <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                        <div className="acc-radio-info">
+                          <span className="acc-radio-name">{acc.name}</span>
+                          <span className="acc-radio-bal">
+                            {(acc.balance || 0).toLocaleString('en-GB', { style: 'currency', currency: acc.currency || 'GBP' })}
+                          </span>
+                        </div>
+                        {acc.isPrimary && <span className="acc-radio-star" title="Primary">★</span>}
+                      </label>
+                    );
+                  })}
+                </div>
+              ) : (
+                <input type="text" name="Account" className="form-input" value={form.Account} onChange={handleChange} placeholder="e.g. Monzo, NatWest" required />
+              )}
+            </div>
+          ) : (
+            /* Transfer: From + To account selectors */
+            <div className="modal-row" style={{ alignItems: 'flex-start' }}>
+              <div className="form-group">
+                <label className="form-label">From Account *</label>
+                <div className="acc-radio-list" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {accounts.map((acc) => {
+                    const selected = form.Account === acc.name;
+                    return (
+                      <label
+                        key={acc._id}
+                        className={`acc-radio-card${selected ? ' acc-radio-card--selected' : ''}${form.ToAccount === acc.name ? ' acc-radio-card--disabled' : ''}`}
+                        style={{ '--acc-clr': acc.color || '#6366f1', width: '100%', opacity: form.ToAccount === acc.name ? 0.4 : 1 }}
+                      >
+                        <input
+                          type="radio" name="Account" value={acc.name} checked={selected}
+                          onChange={handleChange} required disabled={form.ToAccount === acc.name}
+                        />
+                        <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                        <div className="acc-radio-info">
+                          <span className="acc-radio-name">{acc.name}</span>
+                          <span className="acc-radio-bal">
+                            {(acc.balance || 0).toLocaleString('en-GB', { style: 'currency', currency: acc.currency || 'GBP' })}
+                          </span>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
-            ) : (
-              <input
-                type="text"
-                name="Account"
-                className="form-input"
-                value={form.Account}
-                onChange={handleChange}
-                placeholder="e.g. Monzo, NatWest"
-                required
-              />
-            )}
-          </div>
+              <div className="form-group">
+                <label className="form-label">To Account *</label>
+                <div className="acc-radio-list" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {accounts.map((acc) => {
+                    const selected = form.ToAccount === acc.name;
+                    return (
+                      <label
+                        key={acc._id}
+                        className={`acc-radio-card${selected ? ' acc-radio-card--selected' : ''}${form.Account === acc.name ? ' acc-radio-card--disabled' : ''}`}
+                        style={{ '--acc-clr': acc.color || '#6366f1', width: '100%', opacity: form.Account === acc.name ? 0.4 : 1 }}
+                      >
+                        <input
+                          type="radio" name="ToAccount" value={acc.name} checked={selected}
+                          onChange={handleChange} required disabled={form.Account === acc.name}
+                        />
+                        <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                        <div className="acc-radio-info">
+                          <span className="acc-radio-name">{acc.name}</span>
+                          <span className="acc-radio-bal">
+                            {(acc.balance || 0).toLocaleString('en-GB', { style: 'currency', currency: acc.currency || 'GBP' })}
+                          </span>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Amount + Currency */}
           <div className="modal-row">

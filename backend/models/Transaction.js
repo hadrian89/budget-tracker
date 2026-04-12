@@ -46,6 +46,11 @@ const transactionSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    ToAccount: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     userid: {
       type: String,
       required: [true, 'User ID is required'],
