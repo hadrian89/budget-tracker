@@ -82,20 +82,12 @@ export default function AccountsPage() {
     setSaving(true);
     setFormError('');
     try {
-      const { isPrimary, ...rest } = form;
-      const payload = { ...rest, balance: bal };
-      let accountId = editAccount?._id;
+      const payload = { ...form, balance: bal };
 
       if (editAccount) {
-        await axiosInstance.put(`/api/accounts/${accountId}`, payload);
+        await axiosInstance.put(`/api/accounts/${editAccount._id}`, payload);
       } else {
-        const res = await axiosInstance.post('/api/accounts', payload);
-        accountId = res.data.account._id;
-      }
-
-      // If primary was checked and account isn't already the primary, call set-primary
-      if (isPrimary && !editAccount?.isPrimary) {
-        await axiosInstance.put(`/api/accounts/${accountId}/set-primary`);
+        await axiosInstance.post('/api/accounts', payload);
       }
 
       setModalOpen(false);
@@ -107,14 +99,13 @@ export default function AccountsPage() {
     }
   };
 
-  const handleSetPrimary = async (acc) => {
-    if (acc.isPrimary) return;
+  const handleTogglePrimary = async (acc) => {
     setSettingPrimary(acc._id);
     try {
       await axiosInstance.put(`/api/accounts/${acc._id}/set-primary`);
       fetchAccounts();
     } catch {
-      setError('Failed to set primary account.');
+      setError('Failed to update primary status.');
     } finally {
       setSettingPrimary(null);
     }
@@ -168,9 +159,9 @@ export default function AccountsPage() {
                 <div className="acc-actions">
                   <button
                     className={`acc-action-btn acc-action-btn--star${acc.isPrimary ? ' acc-action-btn--star-active' : ''}`}
-                    onClick={() => handleSetPrimary(acc)}
-                    disabled={acc.isPrimary || settingPrimary === acc._id}
-                    title={acc.isPrimary ? 'Primary account' : 'Set as primary'}
+                    onClick={() => handleTogglePrimary(acc)}
+                    disabled={settingPrimary === acc._id}
+                    title={acc.isPrimary ? 'Remove primary' : 'Set as primary'}
                   >
                     {acc.isPrimary ? '★' : '☆'}
                   </button>
@@ -322,16 +313,13 @@ export default function AccountsPage() {
                   <input
                     type="checkbox"
                     checked={form.isPrimary}
-                    disabled={editAccount?.isPrimary}
                     onChange={(e) => setForm((p) => ({ ...p, isPrimary: e.target.checked }))}
                   />
                   <span className="acc-primary-checkbox-indicator" />
                   <div className="acc-primary-checkbox-label">
-                    <span className="acc-primary-checkbox-title">★ Set as primary account</span>
+                    <span className="acc-primary-checkbox-title">★ Primary account</span>
                     <span className="acc-primary-checkbox-desc">
-                      {editAccount?.isPrimary
-                        ? 'This is already your primary account'
-                        : 'Auto-selects this account in new transactions'}
+                      Primary accounts appear as quick-select options in new transactions
                     </span>
                   </div>
                 </label>

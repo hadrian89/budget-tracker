@@ -53,12 +53,14 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
     ]).then(([catRes, accRes]) => {
       const cats = catRes.data.categories || [];
       setCategories(cats.length ? cats : FALLBACK_CATEGORIES);
-      const accs = accRes.data.accounts || [];
-      setAccounts(accs);
-      // Auto-select primary account for new transactions
+      const all = accRes.data.accounts || [];
+      // Show only primary accounts; fall back to all if none are marked primary
+      const primaries = all.filter((a) => a.isPrimary);
+      setAccounts(primaries.length ? primaries : all);
+      // Auto-select when adding a new transaction
       if (!transaction) {
-        const primary = accs.find((a) => a.isPrimary);
-        if (primary) setForm((p) => ({ ...p, Account: p.Account || primary.name }));
+        const first = (primaries.length ? primaries : all)[0];
+        if (first) setForm((p) => ({ ...p, Account: p.Account || first.name }));
       }
     });
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
