@@ -15,7 +15,7 @@ const PRESET_COLORS = [
 
 const ICON_OPTIONS = ['🏦', '💵', '💳', '📈', '🏧', '💰', '🪙', '📊', '🏪', '🌐'];
 
-const emptyForm = { name: '', type: 'bank', balance: '', currency: 'GBP', color: '#6366f1', icon: '🏦' };
+const emptyForm = { name: '', type: 'bank', balance: '', currency: 'GBP', color: '#6366f1', icon: '🏦', isPrimary: false };
 
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState([]);
@@ -65,6 +65,7 @@ export default function AccountsPage() {
       currency: acc.currency || 'GBP',
       color: acc.color || '#6366f1',
       icon: acc.icon || TYPE_ICONS[acc.type] || '🏦',
+      isPrimary: acc.isPrimary || false,
     });
     setFormError('');
     setModalOpen(true);
@@ -81,12 +82,22 @@ export default function AccountsPage() {
     setSaving(true);
     setFormError('');
     try {
-      const payload = { ...form, balance: bal };
+      const { isPrimary, ...rest } = form;
+      const payload = { ...rest, balance: bal };
+      let accountId = editAccount?._id;
+
       if (editAccount) {
-        await axiosInstance.put(`/api/accounts/${editAccount._id}`, payload);
+        await axiosInstance.put(`/api/accounts/${accountId}`, payload);
       } else {
-        await axiosInstance.post('/api/accounts', payload);
+        const res = await axiosInstance.post('/api/accounts', payload);
+        accountId = res.data.account._id;
       }
+
+      // If primary was checked and account isn't already the primary, call set-primary
+      if (isPrimary && !editAccount?.isPrimary) {
+        await axiosInstance.put(`/api/accounts/${accountId}/set-primary`);
+      }
+
       setModalOpen(false);
       fetchAccounts();
     } catch (e) {
@@ -303,6 +314,27 @@ export default function AccountsPage() {
                     />
                   ))}
                 </div>
+              </div>
+
+              {/* Primary toggle */}
+              <div className="acc-primary-toggle">
+                <label className={`acc-primary-checkbox${form.isPrimary ? ' acc-primary-checkbox--checked' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={form.isPrimary}
+                    disabled={editAccount?.isPrimary}
+                    onChange={(e) => setForm((p) => ({ ...p, isPrimary: e.target.checked }))}
+                  />
+                  <span className="acc-primary-checkbox-indicator" />
+                  <div className="acc-primary-checkbox-label">
+                    <span className="acc-primary-checkbox-title">★ Set as primary account</span>
+                    <span className="acc-primary-checkbox-desc">
+                      {editAccount?.isPrimary
+                        ? 'This is already your primary account'
+                        : 'Auto-selects this account in new transactions'}
+                    </span>
+                  </div>
+                </label>
               </div>
 
               {/* Preview */}
