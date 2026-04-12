@@ -27,6 +27,10 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    monthlyLimit: {
+      type: Number,
+      default: null, // null = no limit set
+    },
   },
   {
     collection: 'budget_tracker_categories',

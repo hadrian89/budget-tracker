@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
 // POST /api/categories
 router.post('/', async (req, res) => {
   try {
-    const { name, color, icon, subcategories } = req.body;
+    const { name, color, icon, subcategories, monthlyLimit } = req.body;
     if (!name) return res.status(400).json({ message: 'Category name is required' });
 
     const category = new Category({
@@ -57,6 +57,7 @@ router.post('/', async (req, res) => {
       subcategories: subcategories || [],
       userid: req.userId,
       isDefault: false,
+      monthlyLimit: monthlyLimit ? parseFloat(monthlyLimit) || null : null,
     });
     await category.save();
     res.status(201).json({ message: 'Category created', category });
@@ -75,11 +76,12 @@ router.put('/:id', async (req, res) => {
     });
     if (!category) return res.status(404).json({ message: 'Category not found' });
 
-    const { name, color, icon, subcategories } = req.body;
+    const { name, color, icon, subcategories, monthlyLimit } = req.body;
     if (name !== undefined) category.name = name;
     if (color !== undefined) category.color = color;
     if (icon !== undefined) category.icon = icon;
     if (subcategories !== undefined) category.subcategories = subcategories;
+    if (monthlyLimit !== undefined) category.monthlyLimit = monthlyLimit === '' || monthlyLimit === null ? null : parseFloat(monthlyLimit) || null;
 
     await category.save();
     res.json({ message: 'Category updated', category });

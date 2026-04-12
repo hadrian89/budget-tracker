@@ -42,7 +42,7 @@ export default function CategoriesPage() {
   const [catLoading, setCatLoading] = useState(false);
 
   const [editCat, setEditCat] = useState(null);
-  const [form, setForm] = useState({ name: '', color: '#5b5b5f', icon: '📦', subcategories: [] });
+  const [form, setForm] = useState({ name: '', color: '#5b5b5f', icon: '📦', subcategories: [], monthlyLimit: '' });
   const [newSub, setNewSub] = useState('');
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
@@ -66,13 +66,19 @@ export default function CategoriesPage() {
         managedMap[c.name] = { icon: c.icon || '📦', color: c.color || null };
       });
 
+      // Build limit lookup: category name → monthlyLimit
+      const limitMap = {};
+      (catRes.data.categories || []).forEach((c) => {
+        if (c.monthlyLimit != null) limitMap[c.name] = c.monthlyLimit;
+      });
+
       const txs = txRes.data.transactions || [];
       const map = {};
       txs.forEach((tx) => {
         const cat = tx.Category || 'Uncategorized';
         if (!map[cat]) {
           const mc = managedMap[cat] || {};
-          map[cat] = { name: cat, amount: 0, count: 0, icon: mc.icon || '📦', color: mc.color || null };
+          map[cat] = { name: cat, amount: 0, count: 0, icon: mc.icon || '📦', color: mc.color || null, monthlyLimit: limitMap[cat] ?? null };
         }
         map[cat].amount += Math.abs(tx.Amount_GBP || 0);
         map[cat].count += 1;
@@ -101,7 +107,7 @@ export default function CategoriesPage() {
 
   const resetForm = () => {
     setEditCat(null);
-    setForm({ name: '', color: '#5b5b5f', icon: '📦', subcategories: [] });
+    setForm({ name: '', color: '#5b5b5f', icon: '📦', subcategories: [], monthlyLimit: '' });
     setNewSub('');
     setFormError('');
   };
@@ -114,7 +120,11 @@ export default function CategoriesPage() {
 
   const startEdit = (cat) => {
     setEditCat(cat);
-    setForm({ name: cat.name, color: cat.color, icon: cat.icon, subcategories: [...(cat.subcategories || [])] });
+    setForm({
+      name: cat.name, color: cat.color, icon: cat.icon,
+      subcategories: [...(cat.subcategories || [])],
+      monthlyLimit: cat.monthlyLimit != null ? String(cat.monthlyLimit) : '',
+    });
     setFormError('');
   };
 
@@ -218,6 +228,12 @@ export default function CategoriesPage() {
           <div className="cat-list">
             {enriched.map((cat) => {
               const pct = grandTotal > 0 ? Math.round((cat.amount / grandTotal) * 100) : 0;
+              const hasLimit = cat.monthlyLimit != null && cat.monthlyLimit > 0;
+              const budgetPct = hasLimit ? Math.min(Math.round((cat.amount / cat.monthlyLimit) * 100), 100) : 0;
+              const isOver = hasLimit && cat.amount > cat.monthlyLimit;
+              const isWarning = hasLimit && !isOver && budgetPct >= 80;
+              const budgetBarColor = isOver ? 'var(--error)' : isWarning ? '#f59e0b' : cat.color;
+
               return (
                 <div className="cat-list-item" key={cat.name}>
                   <div className="cat-list-icon" style={{ background: cat.color + '1f' }}>
@@ -226,16 +242,30 @@ export default function CategoriesPage() {
                   <div className="cat-list-info">
                     <div className="cat-list-row">
                       <span className="cat-list-name">{cat.name}</span>
-                      <span className="cat-list-amount">{fmt(cat.amount)}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        {hasLimit && (
+                          <span className={`cat-budget-badge${isOver ? ' cat-budget-badge--over' : isWarning ? ' cat-budget-badge--warn' : ''}`}>
+                            {isOver ? '⚠ Over' : `${budgetPct}% of ${fmt(cat.monthlyLimit)}`}
+                          </span>
+                        )}
+                        <span className="cat-list-amount">{fmt(cat.amount)}</span>
+                      </div>
                     </div>
+                    {hasLimit && (
+                      <div className="cat-budget-bar-row">
+                        <div className="cat-list-bar-bg">
+                          <div className="cat-list-bar-fill" style={{ width: `${budgetPct}%`, background: budgetBarColor }} />
+                        </div>
+                        <span className="cat-list-pct" style={{ color: isOver ? 'var(--error)' : isWarning ? '#f59e0b' : undefined }}>
+                          {fmt(cat.monthlyLimit)} limit
+                        </span>
+                      </div>
+                    )}
                     <div className="cat-list-bar-row">
                       <div className="cat-list-bar-bg">
-                        <div
-                          className="cat-list-bar-fill"
-                          style={{ width: `${pct}%`, background: cat.color }}
-                        />
+                        <div className="cat-list-bar-fill" style={{ width: `${pct}%`, background: cat.color, opacity: 0.4 }} />
                       </div>
-                      <span className="cat-list-pct">{pct}%</span>
+                      <span className="cat-list-pct">{pct}% of total</span>
                     </div>
                   </div>
                 </div>
@@ -299,6 +329,19 @@ export default function CategoriesPage() {
                         />
                       ))}
                     </div>
+                  </div>
+
+                  <div className="form-group-sm">
+                    <label className="form-label-sm">Monthly Budget Limit (£)</label>
+                    <input
+                      className="form-input-sm"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={form.monthlyLimit}
+                      onChange={(e) => setForm((p) => ({ ...p, monthlyLimit: e.target.value }))}
+                      placeholder="e.g. 200 — leave blank for no limit"
+                    />
                   </div>
 
                   <div className="form-group-sm">

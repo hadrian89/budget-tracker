@@ -157,6 +157,7 @@ const Dashboard = () => {
   const sparkline       = homeData?.sparkline       ?? [];
   const monthLabel      = homeData?.monthLabel      ?? '';
   const lastActivity    = homeData?.lastActivity    ?? {};
+  const budgetStatus    = homeData?.budgetStatus    ?? [];
 
   const netPositive = monthlyNet >= 0;
 
@@ -383,6 +384,42 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Budget limits widget */}
+      {!loading && budgetStatus.length > 0 && (
+        <div className="budget-widget">
+          <div className="budget-widget-header">
+            <h3 className="budget-widget-title">Budget Limits — {monthLabel}</h3>
+            <Link to="/categories" className="budget-widget-link">Manage →</Link>
+          </div>
+          <div className="budget-widget-list">
+            {budgetStatus.map((b) => {
+              const isOver    = b.over;
+              const isWarning = !isOver && b.pct >= 80;
+              const barColor  = isOver ? 'var(--error)' : isWarning ? '#f59e0b' : b.color;
+              return (
+                <div key={b.name} className="budget-row">
+                  <span className="budget-row-icon">{b.icon}</span>
+                  <div className="budget-row-body">
+                    <div className="budget-row-top">
+                      <span className="budget-row-name">{b.name}</span>
+                      <span className={`budget-row-amount${isOver ? ' budget-row-amount--over' : ''}`}>
+                        {fmt(b.spent)} / {fmt(b.limit)}
+                      </span>
+                    </div>
+                    <div className="budget-bar-bg">
+                      <div className="budget-bar-fill" style={{ width: `${Math.min(b.pct, 100)}%`, background: barColor }} />
+                    </div>
+                  </div>
+                  <span className={`budget-pct${isOver ? ' budget-pct--over' : isWarning ? ' budget-pct--warn' : ''}`}>
+                    {isOver ? '⚠' : `${b.pct}%`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Activity strip */}
       {!loading && (lastActivity.lastVisit || lastActivity.lastUpdate) && (

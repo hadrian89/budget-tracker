@@ -3,6 +3,7 @@ const router = express.Router();
 const Transaction = require('../models/Transaction');
 const Account = require('../models/Account');
 const User = require('../models/User');
+const Category = require('../models/Category');
 const auth = require('../middleware/auth');
 const { trackVisit } = require('../utils/activity');
 
@@ -123,6 +124,27 @@ router.get('/home', async (req, res) => {
       }
     });
 
+    // Budget limits: categories with a monthlyLimit vs actual spend this month
+    const allCats = await Category.find({
+      $or: [{ userid: userId }, { isDefault: true }],
+      monthlyLimit: { $ne: null },
+    }).lean();
+
+    const budgetStatus = allCats.map((cat) => {
+      const spent = catAgg.find((c) => c._id === cat.name)?.total || 0;
+      const limit = cat.monthlyLimit;
+      const pct = limit > 0 ? Math.round((spent / limit) * 100) : 0;
+      return {
+        name: cat.name,
+        icon: cat.icon || '📦',
+        color: cat.color || '#6366f1',
+        limit,
+        spent,
+        pct,
+        over: spent > limit,
+      };
+    }).sort((a, b) => b.pct - a.pct);
+
     // Return previous activity first, then update visit time in background
     const lastActivity = userDoc?.lastActivity || {};
     trackVisit(userId, req);
@@ -133,6 +155,7 @@ router.get('/home', async (req, res) => {
       monthLabel: `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`,
       gbpToInr,
       lastActivity,
+      budgetStatus,
     });
   } catch (error) {
     console.error('Home dashboard error:', error);
