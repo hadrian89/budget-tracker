@@ -139,6 +139,40 @@
   color: var(--error);
 }
 
+.acc-action-btn--star {
+  font-size: 16px;
+  color: var(--outline);
+  padding: 4px 6px;
+}
+
+.acc-action-btn--star:hover {
+  background: rgba(234, 179, 8, 0.12);
+  color: #ca8a04;
+}
+
+.acc-action-btn--star-active {
+  color: #ca8a04;
+  background: rgba(234, 179, 8, 0.12);
+  cursor: default;
+}
+
+.acc-action-btn--star-active:hover {
+  background: rgba(234, 179, 8, 0.12);
+  color: #ca8a04;
+}
+
+.acc-primary-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #92400e;
+  background: rgba(234, 179, 8, 0.18);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
 .acc-card-body {
   margin-bottom: 16px;
 }

@@ -466,3 +466,89 @@
   .modal-overlay { padding: 0; }
   .modal { max-height: 95vh; }
 }
+
+/* ── Account radio cards ───────────────────────────────────── */
+.acc-radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.acc-radio-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface-low);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.acc-radio-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.acc-radio-card:hover {
+  border-color: var(--acc-clr, var(--primary));
+  background: var(--surface-lowest);
+}
+
+.acc-radio-card--selected {
+  border-color: var(--acc-clr, var(--primary));
+  background: var(--surface-lowest);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc-clr, var(--primary)) 12%, transparent);
+}
+
+.acc-radio-card--selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  background: var(--acc-clr, var(--primary));
+}
+
+.acc-radio-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.acc-radio-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.acc-radio-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--on-bg);
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acc-radio-bal {
+  font-size: 12px;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
+}
+
+.acc-radio-star {
+  font-size: 15px;
+  color: #ca8a04;
+  flex-shrink: 0;
+  line-height: 1;
+}

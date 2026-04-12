@@ -35,6 +35,10 @@ const accountSchema = new mongoose.Schema(
       required: [true, 'User ID is required'],
       index: true,
     },
+    isPrimary: {
+      type: Boolean,
+      default: false,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

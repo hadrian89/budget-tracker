@@ -30,6 +30,7 @@ export default function AccountsPage() {
 
   const [deleteId, setDeleteId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [settingPrimary, setSettingPrimary] = useState(null);
 
   const fetchAccounts = useCallback(async () => {
     setLoading(true);
@@ -95,6 +96,19 @@ export default function AccountsPage() {
     }
   };
 
+  const handleSetPrimary = async (acc) => {
+    if (acc.isPrimary) return;
+    setSettingPrimary(acc._id);
+    try {
+      await axiosInstance.put(`/api/accounts/${acc._id}/set-primary`);
+      fetchAccounts();
+    } catch {
+      setError('Failed to set primary account.');
+    } finally {
+      setSettingPrimary(null);
+    }
+  };
+
   const confirmDelete = async () => {
     if (!deleteId) return;
     setDeleteLoading(true);
@@ -141,6 +155,14 @@ export default function AccountsPage() {
                   <span className="acc-icon">{acc.icon || TYPE_ICONS[acc.type] || '🏦'}</span>
                 </div>
                 <div className="acc-actions">
+                  <button
+                    className={`acc-action-btn acc-action-btn--star${acc.isPrimary ? ' acc-action-btn--star-active' : ''}`}
+                    onClick={() => handleSetPrimary(acc)}
+                    disabled={acc.isPrimary || settingPrimary === acc._id}
+                    title={acc.isPrimary ? 'Primary account' : 'Set as primary'}
+                  >
+                    {acc.isPrimary ? '★' : '☆'}
+                  </button>
                   <button className="acc-action-btn" onClick={() => openEdit(acc)} title="Edit">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -158,8 +180,13 @@ export default function AccountsPage() {
 
               <div className="acc-card-body">
                 <p className="acc-name">{acc.name}</p>
-                <div className="acc-type-badge">
-                  <span>{TYPE_LABELS[acc.type] || acc.type}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div className="acc-type-badge">
+                    <span>{TYPE_LABELS[acc.type] || acc.type}</span>
+                  </div>
+                  {acc.isPrimary && (
+                    <span className="acc-primary-badge">Primary</span>
+                  )}
                 </div>
               </div>
 

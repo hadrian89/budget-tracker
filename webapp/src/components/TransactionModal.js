@@ -53,9 +53,15 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
     ]).then(([catRes, accRes]) => {
       const cats = catRes.data.categories || [];
       setCategories(cats.length ? cats : FALLBACK_CATEGORIES);
-      setAccounts(accRes.data.accounts || []);
+      const accs = accRes.data.accounts || [];
+      setAccounts(accs);
+      // Auto-select primary account for new transactions
+      if (!transaction) {
+        const primary = accs.find((a) => a.isPrimary);
+        if (primary) setForm((p) => ({ ...p, Account: p.Account || primary.name }));
+      }
     });
-  }, [isOpen]);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update subcategory options when category changes
   useEffect(() => {
@@ -211,20 +217,35 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
           <div className="form-group">
             <label className="form-label">Account *</label>
             {accounts.length > 0 ? (
-              <select
-                name="Account"
-                className="form-input form-select"
-                value={form.Account}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select account...</option>
-                {accounts.map((acc) => (
-                  <option key={acc._id} value={acc.name}>
-                    {acc.icon ? `${acc.icon} ` : ''}{acc.name}
-                  </option>
-                ))}
-              </select>
+              <div className="acc-radio-list">
+                {accounts.map((acc) => {
+                  const selected = form.Account === acc.name;
+                  return (
+                    <label
+                      key={acc._id}
+                      className={`acc-radio-card${selected ? ' acc-radio-card--selected' : ''}`}
+                      style={{ '--acc-clr': acc.color || '#6366f1' }}
+                    >
+                      <input
+                        type="radio"
+                        name="Account"
+                        value={acc.name}
+                        checked={selected}
+                        onChange={handleChange}
+                        required
+                      />
+                      <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                      <div className="acc-radio-info">
+                        <span className="acc-radio-name">{acc.name}</span>
+                        <span className="acc-radio-bal">
+                          {(acc.balance || 0).toLocaleString('en-GB', { style: 'currency', currency: acc.currency || 'GBP' })}
+                        </span>
+                      </div>
+                      {acc.isPrimary && <span className="acc-radio-star" title="Primary">★</span>}
+                    </label>
+                  );
+                })}
+              </div>
             ) : (
               <input
                 type="text"

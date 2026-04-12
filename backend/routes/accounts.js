@@ -62,6 +62,23 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// PUT /api/accounts/:id/set-primary — mark one account as primary, clear others
+router.put('/:id/set-primary', async (req, res) => {
+  try {
+    await Account.updateMany({ userid: req.userId }, { isPrimary: false });
+    const account = await Account.findOneAndUpdate(
+      { _id: req.params.id, userid: req.userId },
+      { isPrimary: true },
+      { new: true }
+    );
+    if (!account) return res.status(404).json({ message: 'Account not found' });
+    res.json({ message: 'Primary account updated', account });
+  } catch (error) {
+    console.error('Set primary error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // DELETE /api/accounts/:id — delete account
 router.delete('/:id', async (req, res) => {
   try {
