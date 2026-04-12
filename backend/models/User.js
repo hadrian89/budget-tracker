@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
     theme:      { type: String,  default: 'light' },
     gbpToInr:   { type: Number,  default: 125.25 },
   },
+  lastActivity: {
+    lastVisit:  { type: Date },
+    lastUpdate: { type: Date },
+    lastDevice: { type: String, default: '' },
+  },
 });
 
 // Hash password before saving

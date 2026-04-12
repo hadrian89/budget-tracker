@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Account = require('../models/Account');
 const auth = require('../middleware/auth');
+const { trackUpdate } = require('../utils/activity');
 
 router.use(auth);
 
@@ -34,6 +35,7 @@ router.post('/', async (req, res) => {
       userid: req.userId,
     });
     await account.save();
+    trackUpdate(req.userId);
     res.status(201).json({ message: 'Account created', account });
   } catch (error) {
     console.error('Create account error:', error);
@@ -57,6 +59,7 @@ router.put('/:id', async (req, res) => {
     if (isPrimary !== undefined) account.isPrimary = isPrimary;
 
     await account.save();
+    trackUpdate(req.userId);
     res.json({ message: 'Account updated', account });
   } catch (error) {
     console.error('Update account error:', error);
@@ -71,6 +74,7 @@ router.put('/:id/set-primary', async (req, res) => {
     if (!account) return res.status(404).json({ message: 'Account not found' });
     account.isPrimary = !account.isPrimary;
     await account.save();
+    trackUpdate(req.userId);
     res.json({ message: 'Primary status toggled', account });
   } catch (error) {
     console.error('Set primary error:', error);
@@ -83,6 +87,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const account = await Account.findOneAndDelete({ _id: req.params.id, userid: req.userId });
     if (!account) return res.status(404).json({ message: 'Account not found' });
+    trackUpdate(req.userId);
     res.json({ message: 'Account deleted' });
   } catch (error) {
     console.error('Delete account error:', error);

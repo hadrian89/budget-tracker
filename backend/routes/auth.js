@@ -21,7 +21,7 @@ router.post(
   '/register',
   [
     body('name').trim().notEmpty().withMessage('Name is required'),
-    body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
+    body('email').isEmail().normalizeEmail({ gmail_remove_dots: false }).withMessage('Please provide a valid email'),
     body('password')
       .isLength({ min: 6 })
       .withMessage('Password must be at least 6 characters'),
@@ -74,7 +74,7 @@ router.post(
 router.post(
   '/login',
   [
-    body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
+    body('email').isEmail().normalizeEmail({ gmail_remove_dots: false }).withMessage('Please provide a valid email'),
     body('password').notEmpty().withMessage('Password is required'),
   ],
   async (req, res) => {
@@ -235,7 +235,7 @@ router.put(
   auth,
   [
     body('name').optional().trim().notEmpty().withMessage('Name cannot be empty'),
-    body('email').optional().isEmail().normalizeEmail().withMessage('Valid email required'),
+    body('email').optional().isEmail().normalizeEmail({ gmail_remove_dots: false }).withMessage('Valid email required'),
   ],
   async (req, res) => {
     const errors = validationResult(req);

@@ -32,6 +32,16 @@ const BalanceIcon = () => (
 );
 
 // ── Helpers ──────────────────────────────────────────────────
+const timeAgo = (iso) => {
+  if (!iso) return null;
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (diff < 60)   return 'just now';
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 172800) return 'yesterday';
+  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+};
+
 const fmt = (v) => {
   if (v === null || v === undefined) return '£0.00';
   return `£${Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -146,6 +156,7 @@ const Dashboard = () => {
   const recent          = homeData?.recentTransactions  ?? [];
   const sparkline       = homeData?.sparkline       ?? [];
   const monthLabel      = homeData?.monthLabel      ?? '';
+  const lastActivity    = homeData?.lastActivity    ?? {};
 
   const netPositive = monthlyNet >= 0;
 
@@ -372,6 +383,33 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Activity strip */}
+      {!loading && (lastActivity.lastVisit || lastActivity.lastUpdate) && (
+        <div className="activity-strip">
+          <span className="activity-strip-icon">🕐</span>
+          <div className="activity-strip-items">
+            {lastActivity.lastVisit && (
+              <span className="activity-strip-item">
+                <span className="activity-strip-label">Last visit</span>
+                <span className="activity-strip-value">{timeAgo(lastActivity.lastVisit)}</span>
+              </span>
+            )}
+            {lastActivity.lastUpdate && (
+              <span className="activity-strip-item">
+                <span className="activity-strip-label">Last update</span>
+                <span className="activity-strip-value">{timeAgo(lastActivity.lastUpdate)}</span>
+              </span>
+            )}
+            {lastActivity.lastDevice && (
+              <span className="activity-strip-item">
+                <span className="activity-strip-label">Device</span>
+                <span className="activity-strip-value">{lastActivity.lastDevice}</span>
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Recent transactions */}
       <div className="recent-section">

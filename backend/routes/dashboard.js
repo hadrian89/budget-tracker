@@ -4,6 +4,7 @@ const Transaction = require('../models/Transaction');
 const Account = require('../models/Account');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
+const { trackVisit } = require('../utils/activity');
 
 router.use(auth);
 
@@ -122,11 +123,16 @@ router.get('/home', async (req, res) => {
       }
     });
 
+    // Return previous activity first, then update visit time in background
+    const lastActivity = userDoc?.lastActivity || {};
+    trackVisit(userId, req);
+
     res.json({
       totalBalance, monthlyIncome, monthlyExpense, monthlyNet,
       accounts, cashflowCategories, recentTransactions, sparkline,
       monthLabel: `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`,
       gbpToInr,
+      lastActivity,
     });
   } catch (error) {
     console.error('Home dashboard error:', error);

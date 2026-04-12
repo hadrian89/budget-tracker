@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const Transaction = require('../models/Transaction');
 const Account = require('../models/Account');
 const auth = require('../middleware/auth');
+const { trackUpdate } = require('../utils/activity');
 
 // ── Balance helper ────────────────────────────────────────────────────────────
 // Applies or reverses a transaction's effect on account balances.
@@ -192,6 +193,7 @@ router.post(
 
       await transaction.save();
       await applyTransactionBalance(userId, transaction, +1);
+      trackUpdate(userId);
 
       res.status(201).json({
         message: 'Transaction created successfully',
@@ -239,6 +241,7 @@ router.put('/:id', async (req, res) => {
 
     // Apply new transaction's effect
     await applyTransactionBalance(userId, transaction, +1);
+    trackUpdate(userId);
 
     res.json({
       message: 'Transaction updated successfully',
@@ -265,6 +268,7 @@ router.delete('/:id', async (req, res) => {
 
     // Reverse the deleted transaction's effect on account balances
     await applyTransactionBalance(userId, transaction, -1);
+    trackUpdate(userId);
 
     res.json({ message: 'Transaction deleted successfully' });
   } catch (error) {
