@@ -1,8 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const { body, query, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const Transaction = require('../models/Transaction');
+const Account = require('../models/Account');
 const auth = require('../middleware/auth');
+
+// ── Balance helper ────────────────────────────────────────────────────────────
+// direction: +1 to apply a transaction, -1 to reverse it
+async function adjustAccountBalance(userId, accountName, type, amount, direction) {
+  if (!accountName) return;
+  const account = await Account.findOne({
+    userid: userId,
+    name: { $regex: new RegExp(`^${accountName.trim()}$`, 'i') },
+  });
+  if (!account) return;
+
+  const amt = Math.abs(parseFloat(amount) || 0);
+  let delta = 0;
+  if (type === 'INCOME')   delta =  amt;   // income → balance up
+  if (type === 'EXPENSE')  delta = -amt;   // expense → balance down
+  if (type === 'TRANSFER') delta = -amt;   // transfer out → balance down
+
+  account.balance = (account.balance || 0) + delta * direction;
+  await account.save();
+}
 
 // All routes require authentication
 router.use(auth);
@@ -160,6 +181,7 @@ router.post(
       });
 
       await transaction.save();
+      await adjustAccountBalance(userId, Account, transaction.Type, transaction.Amount_GBP, +1);
 
       res.status(201).json({
         message: 'Transaction created successfully',
@@ -185,6 +207,9 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Transaction not found or access denied' });
     }
 
+    // Reverse old transaction's effect before applying changes
+    await adjustAccountBalance(userId, transaction.Account, transaction.Type, transaction.Amount_GBP, -1);
+
     const { Date: txDate, Type, Account, Currency, Amount, Category, Subcategory, Notes } = req.body;
 
     if (txDate !== undefined) transaction.Date = txDate;
@@ -200,6 +225,9 @@ router.put('/:id', async (req, res) => {
     if (Notes !== undefined) transaction.Notes = Notes;
 
     await transaction.save();
+
+    // Apply new transaction's effect
+    await adjustAccountBalance(userId, transaction.Account, transaction.Type, transaction.Amount_GBP, +1);
 
     res.json({
       message: 'Transaction updated successfully',
@@ -223,6 +251,9 @@ router.delete('/:id', async (req, res) => {
     if (!transaction) {
       return res.status(404).json({ message: 'Transaction not found or access denied' });
     }
+
+    // Reverse the deleted transaction's effect on the account balance
+    await adjustAccountBalance(userId, transaction.Account, transaction.Type, transaction.Amount_GBP, -1);
 
     res.json({ message: 'Transaction deleted successfully' });
   } catch (error) {
