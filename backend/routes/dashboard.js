@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/Transaction');
 const Account = require('../models/Account');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 router.use(auth);
@@ -48,9 +49,18 @@ router.get('/home', async (req, res) => {
     const [_y, _m] = monthStr.split('-').map(Number);
     const endOfMonth = `${monthStr}-${String(new Date(_y, _m, 0).getDate()).padStart(2, '0')}`;
 
-    // Accounts
-    const accounts = await Account.find({ userid: userId }).lean();
-    const totalBalance = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
+    // Accounts — convert non-GBP balances to GBP using user's exchange rate
+    const [accounts, userDoc] = await Promise.all([
+      Account.find({ userid: userId }).lean(),
+      User.findById(userId).lean(),
+    ]);
+    const gbpToInr = userDoc?.settings?.gbpToInr || 125.25;
+    const toGBP = (acc) => {
+      const bal = acc.balance || 0;
+      if ((acc.currency || 'GBP').toUpperCase() === 'INR') return bal / gbpToInr;
+      return bal;
+    };
+    const totalBalance = accounts.reduce((sum, a) => sum + toGBP(a), 0);
 
     // Monthly income/expense
     const monthlyAgg = await Transaction.aggregate([
@@ -116,6 +126,7 @@ router.get('/home', async (req, res) => {
       totalBalance, monthlyIncome, monthlyExpense, monthlyNet,
       accounts, cashflowCategories, recentTransactions, sparkline,
       monthLabel: `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`,
+      gbpToInr,
     });
   } catch (error) {
     console.error('Home dashboard error:', error);

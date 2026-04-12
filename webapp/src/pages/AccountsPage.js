@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 import './AccountsPage.css';
 
 const formatCurrency = (v) =>
@@ -18,6 +19,13 @@ const ICON_OPTIONS = ['🏦', '💵', '💳', '📈', '🏧', '💰', '🪙', '�
 const emptyForm = { name: '', type: 'bank', balance: '', currency: 'GBP', color: '#6366f1', icon: '🏦', isPrimary: false };
 
 export default function AccountsPage() {
+  const { user } = useAuth();
+  const gbpToInr = user?.settings?.gbpToInr || 125.25;
+  const toGBP = (acc) => {
+    const bal = acc.balance || 0;
+    return (acc.currency || 'GBP').toUpperCase() === 'INR' ? bal / gbpToInr : bal;
+  };
+
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -47,7 +55,7 @@ export default function AccountsPage() {
 
   useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
 
-  const totalBalance = accounts.reduce((s, a) => s + (a.balance || 0), 0);
+  const totalBalance = accounts.reduce((s, a) => s + toGBP(a), 0);
 
   const openAdd = () => {
     setEditAccount(null);

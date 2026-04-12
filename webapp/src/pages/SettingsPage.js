@@ -211,15 +211,20 @@ function PreferencesTab({ user, updateUser }) {
   const saved = user?.settings || {};
   const [currency,   setCurrency]   = useState(saved.currency   || 'GBP');
   const [dateFormat, setDateFormat] = useState(saved.dateFormat || 'en-GB');
+  const [gbpToInr,   setGbpToInr]  = useState(String(saved.gbpToInr ?? 125.25));
   const [saving, setSaving]         = useState(false);
   const [alert, setAlert]           = useState({ type: '', message: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const rate = parseFloat(gbpToInr);
+    if (isNaN(rate) || rate <= 0) {
+      return setAlert({ type: 'error', message: 'Please enter a valid GBP → INR rate.' });
+    }
     setSaving(true);
     setAlert({ type: '', message: '' });
     try {
-      const res = await api.put('/api/auth/settings', { currency, dateFormat });
+      const res = await api.put('/api/auth/settings', { currency, dateFormat, gbpToInr: rate });
       updateUser({ ...user, settings: res.data.settings });
       setAlert({ type: 'success', message: 'Preferences saved.' });
     } catch (err) {
@@ -257,6 +262,20 @@ function PreferencesTab({ user, updateUser }) {
             {DATE_FORMATS.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
           </select>
           <p className="form-hint">Preview: <strong>{datePreview}</strong></p>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">GBP → INR EXCHANGE RATE</label>
+          <input
+            className="form-input"
+            type="number"
+            step="0.01"
+            min="1"
+            value={gbpToInr}
+            onChange={(e) => setGbpToInr(e.target.value)}
+            placeholder="e.g. 125.25"
+          />
+          <p className="form-hint">Used to convert INR account balances to GBP for total balance. Currently: <strong>1 GBP = {parseFloat(gbpToInr) || 125.25} INR</strong></p>
         </div>
 
         <div className="settings-form-footer">

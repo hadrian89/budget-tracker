@@ -302,7 +302,7 @@ router.put(
 // @desc    Update app preferences (currency, dateFormat, theme)
 // @access  Private
 router.put('/settings', auth, async (req, res) => {
-  const allowed = ['currency', 'dateFormat', 'theme'];
+  const allowed = ['currency', 'dateFormat', 'theme', 'gbpToInr'];
   try {
     const user = req.user;
     allowed.forEach((key) => {

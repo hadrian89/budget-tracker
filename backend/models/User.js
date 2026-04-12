@@ -27,9 +27,10 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
   settings: {
-    currency:   { type: String, default: 'GBP' },
-    dateFormat: { type: String, default: 'en-GB' },
-    theme:      { type: String, default: 'light' },
+    currency:   { type: String,  default: 'GBP' },
+    dateFormat: { type: String,  default: 'en-GB' },
+    theme:      { type: String,  default: 'light' },
+    gbpToInr:   { type: Number,  default: 125.25 },
   },
 });
 
