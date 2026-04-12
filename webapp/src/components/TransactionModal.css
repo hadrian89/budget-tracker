@@ -139,7 +139,7 @@
 }
 
 .form-prefix {
-  position: absolute;
+  /* position: absolute; */
   left: 14px;
   color: var(--outline);
   font-size: 14px;

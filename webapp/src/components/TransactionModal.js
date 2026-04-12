@@ -112,9 +112,9 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
 
     const payload = {
       Date: form.Date,
-      Type: form.Type,
+      Type: form.Type.toUpperCase(),
       Account: form.Account,
-      Currency: form.Currency,
+      Currency: "GBP",//form.Currency,
       Amount: signedAmount,
       Amount_GBP: signedAmount,
       Category: form.Category || 'Uncategorized',
@@ -257,7 +257,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
                 />
               </div>
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label className="form-label">Currency</label>
               <select
                 name="Currency"
@@ -270,7 +270,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess }) => {
                 <option value="EUR">EUR (€)</option>
                 <option value="INR">INR (₹)</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
           {/* Category + Subcategory */}
