@@ -112,7 +112,7 @@ const Dashboard = () => {
   const [presets, setPresets] = useState([]);
   const [manageOpen, setManageOpen] = useState(false);
   const [editPreset, setEditPreset] = useState(null);
-  const [presetForm, setPresetForm] = useState({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', account: '', notes: '' });
+  const [presetForm, setPresetForm] = useState({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
   const [presetSaving, setPresetSaving] = useState(false);
   const [presetError, setPresetError] = useState('');
   const [txOpen, setTxOpen] = useState(false);
@@ -175,7 +175,7 @@ const Dashboard = () => {
   const openManage = async () => {
     setManageOpen(true);
     setEditPreset(null);
-    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', account: '', notes: '' });
+    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
     setPresetError('');
     try {
       const [catRes, accRes] = await Promise.all([
@@ -192,14 +192,14 @@ const Dashboard = () => {
     setPresetForm({
       label: p.label, icon: p.icon, type: p.type,
       amount: p.amount != null ? String(p.amount) : '',
-      category: p.category || '', account: p.account || '', notes: p.notes || '',
+      category: p.category || '', subcategory: p.subcategory || '', account: p.account || '', notes: p.notes || '',
     });
     setPresetError('');
   };
 
   const resetPresetForm = () => {
     setEditPreset(null);
-    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', account: '', notes: '' });
+    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
     setPresetError('');
   };
 
@@ -236,6 +236,7 @@ const Dashboard = () => {
     setTxPrefill({
       Type: p.type || 'Expense',
       Category: p.category || '',
+      Subcategory: p.subcategory || '',
       Account: p.account || '',
       Amount: p.amount ? String(p.amount) : '',
       Notes: p.notes || '',
@@ -635,7 +636,7 @@ const Dashboard = () => {
                     <select
                       className="form-input-sm"
                       value={presetForm.category}
-                      onChange={(e) => setPresetForm((p) => ({ ...p, category: e.target.value }))}
+                      onChange={(e) => setPresetForm((p) => ({ ...p, category: e.target.value, subcategory: '' }))}
                     >
                       <option value="">None</option>
                       {quickCats.map((c) => (
@@ -643,6 +644,26 @@ const Dashboard = () => {
                       ))}
                     </select>
                   </div>
+
+                  {(() => {
+                    const subs = quickCats.find((c) => c.name === presetForm.category)?.subcategories || [];
+                    if (!subs.length) return null;
+                    return (
+                      <div className="form-group-sm">
+                        <label className="form-label-sm">Subcategory — optional</label>
+                        <select
+                          className="form-input-sm"
+                          value={presetForm.subcategory}
+                          onChange={(e) => setPresetForm((p) => ({ ...p, subcategory: e.target.value }))}
+                        >
+                          <option value="">None</option>
+                          {subs.map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </select>
+                      </div>
+                    );
+                  })()}
 
                   <div className="form-group-sm">
                     <label className="form-label-sm">Account — optional</label>
@@ -682,7 +703,7 @@ const Dashboard = () => {
                     <div className="cat-manage-info">
                       <span className="cat-manage-name">{p.label}</span>
                       <span className="cat-manage-subs">
-                        {p.type}{p.amount ? ` · £${p.amount}` : ''}{p.category ? ` · ${p.category}` : ''}
+                        {p.type}{p.amount ? ` · £${p.amount}` : ''}{p.category ? ` · ${p.category}` : ''}{p.subcategory ? ` › ${p.subcategory}` : ''}
                       </span>
                     </div>
                     <div className="cat-manage-actions">
