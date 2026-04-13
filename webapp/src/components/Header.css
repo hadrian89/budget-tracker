@@ -5,15 +5,21 @@
 .header {
   position: sticky;
   top: 0;
-  background: rgba(245, 247, 248, 0.85);
+  background: rgba(247, 249, 251, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(42, 20, 180, 0.06);
   padding: 16px 32px;
   z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+[data-theme="dark"] .header {
+  background: rgba(14, 20, 34, 0.88);
+  border-bottom-color: rgba(108, 99, 255, 0.1);
 }
 
 .header-left {
@@ -23,7 +29,7 @@
 }
 
 .header-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 22px;
   color: var(--on-bg);
@@ -59,9 +65,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--surface-container);
-  color: var(--primary);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--gradient-primary);
+  color: white;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 12px;
   display: flex;

@@ -49,8 +49,9 @@
 }
 
 .an-tab--active {
-  background: var(--surface-container);
-  color: var(--primary);
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(42, 20, 180, 0.2);
 }
 
 /* ── Chart card ────────────────────────────────────────────── */
@@ -89,7 +90,7 @@
 }
 
 .an-card-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 16px;
   color: var(--on-surface);
@@ -130,7 +131,7 @@
 }
 
 .an-cf-value {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 15px;
 }

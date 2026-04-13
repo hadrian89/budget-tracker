@@ -35,13 +35,14 @@
 }
 .theme-btn--active {
   border-color: var(--primary);
-  background: var(--surface-container);
+  background: var(--primary-light);
   color: var(--primary);
+  font-weight: 700;
 }
 
 /* ── Header ────────────────────────────────────────────────── */
 .settings-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 26px;
   color: var(--on-bg);
@@ -95,12 +96,12 @@
 }
 
 .settings-nav-item:hover {
-  background: var(--surface-variant);
+  background: var(--surface-low);
   color: var(--on-bg);
 }
 
 .settings-nav-item--active {
-  background: var(--primary-container);
+  background: var(--primary-light);
   color: var(--primary);
   font-weight: 600;
 }
@@ -111,7 +112,7 @@
 
 .settings-nav-item--danger:hover,
 .settings-nav-item--danger.settings-nav-item--active {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   color: #b31b25;
 }
 
@@ -137,7 +138,7 @@
 }
 
 .settings-section-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 18px;
   color: var(--on-bg);
@@ -157,7 +158,7 @@
   gap: 16px;
   margin-bottom: 24px;
   padding: 16px;
-  background: var(--surface-variant);
+  background: var(--surface-low);
   border-radius: var(--radius-md);
 }
 
@@ -165,7 +166,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: #fff;
   font-size: 20px;
   font-weight: 700;
@@ -173,7 +174,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
 .settings-avatar-name {
@@ -258,9 +259,9 @@
 }
 
 .settings-alert--error {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   color: #b31b25;
-  border: 1px solid rgba(179, 27, 37, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .settings-alert-close {
@@ -283,9 +284,9 @@
   justify-content: space-between;
   gap: 24px;
   padding: 20px;
-  border: 1px solid rgba(179, 27, 37, 0.25);
+  border: 1px solid rgba(220, 38, 38, 0.25);
   border-radius: var(--radius-md);
-  background: rgba(179, 27, 37, 0.04);
+  background: rgba(220, 38, 38, 0.04);
 }
 
 .danger-card-title {
@@ -325,11 +326,11 @@
 /* ── Shared button styles (reused from global) ─────────────── */
 .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; border: none; transition: opacity 0.15s, background 0.15s; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-.btn-primary  { background: var(--primary); color: #fff; }
-.btn-primary:hover:not(:disabled) { opacity: 0.88; }
+.btn-primary  { background: var(--gradient-primary); color: #fff; box-shadow: var(--shadow-primary); }
+.btn-primary:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
 .btn-ghost    { background: transparent; color: var(--on-bg); border: 1px solid var(--border); }
-.btn-ghost:hover:not(:disabled)   { background: var(--surface-variant); }
-.btn-danger   { background: #b31b25; color: #fff; }
+.btn-ghost:hover:not(:disabled)   { background: var(--surface-low); }
+.btn-danger   { background: var(--error); color: #fff; }
 .btn-danger:hover:not(:disabled)  { opacity: 0.88; }
 .btn-spinner  { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -344,7 +345,7 @@
 /* ── Modal overlay ─────────────────────────────────────────── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px; }
 .confirm-dialog { background: var(--surface-lowest); border-radius: var(--radius-lg); padding: 28px; width: 100%; max-width: 440px; box-shadow: var(--shadow-lg); }
-.confirm-title  { font-weight: 700; font-size: 17px; color: var(--on-bg); font-family: 'Plus Jakarta Sans', sans-serif; }
+.confirm-title  { font-weight: 700; font-size: 17px; color: var(--on-bg); font-family: 'Manrope', sans-serif; }
 .confirm-text   { font-size: 13.5px; color: var(--outline); line-height: 1.55; margin-top: 6px; font-family: 'Inter', sans-serif; }
 .confirm-actions{ display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
 

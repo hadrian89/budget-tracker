@@ -5,7 +5,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(44, 47, 48, 0.35);
+  background: rgba(15, 23, 42, 0.35);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -45,11 +45,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 24px 16px;
-  border-bottom: 1px solid rgba(171, 173, 174, 0.12);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 .modal-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: var(--on-surface);
@@ -120,7 +120,7 @@
 
 .form-input:focus {
   background: var(--surface-lowest);
-  box-shadow: 0 0 0 2px rgba(91, 91, 95, 0.18);
+  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.18);
 }
 
 .form-input::placeholder {
@@ -150,7 +150,7 @@
   font-size: 14px;
   font-weight: 600;
   pointer-events: none;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
 .form-input--prefixed {
@@ -159,7 +159,7 @@
 
 /* ── Error ──────────────────────────────────────────────────── */
 .modal-error {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   border-radius: var(--radius-md);
   padding: 10px 14px;
   color: var(--error);
@@ -201,14 +201,15 @@
 }
 
 .btn-primary {
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
-  box-shadow: 0 4px 16px rgba(91, 91, 95, 0.22);
+  box-shadow: var(--shadow-primary);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-dim);
+  opacity: 0.9;
   transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(42, 20, 180, 0.4);
 }
 
 .btn-secondary,
@@ -225,13 +226,13 @@
 }
 
 .btn-danger {
-  background: rgba(179, 27, 37, 0.1);
+  background: rgba(220, 38, 38, 0.1);
   color: var(--error);
   border: none;
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: rgba(179, 27, 37, 0.18);
+  background: rgba(220, 38, 38, 0.18);
 }
 
 .btn-sm {
@@ -286,7 +287,7 @@
 
 .form-input-sm:focus {
   background: var(--surface-lowest);
-  box-shadow: 0 0 0 2px rgba(91, 91, 95, 0.15);
+  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.15);
 }
 
 .form-input-sm::placeholder {
@@ -294,7 +295,7 @@
 }
 
 .form-error {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   border-radius: var(--radius-sm);
   padding: 8px 12px;
   color: var(--error);
@@ -329,7 +330,7 @@
 
 .icon-btn--active {
   border-color: var(--primary);
-  background: rgba(91, 91, 95, 0.1);
+  background: rgba(42, 20, 180, 0.1);
 }
 
 .color-picker {
@@ -414,7 +415,7 @@
 }
 
 .action-btn--delete:hover {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   color: var(--error);
 }
 

@@ -15,7 +15,7 @@
 }
 
 .tx-page-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 26px;
   color: var(--on-bg);
@@ -87,7 +87,7 @@
 
 .tx-filter-select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(91,91,95,0.15);
+  box-shadow: 0 0 0 2px rgba(42,20,180,0.18);
 }
 
 .tx-filter-date {
@@ -103,11 +103,11 @@
 
 .tx-filter-date:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(91,91,95,0.15);
+  box-shadow: 0 0 0 2px rgba(42,20,180,0.18);
 }
 
 .tx-filter-apply {
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -117,8 +117,9 @@
   font-family: 'Inter', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(42, 20, 180, 0.25);
 }
-.tx-filter-apply:hover { background: var(--primary-dim); }
+.tx-filter-apply:hover { opacity: 0.9; transform: translateY(-1px); }
 
 .tx-filter-clear {
   background: rgba(179,27,37,0.07);
@@ -154,7 +155,7 @@
 }
 
 .tx-summary-income {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: #00875a;
@@ -166,14 +167,14 @@
 }
 
 .tx-summary-expense {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: var(--tertiary);
 }
 
 .tx-summary-net {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: var(--on-surface);
@@ -217,7 +218,7 @@
 }
 
 .tx-day-label {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: var(--on-surface);
@@ -231,7 +232,7 @@
 }
 
 .tx-day-sum {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 13px;
 }
@@ -313,7 +314,7 @@
 }
 
 .tx-item-amount {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 14px;
 }
@@ -396,8 +397,9 @@
   color: var(--primary);
 }
 .tx-page-btn--active {
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
+  box-shadow: 0 2px 8px rgba(42, 20, 180, 0.25);
 }
 .tx-page-btn:disabled {
   opacity: 0.4;
@@ -411,11 +413,11 @@
   right: 32px;
   width: 56px;
   height: 56px;
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
   border: none;
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 24px rgba(91,91,95,0.3);
+  box-shadow: var(--shadow-primary);
   display: flex;
   align-items: center;
   justify-content: center;

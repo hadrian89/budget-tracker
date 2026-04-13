@@ -67,12 +67,12 @@ const getCategoryEmoji = (cat) => {
 };
 
 const TYPE_ICON_COLORS = {
-  INCOME:   { bg: 'rgba(0,135,90,0.1)',   emoji: getCategoryEmoji },
-  EXPENSE:  { bg: 'rgba(182,0,81,0.1)',   emoji: getCategoryEmoji },
-  TRANSFER: { bg: 'rgba(91,91,95,0.08)',  emoji: () => '🔄' },
+  INCOME:   { bg: 'rgba(5,150,105,0.1)',   emoji: getCategoryEmoji },
+  EXPENSE:  { bg: 'rgba(220,38,38,0.1)',   emoji: getCategoryEmoji },
+  TRANSFER: { bg: 'rgba(42,20,180,0.08)',  emoji: () => '🔄' },
 };
 
-const PIE_COLORS = ['#5b5b5f', '#008080', '#b60051', '#747778', '#abadae', '#4f4f53', '#595c5d', '#dfe3e4'];
+const PIE_COLORS = ['#2a14b4', '#4338ca', '#4700ab', '#006c49', '#0891b2', '#7c3aed', '#db2777', '#d97706'];
 
 // ── Custom Tooltip ───────────────────────────────────────────
 const BarTooltip = ({ active, payload, label }) => {
@@ -340,18 +340,18 @@ const Dashboard = () => {
                 <AreaChart data={sparkline} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="var(--primary)" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
+                      <stop offset="5%"  stopColor="rgba(255,255,255,0.5)" stopOpacity={1} />
+                      <stop offset="95%" stopColor="rgba(255,255,255,0)" stopOpacity={1} />
                     </linearGradient>
                   </defs>
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke="var(--primary)"
+                    stroke="rgba(255,255,255,0.8)"
                     strokeWidth={2}
                     fill="url(#sparkGrad)"
                     dot={false}
-                    activeDot={{ r: 4, fill: 'var(--primary)' }}
+                    activeDot={{ r: 4, fill: 'white' }}
                   />
                   <Tooltip content={<SparkTooltip />} />
                 </AreaChart>
@@ -421,8 +421,8 @@ const Dashboard = () => {
                     tickFormatter={fmtShort}
                   />
                   <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(91,91,95,0.04)' }} />
-                  <Bar dataKey="income"  name="Income"   fill="rgba(0,135,90,0.7)"  radius={[6,6,0,0]} maxBarSize={28} />
-                  <Bar dataKey="expense" name="Expenses" fill="rgba(182,0,81,0.65)" radius={[6,6,0,0]} maxBarSize={28} />
+                  <Bar dataKey="income"  name="Income"   fill="rgba(5,150,105,0.75)"  radius={[6,6,0,0]} maxBarSize={28} />
+                  <Bar dataKey="expense" name="Expenses" fill="rgba(220,38,38,0.65)" radius={[6,6,0,0]} maxBarSize={28} />
                 </BarChart>
               </ResponsiveContainer>
               <div className="cashflow-stats">

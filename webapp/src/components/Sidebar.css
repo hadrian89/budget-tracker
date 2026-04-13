@@ -1,5 +1,5 @@
 /* ============================================================
-   Sidebar — Luminaire Design
+   Sidebar — The Wealth Studio Design
    ============================================================ */
 
 .sidebar {
@@ -9,7 +9,7 @@
   top: 0;
   height: 100vh;
   background: var(--surface-lowest);
-  box-shadow: 1px 0 0 rgba(171, 173, 174, 0.1), var(--shadow-sm);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -27,29 +27,30 @@
 }
 
 .sidebar-logo-icon-wrap {
-  width: 34px;
-  height: 34px;
-  background: var(--primary);
+  width: 36px;
+  height: 36px;
+  background: var(--gradient-primary);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(42, 20, 180, 0.3);
 }
 
 .sidebar-logo-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
   font-size: 17px;
   color: var(--primary);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 /* ── Navigation ────────────────────────────────────────────── */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   padding: 8px 12px;
   flex: 1;
 }
@@ -57,7 +58,7 @@
 .sidebar-nav-label {
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--outline-variant);
   padding: 16px 14px 6px;
   font-weight: 700;
@@ -85,15 +86,16 @@
 }
 
 .sidebar-nav-item:hover {
-  background: var(--surface-low);
+  background: var(--primary-light);
   color: var(--primary);
 }
 
 .sidebar-nav-item--active,
 .sidebar-nav-item.active {
-  background: var(--surface-container);
-  color: var(--primary);
-  font-weight: 700;
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(42, 20, 180, 0.25);
 }
 
 .sidebar-nav-icon {
@@ -101,11 +103,14 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .sidebar-nav-item--active .sidebar-nav-icon,
-.sidebar-nav-item.active .sidebar-nav-icon,
+.sidebar-nav-item.active .sidebar-nav-icon {
+  opacity: 1;
+}
+
 .sidebar-nav-item:hover .sidebar-nav-icon {
   opacity: 1;
 }
@@ -139,7 +144,7 @@
   transition: all 0.2s;
 }
 .sidebar-theme-btn:hover {
-  background: var(--surface-container);
+  background: var(--primary-light);
   color: var(--primary);
 }
 .sidebar-theme-icon { font-size: 15px; }
@@ -147,7 +152,7 @@
 /* ── User section ──────────────────────────────────────────── */
 .sidebar-user {
   padding: 16px 20px;
-  border-top: 1px solid rgba(171, 173, 174, 0.15);
+  border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -162,11 +167,11 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--surface-container);
-  color: var(--primary);
+  background: var(--gradient-primary);
+  color: white;
   font-size: 12px;
   font-weight: 700;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,7 +212,7 @@
   width: 100%;
   background: transparent;
   color: var(--outline);
-  border: 1px solid rgba(171, 173, 174, 0.2);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 13px;
@@ -218,9 +223,9 @@
 }
 
 .sidebar-logout-btn:hover {
-  background: var(--surface-low);
-  color: var(--primary);
-  border-color: rgba(91, 91, 95, 0.2);
+  background: rgba(220, 38, 38, 0.06);
+  color: var(--error);
+  border-color: rgba(220, 38, 38, 0.2);
 }
 
 /* ── Mobile drawer ───────────────────────────────────────── */

@@ -16,7 +16,7 @@ const FREQUENCIES = [
 ];
 
 const PRESET_ICONS = ['📄','🏠','💡','💧','📱','📺','🌐','🚗','🏋️','🎬','🏥','🎓','💳','🏦','🛡️','🎵','☁️','🔥','🧾','🛒'];
-const PRESET_COLORS = ['#5b5b5f','#008080','#b60051','#6366f1','#ef4444','#ec4899','#8b5cf6','#06b6d4','#f59e0b','#10b981','#3b82f6','#f97316'];
+const PRESET_COLORS = ['#2a14b4','#4338ca','#4700ab','#006c49','#dc2626','#db2777','#7c3aed','#0891b2','#d97706','#059669','#0ea5e9','#f97316'];
 
 const TYPE_META = {
   bill:         { label: 'Bill',         emoji: '📄', description: 'Utilities, rent, insurance…' },
@@ -45,14 +45,14 @@ function getDueStatus(bill) {
 
   if (due < today)   return { status: 'overdue',   label: `Overdue by ${Math.abs(diffDays)}d`,  color: '#b31b25' };
   if (due <= remind) return { status: 'due-soon',  label: diffDays === 0 ? 'Due today' : `Due in ${diffDays}d`, color: '#c47a00' };
-  return               { status: 'upcoming',    label: `Due ${fmtDate(bill.nextDueDate)}`, color: '#747778' };
+  return               { status: 'upcoming',    label: `Due ${fmtDate(bill.nextDueDate)}`, color: '#64748b' };
 }
 
 // ── Empty form ────────────────────────────────────────────────────────────────
 
 const emptyForm = () => ({
   name: '', amount: '', currency: 'GBP', category: 'Bills',
-  icon: '📄', color: '#5b5b5f', notes: '',
+  icon: '📄', color: '#2a14b4', notes: '',
   type: 'bill', frequency: 'monthly', dueDay: '',
   nextDueDate: new Date().toISOString().slice(0, 10),
   totalInstallments: '', remindDaysBefore: '3',
@@ -115,7 +115,7 @@ export default function BillsPage() {
       currency: bill.currency || 'GBP',
       category: bill.category || 'Bills',
       icon: bill.icon || '📄',
-      color: bill.color || '#5b5b5f',
+      color: bill.color || '#2a14b4',
       notes: bill.notes || '',
       type: bill.type || 'bill',
       frequency: bill.frequency || 'monthly',

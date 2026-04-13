@@ -51,7 +51,7 @@
 }
 
 .cat-donut-expense {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 20px;
   color: var(--on-bg);
@@ -116,7 +116,7 @@
 }
 
 .cat-list-amount {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 600;
   font-size: 14px;
   color: var(--on-surface);
@@ -166,7 +166,7 @@
 
 .cat-tooltip-icon  { font-size: 16px; }
 .cat-tooltip-name  { color: var(--on-surface-variant); font-weight: 500; }
-.cat-tooltip-val   { color: var(--on-surface); font-weight: 700; margin-left: 4px; font-family: 'Plus Jakarta Sans', sans-serif; }
+.cat-tooltip-val   { color: var(--on-surface); font-weight: 700; margin-left: 4px; font-family: 'Manrope', sans-serif; }
 
 /* ── Manage modal ──────────────────────────────────────────── */
 .cat-modal {
@@ -191,7 +191,7 @@
 }
 
 .cat-modal-header h2 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 18px;
   color: var(--on-surface);
@@ -203,7 +203,7 @@
 }
 
 .cat-form-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: var(--on-surface-variant);

@@ -17,7 +17,7 @@
 }
 
 .acc-page-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: var(--on-bg);
@@ -37,7 +37,7 @@
 
 /* ── Error ─────────────────────────────────────────────────── */
 .acc-error {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   border-radius: var(--radius-md);
   color: var(--error);
   padding: 10px 14px;
@@ -82,7 +82,7 @@
 
 .acc-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(44, 47, 48, 0.08);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
 .acc-card-top {
@@ -135,7 +135,7 @@
 }
 
 .acc-action-btn--danger:hover {
-  background: rgba(179, 27, 37, 0.1);
+  background: rgba(220, 38, 38, 0.1);
   color: var(--error);
 }
 
@@ -181,7 +181,7 @@
   font-size: 15px;
   font-weight: 700;
   color: var(--on-surface);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   margin-bottom: 6px;
   white-space: nowrap;
   overflow: hidden;
@@ -211,7 +211,7 @@
 }
 
 .acc-balance {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: var(--on-bg);
@@ -252,7 +252,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 24px 16px;
-  border-bottom: 1px solid rgba(171, 173, 174, 0.12);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
   position: sticky;
   top: 0;
   background: var(--surface-lowest);
@@ -261,7 +261,7 @@
 }
 
 .acc-modal-header h2 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: var(--on-surface);
@@ -279,7 +279,7 @@
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid rgba(171, 173, 174, 0.12);
+  border-top: 1px solid rgba(15, 23, 42, 0.12);
   position: sticky;
   bottom: 0;
   background: var(--surface-lowest);
@@ -311,13 +311,13 @@
 }
 
 .acc-type-btn:hover {
-  border-color: rgba(91, 91, 95, 0.2);
+  border-color: rgba(42, 20, 180, 0.2);
   color: var(--on-surface);
 }
 
 .acc-type-btn--active {
   border-color: var(--primary);
-  background: rgba(91, 91, 95, 0.08);
+  background: rgba(42, 20, 180, 0.08);
   color: var(--primary);
 }
 
@@ -345,7 +345,7 @@
   font-size: 14px;
   font-weight: 600;
   pointer-events: none;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
 .acc-prefix-input .form-input-sm {
@@ -377,12 +377,12 @@
   font-size: 14px;
   font-weight: 700;
   color: var(--on-surface);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   margin-bottom: 2px;
 }
 
 .acc-preview-balance {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 16px;
   font-weight: 700;
 }
@@ -398,7 +398,7 @@
 }
 
 .confirm-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 17px;
   font-weight: 700;
   color: var(--on-surface);

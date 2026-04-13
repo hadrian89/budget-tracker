@@ -126,11 +126,11 @@ export default function Analytics() {
                     <stop offset="95%" stopColor="#00875a" stopOpacity={0.02} />
                   </linearGradient>
                   <linearGradient id="gradExpense" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#b60051" stopOpacity={0.18} />
-                    <stop offset="95%" stopColor="#b60051" stopOpacity={0.02} />
+                    <stop offset="5%"  stopColor="#dc2626" stopOpacity={0.18} />
+                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(171,173,174,0.15)" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(15,23,42,0.07)" vertical={false} />
                 <XAxis
                   dataKey="day"
                   tickFormatter={formatXAxis}
@@ -163,11 +163,11 @@ export default function Analytics() {
                     type="monotone"
                     dataKey="cumExpense"
                     name="Expenses"
-                    stroke="#b60051"
+                    stroke="#dc2626"
                     strokeWidth={2}
                     fill="url(#gradExpense)"
                     dot={false}
-                    activeDot={{ r: 5, fill: '#b60051' }}
+                    activeDot={{ r: 5, fill: '#dc2626' }}
                   />
                 )}
               </AreaChart>

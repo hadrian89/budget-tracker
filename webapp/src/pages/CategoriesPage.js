@@ -11,9 +11,9 @@ const fmt = (v) =>
   `£${Math.abs(v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const PRESET_COLORS = [
-  '#5b5b5f', '#008080', '#b60051', '#747778', '#595c5d',
-  '#4f4f53', '#abadae', '#dfe3e4', '#2c2f30', '#e5e9ea',
-  '#eef1f2', '#d9dddf',
+  '#2a14b4', '#4338ca', '#4700ab', '#006c49', '#0891b2',
+  '#7c3aed', '#db2777', '#dc2626', '#d97706', '#059669',
+  '#0ea5e9', '#64748b',
 ];
 
 const PRESET_ICONS = ['🍔','🛍️','🚗','🎉','🚌','📄','🏠','💊','💰','📦','✈️','🎓','💻','🏋️','🎮','🐾'];
@@ -42,7 +42,7 @@ export default function CategoriesPage() {
   const [catLoading, setCatLoading] = useState(false);
 
   const [editCat, setEditCat] = useState(null);
-  const [form, setForm] = useState({ name: '', color: '#5b5b5f', icon: '📦', subcategories: [], monthlyLimit: '' });
+  const [form, setForm] = useState({ name: '', color: '#2a14b4', icon: '📦', subcategories: [], monthlyLimit: '' });
   const [newSub, setNewSub] = useState('');
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
@@ -107,7 +107,7 @@ export default function CategoriesPage() {
 
   const resetForm = () => {
     setEditCat(null);
-    setForm({ name: '', color: '#5b5b5f', icon: '📦', subcategories: [], monthlyLimit: '' });
+    setForm({ name: '', color: '#2a14b4', icon: '📦', subcategories: [], monthlyLimit: '' });
     setNewSub('');
     setFormError('');
   };
@@ -385,7 +385,7 @@ export default function CategoriesPage() {
               ) : (
                 categories.map((cat) => (
                   <div key={cat._id} className="cat-manage-item">
-                    <div className="cat-manage-icon" style={{ background: (cat.color || '#5b5b5f') + '1f' }}>
+                    <div className="cat-manage-icon" style={{ background: (cat.color || '#2a14b4') + '1f' }}>
                       <span>{cat.icon}</span>
                     </div>
                     <div className="cat-manage-info">

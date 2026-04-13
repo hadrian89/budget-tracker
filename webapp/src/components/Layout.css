@@ -31,7 +31,7 @@
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(44, 47, 48, 0.45);
+  background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   z-index: 199;
@@ -67,7 +67,7 @@
     background: var(--surface-lowest);
     padding: 0 16px;
     z-index: 150;
-    box-shadow: 0 1px 0 rgba(171, 173, 174, 0.15), var(--shadow-sm);
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.15), var(--shadow-sm);
   }
 
   .mobile-menu-btn {
@@ -98,17 +98,18 @@
   .mobile-topbar-icon {
     width: 28px;
     height: 28px;
-    background: var(--primary);
+    background: var(--gradient-primary);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(42, 20, 180, 0.3);
   }
 
   .mobile-topbar-name {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
     font-size: 16px;
     color: var(--primary);
   }

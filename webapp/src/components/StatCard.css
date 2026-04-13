@@ -15,7 +15,7 @@
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 28px 56px rgba(44, 47, 48, 0.07);
+  box-shadow: 0 8px 32px rgba(42, 20, 180, 0.1);
 }
 
 .stat-card-inner {
@@ -41,17 +41,17 @@
 }
 
 .stat-card-icon--danger {
-  background: rgba(179, 27, 37, 0.1);
+  background: rgba(220, 38, 38, 0.1);
   color: var(--error);
 }
 
 .stat-card-icon--accent {
-  background: rgba(91, 91, 95, 0.08);
+  background: var(--primary-light);
   color: var(--primary);
 }
 
 .stat-card-icon--warning {
-  background: rgba(182, 0, 81, 0.08);
+  background: rgba(71, 0, 171, 0.08);
   color: var(--tertiary);
 }
 
@@ -71,7 +71,7 @@
 }
 
 .stat-card-value {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 26px;
   color: var(--on-bg);

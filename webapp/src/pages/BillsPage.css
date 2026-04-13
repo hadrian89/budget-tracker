@@ -19,7 +19,7 @@
 }
 
 .bills-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 26px;
   color: var(--on-bg);
@@ -35,7 +35,7 @@
 
 /* ── Alert ─────────────────────────────────────────────────── */
 .bills-error {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   border-radius: var(--radius-md);
   padding: 12px 16px;
   color: var(--error);
@@ -128,7 +128,7 @@
 }
 
 .bills-stat-value {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 22px;
   color: var(--on-bg);
@@ -356,7 +356,7 @@
 }
 
 .bill-amount {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 17px;
   color: var(--on-bg);
@@ -429,11 +429,11 @@
   text-align: center;
 }
 
-.bills-type-btn:hover { border-color: rgba(91, 91, 95, 0.2); }
+.bills-type-btn:hover { border-color: rgba(42, 20, 180, 0.2); }
 
 .bills-type-btn--active {
   border-color: var(--primary);
-  background: rgba(91, 91, 95, 0.08);
+  background: rgba(42, 20, 180, 0.08);
 }
 
 .bills-type-emoji { font-size: 22px; }

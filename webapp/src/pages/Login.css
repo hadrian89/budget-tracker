@@ -26,7 +26,7 @@
 
 /* ── Left panel ────────────────────────────────────────────── */
 .auth-left {
-  background: var(--surface-low);
+  background: var(--gradient-hero);
   padding: 48px;
   display: flex;
   flex-direction: column;
@@ -43,7 +43,8 @@
 .auth-brand-icon {
   width: 40px;
   height: 40px;
-  background: var(--primary);
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -53,29 +54,29 @@
 }
 
 .auth-brand-name {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
   font-size: 20px;
-  color: var(--primary);
+  color: white;
 }
 
 .auth-left-headline {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 36px;
   font-weight: 800;
   line-height: 1.2;
-  color: var(--on-surface);
+  color: white;
   margin-top: 40px;
 }
 
 .auth-left-headline em {
-  color: var(--tertiary);
+  color: rgba(167, 196, 255, 0.95);
   font-style: normal;
 }
 
 .auth-left-sub {
   font-size: 16px;
-  color: var(--on-surface-variant);
+  color: rgba(255, 255, 255, 0.7);
   margin-top: 12px;
   line-height: 1.6;
   font-family: 'Inter', sans-serif;
@@ -87,25 +88,27 @@
   height: 220px;
   margin-top: auto;
   flex-shrink: 0;
-  background: linear-gradient(135deg, var(--surface-container) 0%, var(--surface-high) 50%, var(--surface-highest) 100%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(12px);
 }
 
 .auth-left-image-pattern {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 20% 30%, rgba(91,91,95,0.06) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(182,0,81,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(167,196,255,0.06) 0%, transparent 50%),
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 20px,
-      rgba(171,173,174,0.08) 20px,
-      rgba(171,173,174,0.08) 21px
+      rgba(255,255,255,0.04) 20px,
+      rgba(255,255,255,0.04) 21px
     );
 }
 
@@ -124,12 +127,17 @@
 }
 
 .auth-left-image-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 13px;
-  color: var(--outline);
+  color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+
+.auth-brand-icon {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* ── Right panel ───────────────────────────────────────────── */
@@ -158,7 +166,7 @@
 }
 
 .auth-logo-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 18px;
   color: var(--primary);
@@ -166,7 +174,7 @@
 
 /* ── Form title ────────────────────────────────────────────── */
 .auth-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 700;
   font-size: 30px;
   color: var(--on-surface);
@@ -230,7 +238,7 @@
 .auth-input:focus {
   outline: none;
   background: var(--surface-lowest);
-  box-shadow: 0 0 0 2px rgba(91, 91, 95, 0.15);
+  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.18);
 }
 
 .auth-input::placeholder {
@@ -280,16 +288,16 @@
 .auth-btn {
   width: 100%;
   padding: 14px;
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
   border-radius: 14px;
   font-size: 16px;
   font-weight: 700;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 8px 24px rgba(91, 91, 95, 0.2);
+  box-shadow: var(--shadow-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -300,6 +308,7 @@
 .auth-btn:hover:not(:disabled) {
   opacity: 0.9;
   transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(42, 20, 180, 0.4);
 }
 
 .auth-btn:disabled {
@@ -342,7 +351,7 @@
 
 /* ── Error message ─────────────────────────────────────────── */
 .auth-error {
-  background: rgba(179, 27, 37, 0.08);
+  background: rgba(220, 38, 38, 0.08);
   border-radius: 12px;
   padding: 10px 14px;
   color: var(--error);
