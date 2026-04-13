@@ -60,9 +60,11 @@ npx expo start
 |----------|----------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design, data flow, key decisions |
 | [docs/API_REFERENCE.md](docs/API_REFERENCE.md) | Every endpoint, request/response shapes |
+| [docs/DATA_MODEL.md](docs/DATA_MODEL.md) | Full field-level schema for every collection |
+| [docs/FEATURES.md](docs/FEATURES.md) | User-facing feature reference |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local setup, environment variables, scripts |
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Production deployment (Render, Vercel, EAS) |
-| [docs/FEATURES.md](docs/FEATURES.md) | User-facing feature reference |
+| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Branching, commit style, code conventions |
 | [LLM_CONTEXT.md](LLM_CONTEXT.md) | Dense context file for AI assistants |
 
 ## Tech stack
