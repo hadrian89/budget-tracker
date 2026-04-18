@@ -31,11 +31,35 @@
   margin-bottom: 24px;
 }
 
+.cat-charts-row {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 32px;
+  align-items: flex-start;
+}
+
 .cat-donut-wrap {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* ── Bar chart ─────────────────────────────────────────────── */
+.cat-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cat-bar-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--outline);
+  font-family: 'Inter', sans-serif;
 }
 
 /* Center overlay label */
@@ -293,6 +317,12 @@
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .cat-charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .categories-page { padding: 16px; }
   .cat-page-header { flex-direction: column; align-items: flex-start; }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis } from 'recharts';
 import axiosInstance from '../api/axios';
 import MonthPicker from '../components/MonthPicker';
 import WalletoIcon, { getIconMeta } from '../components/WalletoIcon';
@@ -20,6 +20,18 @@ const PRESET_COLORS = [
 
 
 const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const { name, value, payload: p } = payload[0];
+  return (
+    <div className="cat-tooltip">
+      <WalletoIcon name={p.icon} size={18} />
+      <span className="cat-tooltip-name">{name}</span>
+      <span className="cat-tooltip-val">{fmt(value)}</span>
+    </div>
+  );
+};
+
+const BarTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   const { name, value, payload: p } = payload[0];
   return (
@@ -192,34 +204,66 @@ export default function CategoriesPage() {
         <div className="loading-container"><div className="spinner" /></div>
       ) : (
         <>
-          {/* Donut chart */}
+          {/* Charts row */}
           <div className="cat-chart-card">
             {enriched.length === 0 ? (
               <div className="cat-empty">No expense data for this month.</div>
             ) : (
-              <div className="cat-donut-wrap">
-                <ResponsiveContainer width="100%" height={340}>
-                  <PieChart>
-                    <Pie
+              <div className="cat-charts-row">
+                {/* Donut */}
+                <div className="cat-donut-wrap">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={enriched}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={80}
+                        outerRadius={118}
+                        dataKey="amount"
+                        nameKey="name"
+                        paddingAngle={2}
+                      >
+                        {enriched.map((entry, i) => (
+                          <Cell key={i} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="cat-donut-center">
+                    <span className="cat-donut-expense">{fmt(totalExpense)}</span>
+                    <span className="cat-donut-income">{fmt(totalIncome)} income</span>
+                  </div>
+                </div>
+
+                {/* Horizontal bar chart */}
+                <div className="cat-bar-wrap">
+                  <p className="cat-bar-label">Spend by category</p>
+                  <ResponsiveContainer width="100%" height={Math.max(enriched.length * 36, 200)}>
+                    <BarChart
                       data={enriched}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={90}
-                      outerRadius={130}
-                      dataKey="amount"
-                      nameKey="name"
-                      paddingAngle={2}
+                      layout="vertical"
+                      margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+                      barSize={10}
                     >
-                      {enriched.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="cat-donut-center">
-                  <span className="cat-donut-expense">{fmt(totalExpense)}</span>
-                  <span className="cat-donut-income">{fmt(totalIncome)} income</span>
+                      <XAxis type="number" hide />
+                      <YAxis
+                        type="category"
+                        dataKey="name"
+                        width={110}
+                        tick={{ fontSize: 12, fontFamily: 'Inter, sans-serif', fill: 'var(--on-surface-variant)' }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(42,20,180,0.04)' }} />
+                      <Bar dataKey="amount" radius={[0, 5, 5, 0]}>
+                        {enriched.map((entry, i) => (
+                          <Cell key={i} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             )}
