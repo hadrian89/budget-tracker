@@ -138,29 +138,38 @@ router.get('/me', auth, async (req, res) => {
 
 // ── OAuth helpers ─────────────────────────────────────────────────────────────
 
-async function findOrCreateOAuthUser({ provider, providerId, email, name }) {
-  // 1. Look up by provider ID
-  const query = provider === 'google' ? { googleId: providerId } : { facebookId: providerId };
-  let user = await User.findOne(query);
+function httpsGet(url, headers) {
+  return new Promise((resolve, reject) => {
+    const https = require('https');
+    const options = { headers };
+    https.get(url, options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try { resolve({ status: res.statusCode, body: JSON.parse(data) }); }
+        catch (e) { reject(e); }
+      });
+    }).on('error', reject);
+  });
+}
+
+async function findOrCreateGoogleUser({ googleId, email, name }) {
+  let user = await User.findOne({ googleId });
   if (user) return user;
 
-  // 2. Link to existing email account
   if (email) {
     user = await User.findOne({ email });
     if (user) {
-      if (provider === 'google')   user.googleId   = providerId;
-      if (provider === 'facebook') user.facebookId = providerId;
+      user.googleId = googleId;
       await user.save();
       return user;
     }
   }
 
-  // 3. Create new OAuth user (no password)
   const newUser = new User({
     name: name || 'User',
-    email: email || `${provider}_${providerId}@noemail.walleto`,
-    googleId:   provider === 'google'   ? providerId : undefined,
-    facebookId: provider === 'facebook' ? providerId : undefined,
+    email: email || `google_${googleId}@noemail.walleto`,
+    googleId,
   });
   await newUser.save();
   return newUser;
@@ -174,15 +183,16 @@ router.post('/google', async (req, res) => {
   if (!accessToken) return res.status(400).json({ message: 'Access token required' });
 
   try {
-    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    if (!response.ok) return res.status(401).json({ message: 'Invalid Google access token' });
+    const { status, body } = await httpsGet(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      { Authorization: `Bearer ${accessToken}` }
+    );
+    if (status !== 200) return res.status(401).json({ message: 'Invalid Google access token' });
 
-    const { sub: googleId, email, name } = await response.json();
+    const { sub: googleId, email, name } = body;
     if (!googleId) return res.status(401).json({ message: 'Could not retrieve Google profile' });
 
-    const user = await findOrCreateOAuthUser({ provider: 'google', providerId: googleId, email, name });
+    const user = await findOrCreateGoogleUser({ googleId, email, name });
     const token = generateToken(user._id.toString());
 
     res.json({
@@ -193,37 +203,6 @@ router.post('/google', async (req, res) => {
   } catch (error) {
     console.error('Google OAuth error:', error);
     res.status(500).json({ message: 'Google login failed' });
-  }
-});
-
-// @route   POST /api/auth/facebook
-// @desc    Verify Facebook access token, sign in / register
-// @access  Public
-router.post('/facebook', async (req, res) => {
-  const { accessToken } = req.body;
-  if (!accessToken) return res.status(400).json({ message: 'Access token required' });
-
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/me?fields=id,name,email&access_token=${encodeURIComponent(accessToken)}`
-    );
-    if (!response.ok) return res.status(401).json({ message: 'Invalid Facebook access token' });
-
-    const data = await response.json();
-    if (data.error) return res.status(401).json({ message: data.error.message || 'Facebook token invalid' });
-
-    const { id: facebookId, name, email } = data;
-    const user = await findOrCreateOAuthUser({ provider: 'facebook', providerId: facebookId, email, name });
-    const token = generateToken(user._id.toString());
-
-    res.json({
-      message: 'Facebook login successful',
-      token,
-      user: { id: user._id, name: user.name, email: user.email, createdAt: user.createdAt, settings: user.settings },
-    });
-  } catch (error) {
-    console.error('Facebook OAuth error:', error);
-    res.status(500).json({ message: 'Facebook login failed' });
   }
 });
 
