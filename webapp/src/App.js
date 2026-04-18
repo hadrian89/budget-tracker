@@ -16,8 +16,7 @@ import SettingsPage from './pages/SettingsPage';
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 function App() {
-  return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+  const inner = (
     <AuthProvider>
       <Router>
         <Routes>
@@ -46,8 +45,11 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
-    </GoogleOAuthProvider>
   );
+
+  return GOOGLE_CLIENT_ID
+    ? <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>{inner}</GoogleOAuthProvider>
+    : inner;
 }
 
 export default App;
