@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import WalletoIcon from '../components/WalletoIcon';
+import { ALL_ACCOUNT_KEYS } from '../data/icons';
 import './AccountsPage.css';
 
 const formatCurrency = (v) =>
   `£${(v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-const TYPE_ICONS = { bank: '🏦', cash: '💵', card: '💳', investment: '📈' };
+const TYPE_ICONS = { bank: 'bank', cash: 'cash', card: 'card', investment: 'investment' };
 const TYPE_LABELS = { bank: 'Bank', cash: 'Cash', card: 'Card', investment: 'Investment' };
 
 const PRESET_COLORS = [
@@ -14,9 +16,8 @@ const PRESET_COLORS = [
   '#06b6d4', '#8b5cf6', '#f97316', '#3b82f6', '#14b8a6',
 ];
 
-const ICON_OPTIONS = ['🏦', '💵', '💳', '📈', '🏧', '💰', '🪙', '📊', '🏪', '🌐'];
 
-const emptyForm = { name: '', type: 'bank', balance: '', currency: 'GBP', color: '#6366f1', icon: '🏦', isPrimary: false };
+const emptyForm = { name: '', type: 'bank', balance: '', currency: 'GBP', color: '#6366f1', icon: 'bank', isPrimary: false };
 
 export default function AccountsPage() {
   const { user } = useAuth();
@@ -72,7 +73,7 @@ export default function AccountsPage() {
       balance: acc.balance,
       currency: acc.currency || 'GBP',
       color: acc.color || '#6366f1',
-      icon: acc.icon || TYPE_ICONS[acc.type] || '🏦',
+      icon: TYPE_ICONS[acc.type] || acc.icon || 'bank',
       isPrimary: acc.isPrimary || false,
     });
     setFormError('');
@@ -80,7 +81,7 @@ export default function AccountsPage() {
   };
 
   const handleTypeChange = (type) => {
-    setForm((p) => ({ ...p, type, icon: TYPE_ICONS[type] || '🏦' }));
+    setForm((p) => ({ ...p, type, icon: TYPE_ICONS[type] || 'bank' }));
   };
 
   const handleSave = async () => {
@@ -152,7 +153,7 @@ export default function AccountsPage() {
         <div className="loading-container"><div className="spinner" /></div>
       ) : accounts.length === 0 ? (
         <div className="acc-empty">
-          <span style={{ fontSize: 48 }}>🏦</span>
+          <WalletoIcon name="bank" size={48} />
           <p>No accounts yet. Add your first account.</p>
           <button className="btn btn-primary" onClick={openAdd}>Add Account</button>
         </div>
@@ -162,7 +163,7 @@ export default function AccountsPage() {
             <div key={acc._id} className="acc-card" style={{ '--acc-color': acc.color || '#6366f1' }}>
               <div className="acc-card-top">
                 <div className="acc-icon-wrap" style={{ background: (acc.color || '#6366f1') + '22' }}>
-                  <span className="acc-icon">{acc.icon || TYPE_ICONS[acc.type] || '🏦'}</span>
+                  <WalletoIcon name={TYPE_ICONS[acc.type] || acc.icon || 'bank'} size={24} className="acc-icon" />
                 </div>
                 <div className="acc-actions">
                   <button
@@ -234,7 +235,7 @@ export default function AccountsPage() {
                       className={`acc-type-btn ${form.type === t ? 'acc-type-btn--active' : ''}`}
                       onClick={() => handleTypeChange(t)}
                     >
-                      <span className="acc-type-btn-icon">{TYPE_ICONS[t]}</span>
+                      <WalletoIcon name={TYPE_ICONS[t]} size={20} className="acc-type-btn-icon" />
                       <span>{TYPE_LABELS[t]}</span>
                     </button>
                   ))}
@@ -244,14 +245,17 @@ export default function AccountsPage() {
               {/* Icon selector */}
               <div className="form-group-sm">
                 <label className="form-label-sm">Icon</label>
-                <div className="icon-picker">
-                  {ICON_OPTIONS.map((ic) => (
+                <div className="icon-picker icon-picker--svg">
+                  {ALL_ACCOUNT_KEYS.map((key) => (
                     <button
-                      key={ic}
+                      key={key}
                       type="button"
-                      className={`icon-btn ${form.icon === ic ? 'icon-btn--active' : ''}`}
-                      onClick={() => setForm((p) => ({ ...p, icon: ic }))}
-                    >{ic}</button>
+                      className={`icon-btn icon-btn--svg${form.icon === key ? ' icon-btn--active' : ''}`}
+                      onClick={() => setForm((p) => ({ ...p, icon: key }))}
+                      title={key}
+                    >
+                      <WalletoIcon name={key} size={20} />
+                    </button>
                   ))}
                 </div>
               </div>
@@ -336,7 +340,7 @@ export default function AccountsPage() {
               {/* Preview */}
               <div className="acc-preview">
                 <div className="acc-preview-icon" style={{ background: (form.color || '#6366f1') + '22' }}>
-                  {form.icon}
+                  <WalletoIcon name={form.icon} size={26} />
                 </div>
                 <div>
                   <p className="acc-preview-name">{form.name || 'Account name'}</p>

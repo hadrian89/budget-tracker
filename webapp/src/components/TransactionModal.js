@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axios';
+import WalletoIcon, { getIconMeta } from './WalletoIcon';
 import './TransactionModal.css';
 
 const CloseIcon = () => (
@@ -33,7 +34,7 @@ const FALLBACK_CATEGORIES = [
   'Food & Dining', 'Shopping', 'Transport', 'Entertainment',
   'Bills & Utilities', 'Health & Fitness', 'Travel', 'Education',
   'Personal Care', 'Home', 'Salary', 'Investments', 'Other Income', 'Uncategorized',
-].map((n) => ({ name: n, subcategories: [], icon: '📦' }));
+].map((n) => ({ name: n, subcategories: [], icon: 'shopping' }));
 
 const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) => {
   const [form, setForm] = useState(initialForm);
@@ -243,7 +244,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
                         style={{ '--acc-clr': acc.color || '#6366f1' }}
                       >
                         <input type="radio" name="Account" value={acc.name} checked={selected} onChange={handleChange} required />
-                        <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                        <span className="acc-radio-icon" style={{ background: getIconMeta(acc.type || 'bank').tileBg }}><WalletoIcon name={acc.type || 'bank'} size={18} /></span>
                         <div className="acc-radio-info">
                           <span className="acc-radio-name">{acc.name}</span>
                           <span className="acc-radio-bal">
@@ -277,7 +278,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
                           type="radio" name="Account" value={acc.name} checked={selected}
                           onChange={handleChange} required disabled={form.ToAccount === acc.name}
                         />
-                        <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                        <span className="acc-radio-icon" style={{ background: getIconMeta(acc.type || 'bank').tileBg }}><WalletoIcon name={acc.type || 'bank'} size={18} /></span>
                         <div className="acc-radio-info">
                           <span className="acc-radio-name">{acc.name}</span>
                           <span className="acc-radio-bal">
@@ -304,7 +305,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
                           type="radio" name="ToAccount" value={acc.name} checked={selected}
                           onChange={handleChange} required disabled={form.Account === acc.name}
                         />
-                        <span className="acc-radio-icon">{acc.icon || '🏦'}</span>
+                        <span className="acc-radio-icon" style={{ background: getIconMeta(acc.type || 'bank').tileBg }}><WalletoIcon name={acc.type || 'bank'} size={18} /></span>
                         <div className="acc-radio-info">
                           <span className="acc-radio-name">{acc.name}</span>
                           <span className="acc-radio-bal">
@@ -366,9 +367,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
               >
                 <option value="">Select category...</option>
                 {categories.map((cat) => (
-                  <option key={cat.name} value={cat.name}>
-                    {cat.icon ? `${cat.icon} ` : ''}{cat.name}
-                  </option>
+                  <option key={cat.name} value={cat.name}>{cat.name}</option>
                 ))}
               </select>
             </div>

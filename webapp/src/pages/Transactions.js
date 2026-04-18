@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../api/axios';
 import TransactionModal from '../components/TransactionModal';
+import WalletoIcon, { getIconMeta } from '../components/WalletoIcon';
 import './Transactions.css';
 import { toDateKey, formatDayHeader } from '../utils/dateUtils';
 
@@ -47,7 +48,7 @@ const buildIconMap = (cats) => {
   return map;
 };
 
-const getCategoryEmoji = (cat, iconMap) => iconMap[cat] || '📦';
+const getCategoryIcon = (cat, iconMap) => iconMap[cat] || cat;
 
 // Group transactions by date
 const groupByDate = (txs) => {
@@ -337,12 +338,8 @@ const Transactions = () => {
                 {txs.map((tx) => {
                   const isIncome   = tx.Type?.toUpperCase() === 'INCOME';
                   const isTransfer = tx.Type?.toUpperCase() === 'TRANSFER';
-                  const emoji = isTransfer ? '🔄' : getCategoryEmoji(tx.Category, iconMap);
-                  const iconBg = isIncome
-                    ? 'rgba(0,135,90,0.12)'
-                    : isTransfer
-                      ? 'rgba(91,91,95,0.08)'
-                      : 'rgba(182,0,81,0.12)';
+                  const iconName = getCategoryIcon(tx.Category, iconMap);
+                  const iconBg = isTransfer ? 'rgba(91,91,95,0.08)' : getIconMeta(iconName).tileBg;
                   const amtClass = isIncome
                     ? 'tx-item-amount--income'
                     : isTransfer
@@ -353,14 +350,17 @@ const Transactions = () => {
                   return (
                     <div className="tx-item" key={tx._id}>
                       <div className="tx-item-icon" style={{ background: iconBg }}>
-                        {emoji}
+                        {isTransfer
+                          ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                          : <WalletoIcon name={iconName} size={16} />
+                        }
                       </div>
                       <div className="tx-item-info">
                         <p className="tx-item-category">
                           {tx.Category || 'Uncategorized'}
                           {tx.Subcategory ? ` · ${tx.Subcategory}` : ''}
                         </p>
-                        <p className="tx-item-account">🏦 {tx.Account}</p>
+                        <p className="tx-item-account">{tx.Account}</p>
                         {tx.Notes && (
                           <p className="tx-item-notes">{tx.Notes}</p>
                         )}

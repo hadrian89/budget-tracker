@@ -528,9 +528,13 @@
 }
 
 .acc-radio-icon {
-  font-size: 22px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  line-height: 1;
 }
 
 .acc-radio-info {

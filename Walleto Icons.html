@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Walleto Atelier Marks — Icon System</title>
+<meta name="viewport" content="width=1440">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* core tokens from DESIGN.md */
+    --surface: #f7f9fb;
+    --surface-low: #f2f4f6;
+    --surface-lowest: #ffffff;
+    --surface-high: #ebecf2;
+    --on-surface: #191c1e;
+    --on-surface-muted: #5c5f6b;
+    --on-surface-faint: #9397a2;
+    --primary: #2a14b4;
+    --primary-container: #4338ca;
+    --secondary: #006c49;
+    --tertiary: #4700ab;
+    --outline-ghost: rgba(199, 196, 215, 0.4);
+
+    /* family accents */
+    --fam-primary-fill: rgba(42, 20, 180, 0.06);
+    --fam-primary-accent: #2a14b4;
+    --fam-secondary-fill: rgba(0, 108, 73, 0.08);
+    --fam-secondary-accent: #006c49;
+    --fam-tertiary-fill: rgba(71, 0, 171, 0.07);
+    --fam-tertiary-accent: #7c3aed;
+
+    --tile-size: 44px;
+    --tile-radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--surface);
+    color: var(--on-surface);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    letter-spacing: -0.01em;
+  }
+
+  /* -------- LAYOUT -------- */
+  .page { max-width: 1320px; margin: 0 auto; padding: 64px 56px 120px; }
+
+  /* -------- HERO -------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 56px;
+    align-items: end;
+    padding-bottom: 56px;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--primary);
+    opacity: .5;
+  }
+  h1 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 72px;
+    line-height: .96;
+    letter-spacing: -0.035em;
+    margin: 20px 0 0;
+    color: var(--on-surface);
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--primary);
+    font-family: 'Manrope', sans-serif;
+  }
+  .hero-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--on-surface-muted);
+    max-width: 440px;
+  }
+  .hero-meta p { margin: 0; }
+  .stat-row {
+    display: flex;
+    gap: 32px;
+    padding-top: 24px;
+  }
+  .stat .n {
+    font-family: 'Manrope', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--on-surface);
+    line-height: 1;
+  }
+  .stat .l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-surface-faint);
+    margin-top: 6px;
+  }
+
+  /* -------- SECTIONS -------- */
+  section { margin-top: 96px; }
+  .section-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--on-surface-faint);
+    letter-spacing: 0.1em;
+  }
+  .section-head h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .section-head .desc {
+    font-size: 13px;
+    color: var(--on-surface-muted);
+    max-width: 380px;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* -------- ICON GRID -------- */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    background: var(--surface-high);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .icon-cell {
+    background: var(--surface-lowest);
+    padding: 28px 20px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    transition: background 200ms ease;
+  }
+  .icon-cell:hover {
+    background: #fbfbfe;
+  }
+  .icon-cell .tile {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--tile-bg, var(--surface-low));
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+  .icon-cell .tile svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+  }
+  .icon-cell .label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--on-surface);
+    letter-spacing: -0.005em;
+  }
+  .icon-cell .fam-dot {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  /* family styling */
+  .f-primary   { --fill-tint: var(--fam-primary-fill);   --accent: var(--fam-primary-accent);   --tile-bg: #eeecf8; }
+  .f-secondary { --fill-tint: var(--fam-secondary-fill); --accent: var(--fam-secondary-accent); --tile-bg: #e6f1ec; }
+  .f-tertiary  { --fill-tint: var(--fam-tertiary-fill);  --accent: var(--fam-tertiary-accent);  --tile-bg: #efe8fb; }
+
+  .f-primary .fam-dot   { background: var(--fam-primary-accent); }
+  .f-secondary .fam-dot { background: var(--fam-secondary-accent); }
+  .f-tertiary .fam-dot  { background: var(--fam-tertiary-accent); }
+
+  /* -------- ANATOMY PANEL -------- */
+  .anatomy {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .panel {
+    background: var(--surface-lowest);
+    border-radius: 20px;
+    padding: 36px;
+  }
+  .panel.dark {
+    background: #15151f;
+    color: #eaeaf0;
+  }
+  .panel h3 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  .panel .subh {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-surface-faint);
+    margin-bottom: 24px;
+  }
+  .panel.dark .subh { color: #8a8aa0; }
+
+  .anatomy-svg {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin: 0 auto;
+    display: block;
+  }
+  .anatomy-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+    font-size: 13px;
+  }
+  .legend-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid var(--outline-ghost);
+  }
+  .legend-row:first-child { border-top: none; }
+  .legend-row .swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+  }
+  .legend-row .name { font-weight: 500; }
+  .legend-row .spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--on-surface-muted);
+  }
+
+  /* -------- COLOR SCALES (dark panel) -------- */
+  .scale-rows { display: flex; flex-direction: column; gap: 20px; }
+  .scale-row { display: flex; flex-direction: column; gap: 8px; }
+  .scale-row .n { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8aa0; }
+  .scale-swatches { display: flex; gap: 3px; }
+  .scale-sw {
+    flex: 1;
+    height: 44px;
+    border-radius: 4px;
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #0008;
+    padding: 4px 6px;
+  }
+  .scale-sw.on-dark { color: #fff8; }
+
+  /* -------- USAGE: ACCOUNT PICKER -------- */
+  .mock {
+    background: var(--surface-lowest);
+    border-radius: 24px;
+    padding: 40px;
+    margin-top: 32px;
+  }
+  .mock-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  .mock-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-surface-faint);
+    margin-bottom: 28px;
+  }
+
+  .acct-type-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .acct-type {
+    background: var(--surface-low);
+    border-radius: 14px;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 200ms ease;
+    position: relative;
+  }
+  .acct-type svg { width: 28px; height: 28px; }
+  .acct-type .n { font-size: 13px; font-weight: 500; }
+  .acct-type.sel {
+    background: var(--surface-lowest);
+    box-shadow: 0 0 0 2px var(--primary), 0 8px 24px -12px rgba(42,20,180,.25);
+  }
+
+  .acct-icon-row {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+  }
+  .acct-icon {
+    aspect-ratio: 1;
+    background: var(--surface-low);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 180ms ease;
+  }
+  .acct-icon svg { width: 22px; height: 22px; }
+  .acct-icon.sel {
+    background: var(--surface-lowest);
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  .acct-icon:hover { background: var(--surface-high); }
+
+  .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* -------- USAGE: ACCOUNTS GRID -------- */
+  .accounts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .acct-card {
+    background: var(--surface-lowest);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .acct-card .tile {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+  }
+  .acct-card .tile svg { width: 22px; height: 22px; }
+  .acct-card .n { font-size: 13px; font-weight: 600; color: var(--on-surface); }
+  .acct-card .tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    padding: 3px 7px;
+    border-radius: 4px;
+    background: var(--fill-tint);
+    color: var(--accent);
+    text-transform: uppercase;
+    width: fit-content;
+  }
+  .acct-card .amt {
+    font-family: 'Manrope', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .acct-card .amt .cur {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--on-surface-faint);
+    margin-left: 4px;
+  }
+  .acct-card .underline {
+    height: 2px;
+    border-radius: 1px;
+    background: var(--accent);
+    opacity: .6;
+    width: 40%;
+  }
+
+  /* -------- USAGE: CATEGORY CHIPS -------- */
+  .chip-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 7px 8px;
+    border-radius: 999px;
+    background: var(--surface-low);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .chip svg { width: 18px; height: 18px; }
+  .chip .bullet {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--tile-bg);
+  }
+  .chip .bullet svg { width: 14px; height: 14px; }
+
+  /* -------- USAGE: TRANSACTION LIST -------- */
+  .txn-list {
+    background: var(--surface-lowest);
+    border-radius: 20px;
+    padding: 8px;
+    margin-top: 24px;
+  }
+  .txn {
+    display: grid;
+    grid-template-columns: 44px 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 14px;
+    transition: background 180ms;
+  }
+  .txn:hover { background: var(--surface-low); }
+  .txn .tile {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: var(--tile-bg);
+    display: grid;
+    place-items: center;
+  }
+  .txn .tile svg { width: 22px; height: 22px; }
+  .txn .primary-text {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .txn .meta {
+    font-size: 12px;
+    color: var(--on-surface-muted);
+    margin-top: 2px;
+  }
+  .txn .date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--on-surface-faint);
+  }
+  .txn .amt {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+  }
+  .txn .amt.plus { color: var(--secondary); }
+
+  /* -------- SIZE SHOWCASE -------- */
+  .sizes {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 32px 36px;
+    background: var(--surface-lowest);
+    border-radius: 20px;
+    margin-top: 24px;
+  }
+  .size-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .size-col .ring {
+    border-radius: 10px;
+    background: #eeecf8;
+    display: grid;
+    place-items: center;
+  }
+  .size-col .ring svg { display: block; }
+  .size-col .spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--on-surface-faint);
+    text-transform: uppercase;
+  }
+
+  /* -------- FOOTER -------- */
+  footer {
+    margin-top: 120px;
+    padding-top: 32px;
+    border-top: 1px solid var(--outline-ghost);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-surface-faint);
+  }
+
+  /* -------- TWEAKS PANEL -------- */
+  #tweaks {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px;
+    padding: 20px;
+    width: 260px;
+    box-shadow: 0 20px 60px -20px rgba(25,28,30,.18);
+    display: none;
+    z-index: 50;
+    font-size: 12px;
+  }
+  #tweaks.on { display: block; }
+  #tweaks h4 {
+    margin: 0 0 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  #tweaks label { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+  #tweaks input[type=range] { width: 120px; }
+  #tweaks .swatches { display: flex; gap: 6px; margin-top: 4px; }
+  #tweaks .swatches button {
+    width: 22px; height: 22px; border: 0; border-radius: 6px; cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+  }
+  #tweaks .swatches button.sel { box-shadow: inset 0 0 0 2px var(--on-surface); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Walleto · Icon System v1.0</div>
+      <h1>Atelier <em>Marks.</em></h1>
+    </div>
+    <div class="hero-meta">
+      <p>A custom duotone icon system replacing the placeholder emoji in Walleto's account and category pickers. Drawn on a 24px grid with a 1.5px stroke, tinted fills, and a single accent beat per mark.</p>
+      <p>Designed for the "Digital Atelier" aesthetic — three semantic families (Indigo, Moss, Amethyst), no decorative lines, no gradients inside marks.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="n" id="stat-cat">20</div><div class="l">Category marks</div></div>
+        <div class="stat"><div class="n" id="stat-acc">10</div><div class="l">Account marks</div></div>
+        <div class="stat"><div class="n">24</div><div class="l">Grid / px</div></div>
+        <div class="stat"><div class="n">1.5</div><div class="l">Stroke / px</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANATOMY + SCALES -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">01 /</span>
+      <h2>Anatomy &amp; Families</h2>
+      <span class="desc">Every mark is a tinted fill panel plus a stroke silhouette, with one small accent detail to signal family. Three families map to DESIGN.md's primary / secondary / tertiary tokens.</span>
+    </div>
+
+    <div class="anatomy">
+      <div class="panel">
+        <h3>Construction</h3>
+        <div class="subh">24 × 24 · stroke 1.5 · radii 3–5</div>
+        <svg class="anatomy-svg" viewBox="0 0 240 240">
+          <!-- grid -->
+          <defs>
+            <pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M10 0H0V10" fill="none" stroke="#c7c4d780" stroke-width=".4"/>
+            </pattern>
+          </defs>
+          <rect x="20" y="20" width="200" height="200" fill="#f7f9fb" rx="12"/>
+          <rect x="20" y="20" width="200" height="200" fill="url(#g)" rx="12"/>
+          <!-- safe padding -->
+          <rect x="36.67" y="36.67" width="166.67" height="166.67" fill="none" stroke="#2a14b4" stroke-width=".6" stroke-dasharray="3 3" opacity=".5"/>
+
+          <!-- icon: bank (scaled) -->
+          <g transform="translate(30 30) scale(7.5)">
+            <path d="M3.5 9.5L12 4l8.5 5.5H3.5z" fill="rgba(42,20,180,0.06)" stroke="#2a14b4" stroke-width=".2" stroke-linejoin="round"/>
+            <path d="M5 10v7M9 10v7M15 10v7M19 10v7" stroke="#2a14b4" stroke-width=".2" stroke-linecap="round"/>
+            <path d="M3 20h18" stroke="#2a14b4" stroke-width=".24" stroke-linecap="round"/>
+            <circle cx="12" cy="7.5" r=".9" fill="#2a14b4"/>
+          </g>
+
+          <!-- callouts -->
+          <g font-family="JetBrains Mono" font-size="8" fill="#5c5f6b">
+            <text x="224" y="30" text-anchor="end">24pt grid</text>
+            <text x="224" y="46" text-anchor="end" fill="#2a14b4">2pt safe pad</text>
+
+            <line x1="28" y1="170" x2="50" y2="160" stroke="#5c5f6b" stroke-width=".4"/>
+            <text x="20" y="175">fill tint</text>
+
+            <line x1="228" y1="100" x2="200" y2="100" stroke="#5c5f6b" stroke-width=".4"/>
+            <text x="232" y="103">1.5 stroke</text>
+
+            <line x1="120" y1="95" x2="120" y2="70" stroke="#2a14b4" stroke-width=".4"/>
+            <text x="124" y="65" fill="#2a14b4">accent dot</text>
+          </g>
+        </svg>
+
+        <div class="anatomy-legend">
+          <div class="legend-row">
+            <div class="swatch" style="background:rgba(42,20,180,.08);box-shadow:inset 0 0 0 1px rgba(42,20,180,.18)"></div>
+            <div class="name">Fill panel</div>
+            <div class="spec">tint · 6–8% primary</div>
+          </div>
+          <div class="legend-row">
+            <div class="swatch" style="background:var(--primary)"></div>
+            <div class="name">Stroke silhouette</div>
+            <div class="spec">1.5px · round caps</div>
+          </div>
+          <div class="legend-row">
+            <div class="swatch" style="background:#7c3aed"></div>
+            <div class="name">Accent moment</div>
+            <div class="spec">family color · 1 per mark</div>
+          </div>
+          <div class="legend-row">
+            <div class="swatch" style="background:#eeecf8"></div>
+            <div class="name">Container tile</div>
+            <div class="spec">40px · 11px radius</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel dark">
+        <h3 style="color:#eaeaf0">Families</h3>
+        <div class="subh">three semantic registers</div>
+
+        <div class="scale-rows">
+          <div class="scale-row">
+            <div class="n">▸ Indigo — infrastructure &amp; obligations</div>
+            <div class="scale-swatches">
+              <div class="scale-sw" style="background:#eeecf8">EEECF8</div>
+              <div class="scale-sw on-dark" style="background:#b5addf">B5ADDF</div>
+              <div class="scale-sw on-dark" style="background:#6a57d0">6A57D0</div>
+              <div class="scale-sw on-dark" style="background:#4338ca">4338CA</div>
+              <div class="scale-sw on-dark" style="background:#2a14b4">2A14B4</div>
+            </div>
+          </div>
+          <div class="scale-row">
+            <div class="n">▸ Moss — earnings, savings, growth</div>
+            <div class="scale-swatches">
+              <div class="scale-sw" style="background:#e6f1ec">E6F1EC</div>
+              <div class="scale-sw on-dark" style="background:#9bc9b2">9BC9B2</div>
+              <div class="scale-sw on-dark" style="background:#4a9e7a">4A9E7A</div>
+              <div class="scale-sw on-dark" style="background:#2a8c61">2A8C61</div>
+              <div class="scale-sw on-dark" style="background:#006c49">006C49</div>
+            </div>
+          </div>
+          <div class="scale-row">
+            <div class="n">▸ Amethyst — lifestyle &amp; discretionary</div>
+            <div class="scale-swatches">
+              <div class="scale-sw" style="background:#efe8fb">EFE8FB</div>
+              <div class="scale-sw on-dark" style="background:#c4a6ee">C4A6EE</div>
+              <div class="scale-sw on-dark" style="background:#9666db">9666DB</div>
+              <div class="scale-sw on-dark" style="background:#7c3aed">7C3AED</div>
+              <div class="scale-sw on-dark" style="background:#4700ab">4700AB</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:28px;font-size:12px;line-height:1.6;color:#aeadc4">
+          Family assignment is semantic, not decorative. A food-delivery transaction always sits on Moss (sustenance); a shopping splurge always sits on Amethyst (discretionary). The three families produce legible color-coded ledgers without rainbow chaos.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY SET -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">02 /</span>
+      <h2>Category Marks</h2>
+      <span class="desc">Replaces the emoji row in the transaction/category picker. 20 marks covering typical personal-finance spend and income categories.</span>
+    </div>
+    <div class="icon-grid" id="cat-grid"></div>
+  </section>
+
+  <!-- ACCOUNT SET -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">03 /</span>
+      <h2>Account Marks</h2>
+      <span class="desc">For the "Add Account" flow — four type chips plus ten specific institution-style icons.</span>
+    </div>
+    <div class="icon-grid" id="acc-grid" style="grid-template-columns:repeat(5,1fr)"></div>
+  </section>
+
+  <!-- SIZES -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">04 /</span>
+      <h2>Size &amp; Tile Sheet</h2>
+      <span class="desc">The mark holds up across the five sizes used in-product — tooltip bullet through dashboard hero.</span>
+    </div>
+    <div class="sizes" id="sizes"></div>
+  </section>
+
+  <!-- IN-CONTEXT MOCKS -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">05 /</span>
+      <h2>In Context</h2>
+      <span class="desc">The marks at work — in the Add Account modal, Accounts grid, a transaction ledger, and category chips.</span>
+    </div>
+
+    <!-- Add account modal -->
+    <div class="mock">
+      <h3 class="mock-title">Add Account</h3>
+      <div class="mock-sub">replaces · Account / Icon picker</div>
+
+      <label class="form-label">Account Type</label>
+      <div class="acct-type-row" id="acct-type-row"></div>
+
+      <label class="form-label">Icon</label>
+      <div class="acct-icon-row" id="acct-icon-row"></div>
+    </div>
+
+    <!-- Accounts grid -->
+    <div class="mock" style="margin-top:16px">
+      <h3 class="mock-title">Accounts</h3>
+      <div class="mock-sub">Total balance · £49,552.54 GBP</div>
+      <div class="accounts-grid" id="accounts-grid"></div>
+    </div>
+
+    <!-- Transactions -->
+    <div class="mock" style="margin-top:16px;padding-bottom:24px">
+      <h3 class="mock-title">Recent Transactions</h3>
+      <div class="mock-sub">this week · Apr 2026</div>
+
+      <div style="padding: 0 12px"><div class="chip-row" id="chip-row"></div></div>
+
+      <div class="txn-list" id="txn-list"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Walleto / Atelier Marks</span>
+    <span>Drawn on a 24pt grid · 2026</span>
+  </footer>
+</div>
+
+<!-- TWEAKS -->
+<div id="tweaks">
+  <h4>Tweaks</h4>
+  <label>Tile radius <input type="range" min="4" max="20" value="11" id="tw-radius"></label>
+  <label>Stroke weight <input type="range" min="10" max="22" value="15" id="tw-stroke"></label>
+  <label>Fill intensity <input type="range" min="0" max="100" value="60" id="tw-fill"></label>
+  <div style="margin-top:10px">Family emphasis
+    <div class="swatches" id="tw-fam">
+      <button data-fam="all" class="sel" style="background:linear-gradient(135deg,#2a14b4 0 33%,#006c49 33% 66%, #7c3aed 66%)"></button>
+      <button data-fam="primary" style="background:#2a14b4"></button>
+      <button data-fam="secondary" style="background:#006c49"></button>
+      <button data-fam="tertiary" style="background:#7c3aed"></button>
+    </div>
+  </div>
+</div>
+
+<script src="icons.js"></script>
+<script>
+  /* -------- RENDER HELPERS -------- */
+  const svgEl = (inner, size=24) =>
+    `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+
+  const currentStroke = () => `var(--primary)`;
+
+  function renderGrid(container, iconSet) {
+    const el = document.querySelector(container);
+    el.innerHTML = Object.entries(iconSet).map(([key, cfg]) => `
+      <div class="icon-cell f-${cfg.family}" data-fam="${cfg.family}" data-key="${key}">
+        <div class="fam-dot"></div>
+        <div class="tile">${svgEl(cfg.svg(currentStroke()), 32)}</div>
+        <div class="label">${cfg.label}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderSizes() {
+    const bank = ACCOUNT_ICONS.bank;
+    const sizes = [
+      { px: 14, tile: 22, radius: 6 },
+      { px: 18, tile: 30, radius: 8 },
+      { px: 22, tile: 40, radius: 11 },
+      { px: 28, tile: 52, radius: 14 },
+      { px: 36, tile: 64, radius: 16 },
+      { px: 48, tile: 80, radius: 20 },
+    ];
+    document.getElementById('sizes').innerHTML = sizes.map(s => `
+      <div class="size-col f-primary">
+        <div class="ring" style="width:${s.tile}px;height:${s.tile}px;border-radius:${s.radius}px">
+          ${svgEl(bank.svg(currentStroke()), s.px)}
+        </div>
+        <div class="spec">${s.tile}px</div>
+      </div>
+    `).join('');
+  }
+
+  /* -------- MOCK: ADD ACCOUNT -------- */
+  function renderAddAccountMock() {
+    const types = [
+      { key: 'bank', label: 'Bank' },
+      { key: 'cash', label: 'Cash' },
+      { key: 'card', label: 'Card' },
+      { key: 'investment', label: 'Investment' },
+    ];
+    document.getElementById('acct-type-row').innerHTML = types.map((t,i) => `
+      <div class="acct-type f-${ACCOUNT_ICONS[t.key].family} ${i===3?'sel':''}" data-type="${t.key}">
+        ${svgEl(ACCOUNT_ICONS[t.key].svg(currentStroke()), 28)}
+        <div class="n">${t.label}</div>
+      </div>
+    `).join('');
+
+    const pickerOrder = ['bank','cash','card','investment','atm','wallet','globe','chart','vault','crypto'];
+    document.getElementById('acct-icon-row').innerHTML = pickerOrder.map((k,i) => `
+      <div class="acct-icon f-${ACCOUNT_ICONS[k].family} ${i===1?'sel':''}" data-icon="${k}">
+        ${svgEl(ACCOUNT_ICONS[k].svg(currentStroke()), 22)}
+      </div>
+    `).join('');
+
+    // simple select interaction
+    document.querySelectorAll('.acct-type').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.acct-type').forEach(e=>e.classList.remove('sel'));
+        el.classList.add('sel');
+      });
+    });
+    document.querySelectorAll('.acct-icon').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.acct-icon').forEach(e=>e.classList.remove('sel'));
+        el.classList.add('sel');
+      });
+    });
+  }
+
+  /* -------- MOCK: ACCOUNTS GRID -------- */
+  function renderAccountsMock() {
+    const accts = [
+      { icon:'bank',       name:'Monzo-ABHI',           amt:'£118.27',   fam:'primary' },
+      { icon:'bank',       name:'NBS-ABHI',             amt:'£2,725.23', fam:'primary' },
+      { icon:'cash',       name:'Cash-ABHI',            amt:'£10.00',    fam:'secondary' },
+      { icon:'cash',       name:'Cash-Varsha',          amt:'£0.00',     fam:'secondary' },
+      { icon:'chart',      name:'NBS-FlexRegularSaver', amt:'£2,200.00', fam:'secondary' },
+      { icon:'investment', name:'Monzo-Abhi-Savings',   amt:'£3,653.26', fam:'secondary' },
+      { icon:'investment', name:'HSBC-Varsha-Saver',    amt:'£5,413.00', fam:'secondary' },
+      { icon:'vault',      name:'HSBC-Varsha-Current',  amt:'£47.22',    fam:'primary' },
+    ];
+    document.getElementById('accounts-grid').innerHTML = accts.map(a => `
+      <div class="acct-card f-${a.fam}">
+        <div class="tile">${svgEl(ACCOUNT_ICONS[a.icon].svg(currentStroke()), 22)}</div>
+        <div class="n">${a.name}</div>
+        <div class="tag">${a.fam === 'primary' ? 'Bank' : 'Savings'}</div>
+        <div class="amt">${a.amt} <span class="cur">GBP</span></div>
+        <div class="underline"></div>
+      </div>
+    `).join('');
+  }
+
+  /* -------- MOCK: CHIPS + TXN LIST -------- */
+  function renderChipsMock() {
+    const chipKeys = ['grocery','restaurant','coffee','transport','shopping','entertainment','health','subscription'];
+    document.getElementById('chip-row').innerHTML = chipKeys.map(k => {
+      const c = CATEGORY_ICONS[k];
+      return `<span class="chip f-${c.family}"><span class="bullet">${svgEl(c.svg(currentStroke()), 14)}</span>${c.label}</span>`;
+    }).join('');
+  }
+
+  function renderTxnListMock() {
+    const txns = [
+      { icon:'salary',        name:'Monthly Salary',       meta:'Monzo · Income',        date:'Apr 15',  amt:'+£3,556.73',  plus:true },
+      { icon:'grocery',       name:'Tesco Metro',          meta:'Monzo-ABHI · Grocery',  date:'Apr 14',  amt:'£47.82' },
+      { icon:'subscription',  name:'Netflix',              meta:'HSBC · Subscriptions',  date:'Apr 13',  amt:'£12.99' },
+      { icon:'coffee',        name:'Monmouth Coffee',      meta:'Cash-ABHI · Coffee',    date:'Apr 12',  amt:'£4.20' },
+      { icon:'rent',          name:'April Rent',           meta:'NBS-ABHI · Housing',    date:'Apr 01',  amt:'£1,420.00' },
+      { icon:'travel',        name:'BA — BA118 LHR→JFK',   meta:'Card · Travel',         date:'Apr 09',  amt:'£612.40' },
+      { icon:'fitness',       name:'Third Space',          meta:'HSBC · Fitness',        date:'Apr 08',  amt:'£185.00' },
+    ];
+    document.getElementById('txn-list').innerHTML = txns.map(t => {
+      const c = CATEGORY_ICONS[t.icon];
+      return `
+        <div class="txn f-${c.family}">
+          <div class="tile">${svgEl(c.svg(currentStroke()), 22)}</div>
+          <div>
+            <div class="primary-text">${t.name}</div>
+            <div class="meta">${t.meta}</div>
+          </div>
+          <div class="date">${t.date}</div>
+          <div class="amt ${t.plus?'plus':''}">${t.amt}</div>
+        </div>`;
+    }).join('');
+  }
+
+  /* -------- INIT -------- */
+  renderGrid('#cat-grid', CATEGORY_ICONS);
+  renderGrid('#acc-grid', ACCOUNT_ICONS);
+  renderSizes();
+  renderAddAccountMock();
+  renderAccountsMock();
+  renderChipsMock();
+  renderTxnListMock();
+  document.getElementById('stat-cat').textContent = Object.keys(CATEGORY_ICONS).length;
+  document.getElementById('stat-acc').textContent = Object.keys(ACCOUNT_ICONS).length;
+
+  /* -------- TWEAKS -------- */
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "tile_radius": 11,
+    "stroke_weight": 1.5,
+    "fill_intensity": 60,
+    "family_emphasis": "all"
+  }/*EDITMODE-END*/;
+  let state = {...TWEAK_DEFAULTS};
+
+  function applyTweaks() {
+    document.documentElement.style.setProperty('--tile-radius', state.tile_radius + 'px');
+    // stroke weight on all svg strokes — quick global pass
+    document.querySelectorAll('svg path[stroke], svg circle[stroke], svg rect[stroke], svg ellipse[stroke], svg line[stroke]').forEach(p => {
+      const cs = getComputedStyle(p);
+      // only override paths that currently have 1.5 or 1.3 (mark strokes, not chart bars)
+      const orig = +p.getAttribute('stroke-width') || 0;
+      if (orig > 0.9 && orig <= 2) p.setAttribute('stroke-width', (state.stroke_weight).toFixed(2));
+    });
+
+    // fill intensity
+    const mult = state.fill_intensity / 60;
+    document.documentElement.style.setProperty('--fam-primary-fill', `rgba(42,20,180,${(0.06*mult).toFixed(3)})`);
+    document.documentElement.style.setProperty('--fam-secondary-fill', `rgba(0,108,73,${(0.08*mult).toFixed(3)})`);
+    document.documentElement.style.setProperty('--fam-tertiary-fill', `rgba(71,0,171,${(0.07*mult).toFixed(3)})`);
+
+    // family emphasis: fade the non-selected families
+    const fam = state.family_emphasis;
+    document.querySelectorAll('[data-fam], .f-primary, .f-secondary, .f-tertiary').forEach(el => {
+      if (fam === 'all') { el.style.opacity = ''; return; }
+      const match = el.classList.contains('f-' + fam);
+      el.style.opacity = match ? '' : '0.25';
+    });
+
+    // persist
+    window.parent?.postMessage({ type: '__edit_mode_set_keys', edits: state }, '*');
+  }
+
+  // Listen for edit mode toggle (must be set up BEFORE announcing availability)
+  window.addEventListener('message', (e) => {
+    if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks').classList.add('on');
+    if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('on');
+  });
+  window.parent?.postMessage({ type: '__edit_mode_available' }, '*');
+
+  // wire controls
+  document.getElementById('tw-radius').addEventListener('input', e => { state.tile_radius = +e.target.value; applyTweaks(); });
+  document.getElementById('tw-stroke').addEventListener('input', e => { state.stroke_weight = +e.target.value / 10; applyTweaks(); });
+  document.getElementById('tw-fill').addEventListener('input', e => { state.fill_intensity = +e.target.value; applyTweaks(); });
+  document.querySelectorAll('#tw-fam button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#tw-fam button').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+      state.family_emphasis = b.dataset.fam;
+      applyTweaks();
+    });
+  });
+
+  // init tweaks state (load from persisted defaults)
+  document.getElementById('tw-radius').value = state.tile_radius;
+  document.getElementById('tw-stroke').value = state.stroke_weight * 10;
+  document.getElementById('tw-fill').value = state.fill_intensity;
+</script>
+
+</body>
+</html>

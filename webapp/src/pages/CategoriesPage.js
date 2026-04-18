@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import axiosInstance from '../api/axios';
 import MonthPicker from '../components/MonthPicker';
+import WalletoIcon, { getIconMeta } from '../components/WalletoIcon';
+import { ALL_ICON_KEYS } from '../data/icons';
 import './CategoriesPage.css';
 
 const toMonthStr = (d) =>
@@ -16,14 +18,13 @@ const PRESET_COLORS = [
   '#0ea5e9', '#64748b',
 ];
 
-const PRESET_ICONS = ['🍔','🛍️','🚗','🎉','🚌','📄','🏠','💊','💰','📦','✈️','🎓','💻','🏋️','🎮','🐾'];
 
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   const { name, value, payload: p } = payload[0];
   return (
     <div className="cat-tooltip">
-      <span className="cat-tooltip-icon">{p.icon}</span>
+      <WalletoIcon name={p.icon} size={18} />
       <span className="cat-tooltip-name">{name}</span>
       <span className="cat-tooltip-val">{fmt(value)}</span>
     </div>
@@ -42,7 +43,7 @@ export default function CategoriesPage() {
   const [catLoading, setCatLoading] = useState(false);
 
   const [editCat, setEditCat] = useState(null);
-  const [form, setForm] = useState({ name: '', color: '#2a14b4', icon: '📦', subcategories: [], monthlyLimit: '' });
+  const [form, setForm] = useState({ name: '', color: '#2a14b4', icon: 'shopping', subcategories: [], monthlyLimit: '' });
   const [newSub, setNewSub] = useState('');
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
@@ -63,7 +64,7 @@ export default function CategoriesPage() {
       // Build lookup: category name → { icon, color }
       const managedMap = {};
       (catRes.data.categories || []).forEach((c) => {
-        managedMap[c.name] = { icon: c.icon || '📦', color: c.color || null };
+        managedMap[c.name] = { icon: c.icon || 'shopping', color: c.color || null };
       });
 
       // Build limit lookup: category name → monthlyLimit
@@ -78,7 +79,7 @@ export default function CategoriesPage() {
         const cat = tx.Category || 'Uncategorized';
         if (!map[cat]) {
           const mc = managedMap[cat] || {};
-          map[cat] = { name: cat, amount: 0, count: 0, icon: mc.icon || '📦', color: mc.color || null, monthlyLimit: limitMap[cat] ?? null };
+          map[cat] = { name: cat, amount: 0, count: 0, icon: mc.icon || 'shopping', color: mc.color || null, monthlyLimit: limitMap[cat] ?? null };
         }
         map[cat].amount += Math.abs(tx.Amount_GBP || 0);
         map[cat].count += 1;
@@ -107,7 +108,7 @@ export default function CategoriesPage() {
 
   const resetForm = () => {
     setEditCat(null);
-    setForm({ name: '', color: '#2a14b4', icon: '📦', subcategories: [], monthlyLimit: '' });
+    setForm({ name: '', color: '#2a14b4', icon: 'shopping', subcategories: [], monthlyLimit: '' });
     setNewSub('');
     setFormError('');
   };
@@ -171,7 +172,7 @@ export default function CategoriesPage() {
   const enriched = catData.map((c, i) => ({
     ...c,
     color: c.color || PRESET_COLORS[i % PRESET_COLORS.length],
-    icon: c.icon || '📦',
+    icon: c.icon || 'shopping',
   }));
 
   const grandTotal = enriched.reduce((s, c) => s + c.amount, 0);
@@ -236,8 +237,8 @@ export default function CategoriesPage() {
 
               return (
                 <div className="cat-list-item" key={cat.name}>
-                  <div className="cat-list-icon" style={{ background: cat.color + '1f' }}>
-                    <span style={{ fontSize: 20 }}>{cat.icon}</span>
+                  <div className="cat-list-icon" style={{ background: getIconMeta(cat.name).tileBg }}>
+                    <WalletoIcon name={cat.name} size={22} />
                   </div>
                   <div className="cat-list-info">
                     <div className="cat-list-row">
@@ -291,15 +292,16 @@ export default function CategoriesPage() {
               <div className="cat-form-row">
                 <div className="form-group-sm">
                   <label className="form-label-sm">Icon</label>
-                  <div className="icon-picker">
-                    {PRESET_ICONS.map((ic) => (
+                  <div className="icon-picker icon-picker--svg">
+                    {ALL_ICON_KEYS.map((key) => (
                       <button
-                        key={ic}
-                        className={`icon-btn${form.icon === ic ? ' icon-btn--active' : ''}`}
-                        onClick={() => setForm((p) => ({ ...p, icon: ic }))}
+                        key={key}
+                        className={`icon-btn icon-btn--svg${form.icon === key ? ' icon-btn--active' : ''}`}
+                        onClick={() => setForm((p) => ({ ...p, icon: key }))}
                         type="button"
+                        title={key}
                       >
-                        {ic}
+                        <WalletoIcon name={key} size={20} />
                       </button>
                     ))}
                   </div>
@@ -385,8 +387,8 @@ export default function CategoriesPage() {
               ) : (
                 categories.map((cat) => (
                   <div key={cat._id} className="cat-manage-item">
-                    <div className="cat-manage-icon" style={{ background: (cat.color || '#2a14b4') + '1f' }}>
-                      <span>{cat.icon}</span>
+                    <div className="cat-manage-icon" style={{ background: getIconMeta(cat.name).tileBg }}>
+                      <WalletoIcon name={cat.name} size={20} />
                     </div>
                     <div className="cat-manage-info">
                       <span className="cat-manage-name">{cat.name}</span>
@@ -395,9 +397,13 @@ export default function CategoriesPage() {
                       )}
                     </div>
                     <div className="cat-manage-actions">
-                      <button className="action-btn" onClick={() => startEdit(cat)} title="Edit">✏️</button>
+                      <button className="action-btn" onClick={() => startEdit(cat)} title="Edit">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                      </button>
                       {!cat.isDefault && (
-                        <button className="action-btn action-btn--delete" onClick={() => handleDelete(cat._id)} title="Delete">🗑️</button>
+                        <button className="action-btn action-btn--delete" onClick={() => handleDelete(cat._id)} title="Delete">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                        </button>
                       )}
                     </div>
                   </div>

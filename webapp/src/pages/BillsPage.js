@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../api/axios';
+import WalletoIcon, { getIconMeta } from '../components/WalletoIcon';
+import { ALL_ICON_KEYS } from '../data/icons';
 import './BillsPage.css';
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -15,13 +17,12 @@ const FREQUENCIES = [
   { value: 'one-time',    label: 'One-time' },
 ];
 
-const PRESET_ICONS = ['📄','🏠','💡','💧','📱','📺','🌐','🚗','🏋️','🎬','🏥','🎓','💳','🏦','🛡️','🎵','☁️','🔥','🧾','🛒'];
 const PRESET_COLORS = ['#2a14b4','#4338ca','#4700ab','#006c49','#dc2626','#db2777','#7c3aed','#0891b2','#d97706','#059669','#0ea5e9','#f97316'];
 
 const TYPE_META = {
-  bill:         { label: 'Bill',         emoji: '📄', description: 'Utilities, rent, insurance…' },
-  subscription: { label: 'Subscription', emoji: '🔁', description: 'Netflix, Spotify, software…' },
-  emi:          { label: 'EMI / Loan',   emoji: '🏦', description: 'Car loan, home loan, credit…' },
+  bill:         { label: 'Bill',         icon: 'utilities', description: 'Utilities, rent, insurance…' },
+  subscription: { label: 'Subscription', icon: 'subscription', description: 'Netflix, Spotify, software…' },
+  emi:          { label: 'EMI / Loan',   icon: 'bank',    description: 'Car loan, home loan, credit…' },
 };
 
 const FREQ_LABELS = {
@@ -52,7 +53,7 @@ function getDueStatus(bill) {
 
 const emptyForm = () => ({
   name: '', amount: '', currency: 'GBP', category: 'Bills',
-  icon: '📄', color: '#2a14b4', notes: '',
+  icon: 'utilities', color: '#2a14b4', notes: '',
   type: 'bill', frequency: 'monthly', dueDay: '',
   nextDueDate: new Date().toISOString().slice(0, 10),
   totalInstallments: '', remindDaysBefore: '3',
@@ -114,7 +115,7 @@ export default function BillsPage() {
       amount: String(bill.amount),
       currency: bill.currency || 'GBP',
       category: bill.category || 'Bills',
-      icon: bill.icon || '📄',
+      icon: bill.icon || 'utilities',
       color: bill.color || '#2a14b4',
       notes: bill.notes || '',
       type: bill.type || 'bill',
@@ -208,7 +209,7 @@ export default function BillsPage() {
       {/* Overdue alert */}
       {summary.overdueCount > 0 && (
         <div className="bills-alert">
-          <span className="bills-alert-icon">⚠️</span>
+          <span className="bills-alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
           <span>You have <strong>{summary.overdueCount}</strong> overdue bill{summary.overdueCount > 1 ? 's' : ''} — please review them.</span>
           <button onClick={() => setActiveTab('Overdue')}>View Overdue</button>
         </div>
@@ -261,7 +262,7 @@ export default function BillsPage() {
         </div>
       ) : filteredBills.length === 0 ? (
         <div className="bills-empty">
-          <div className="bills-empty-icon">📋</div>
+          <div className="bills-empty-icon"><WalletoIcon name="subscription" size={48} /></div>
           <p>No bills here yet.</p>
           <button className="btn btn-primary" onClick={openAdd}>Add your first bill</button>
         </div>
@@ -275,8 +276,8 @@ export default function BillsPage() {
             return (
               <div key={bill._id} className={`bill-card bill-card--${due.status}`}>
                 {/* Icon */}
-                <div className="bill-icon" style={{ background: bill.color + '22', color: bill.color }}>
-                  {bill.icon}
+                <div className="bill-icon" style={{ background: getIconMeta(bill.category || bill.icon || 'utilities').tileBg }}>
+                  <WalletoIcon name={bill.category || bill.icon || 'utilities'} size={24} />
                 </div>
 
                 {/* Info */}
@@ -284,7 +285,7 @@ export default function BillsPage() {
                   <div className="bill-name-row">
                     <span className="bill-name">{bill.name}</span>
                     <span className="bill-type-badge bill-type-badge--bill">
-                      {TYPE_META[bill.type]?.emoji} {TYPE_META[bill.type]?.label}
+                      {TYPE_META[bill.type]?.label}
                     </span>
                   </div>
                   <div className="bill-meta-row">
@@ -308,7 +309,7 @@ export default function BillsPage() {
                   {/* Due status */}
                   <div className="bill-due-row">
                     <span className="bill-due-badge" style={{ color: due.color, background: due.color + '15' }}>
-                      {due.status === 'overdue' ? '🔴' : due.status === 'due-soon' ? '🟡' : '📅'} {due.label}
+                      {due.label}
                     </span>
                     {bill.notes && <span className="bill-notes">{bill.notes}</span>}
                   </div>
@@ -331,8 +332,12 @@ export default function BillsPage() {
                     {bill.status === 'completed' && (
                       <span className="bill-completed-badge">✓ Done</span>
                     )}
-                    <button className="action-btn" onClick={() => openEdit(bill)} title="Edit">✏️</button>
-                    <button className="action-btn action-btn--delete" onClick={() => setDeleteTarget(bill)} title="Delete">🗑️</button>
+                    <button className="action-btn" onClick={() => openEdit(bill)} title="Edit">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                    </button>
+                    <button className="action-btn action-btn--delete" onClick={() => setDeleteTarget(bill)} title="Delete">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -362,7 +367,7 @@ export default function BillsPage() {
                       className={`bills-type-btn${form.type === key ? ' bills-type-btn--active' : ''}`}
                       onClick={() => setF('type', key)}
                     >
-                      <span className="bills-type-emoji">{meta.emoji}</span>
+                      <span className="bills-type-emoji"><WalletoIcon name={meta.icon} size={22} /></span>
                       <span className="bills-type-label">{meta.label}</span>
                       <span className="bills-type-desc">{meta.description}</span>
                     </button>
@@ -428,10 +433,10 @@ export default function BillsPage() {
               {/* Icon picker */}
               <div className="form-group">
                 <label className="form-label">ICON</label>
-                <div className="icon-picker">
-                  {PRESET_ICONS.map((ic) => (
-                    <button type="button" key={ic} className={`icon-btn${form.icon === ic ? ' icon-btn--active' : ''}`} onClick={() => setF('icon', ic)}>
-                      {ic}
+                <div className="icon-picker icon-picker--svg">
+                  {ALL_ICON_KEYS.map((ic) => (
+                    <button type="button" key={ic} className={`icon-btn icon-btn--svg${form.icon === ic ? ' icon-btn--active' : ''}`} onClick={() => setF('icon', ic)} title={ic}>
+                      <WalletoIcon name={ic} size={20} />
                     </button>
                   ))}
                 </div>

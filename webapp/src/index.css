@@ -61,6 +61,10 @@
   --shadow-float: 0 20px 60px -10px rgba(42, 20, 180, 0.12), 0 4px 16px rgba(15, 23, 42, 0.06);
   --shadow-primary: 0 8px 24px rgba(42, 20, 180, 0.3);
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+
+  /* Duotone icon tokens */
+  --fill-tint: rgba(42, 20, 180, 0.09);
+  --accent: #6c63ff;
 }
 
 /* ── Dark Theme ────────────────────────────────────────────── */
@@ -91,6 +95,10 @@
   --shadow-float: 0 20px 60px -10px rgba(0, 0, 0, 0.6);
   --shadow-primary: 0 8px 24px rgba(108, 99, 255, 0.4);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+
+  /* Duotone icon tokens */
+  --fill-tint: rgba(108, 99, 255, 0.13);
+  --accent: #a78bfa;
 }
 
 [data-theme="dark"] .modal-overlay {
@@ -444,6 +452,31 @@ textarea:focus {
 .icon-btn--active {
   background: var(--primary);
   box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary);
+}
+
+/* SVG icon picker variant */
+.icon-picker--svg { gap: 4px; }
+.icon-btn--svg {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-low);
+  border: 1.5px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+}
+.icon-btn--svg:hover {
+  background: var(--fill-tint);
+  border-color: var(--primary);
+}
+.icon-btn--svg.icon-btn--active {
+  background: var(--fill-tint);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-light);
 }
 
 .color-picker {

@@ -7,6 +7,7 @@ import {
 import axiosInstance from '../api/axios';
 import StatCard from '../components/StatCard';
 import TransactionModal from '../components/TransactionModal';
+import WalletoIcon, { getIconMeta } from '../components/WalletoIcon';
 import './Dashboard.css';
 import { formatDate } from '../utils/dateUtils';
 
@@ -56,21 +57,7 @@ const fmtShort = (v) => {
 
 // formatDate imported from dateUtils
 
-const getCategoryEmoji = (cat) => {
-  const map = {
-    'Food & Dining': '🍔', 'Shopping': '🛍️', 'Transport': '🚗',
-    'Entertainment': '🎉', 'Bills & Utilities': '📄', 'Health & Fitness': '💊',
-    'Travel': '✈️', 'Education': '🎓', 'Salary': '💰', 'Investments': '📈',
-    'Other Income': '💵', 'Personal Care': '🪥', 'Home': '🏠',
-  };
-  return map[cat] || '📦';
-};
 
-const TYPE_ICON_COLORS = {
-  INCOME:   { bg: 'rgba(5,150,105,0.1)',   emoji: getCategoryEmoji },
-  EXPENSE:  { bg: 'rgba(220,38,38,0.1)',   emoji: getCategoryEmoji },
-  TRANSFER: { bg: 'rgba(42,20,180,0.08)',  emoji: () => '🔄' },
-};
 
 const PIE_COLORS = ['#2a14b4', '#4338ca', '#4700ab', '#006c49', '#0891b2', '#7c3aed', '#db2777', '#d97706'];
 
@@ -98,7 +85,7 @@ const SparkTooltip = ({ active, payload }) => {
   );
 };
 
-const QUICK_ADD_ICONS = ['🛒','☕','🍕','🚌','⛽','💊','🎬','🏋️','📚','🐾','🍺','🧴','🍔','✈️','🎮','🛍️'];
+const QUICK_ADD_ICONS = ['grocery','coffee','restaurant','transport','fuel','health','entertainment','fitness','education','pets','travel','shopping','salary','savings','utilities','subscription'];
 
 // ── Dashboard ────────────────────────────────────────────────
 const Dashboard = () => {
@@ -112,7 +99,7 @@ const Dashboard = () => {
   const [presets, setPresets] = useState([]);
   const [manageOpen, setManageOpen] = useState(false);
   const [editPreset, setEditPreset] = useState(null);
-  const [presetForm, setPresetForm] = useState({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
+  const [presetForm, setPresetForm] = useState({ label: '', icon: 'grocery', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
   const [presetSaving, setPresetSaving] = useState(false);
   const [presetError, setPresetError] = useState('');
   const [txOpen, setTxOpen] = useState(false);
@@ -175,7 +162,7 @@ const Dashboard = () => {
   const openManage = async () => {
     setManageOpen(true);
     setEditPreset(null);
-    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
+    setPresetForm({ label: '', icon: 'grocery', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
     setPresetError('');
     try {
       const [catRes, accRes] = await Promise.all([
@@ -199,7 +186,7 @@ const Dashboard = () => {
 
   const resetPresetForm = () => {
     setEditPreset(null);
-    setPresetForm({ label: '', icon: '🛒', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
+    setPresetForm({ label: '', icon: 'grocery', type: 'Expense', amount: '', category: '', subcategory: '', account: '', notes: '' });
     setPresetError('');
   };
 
@@ -304,7 +291,7 @@ const Dashboard = () => {
           )}
           {presets.map((p) => (
             <button key={p._id} className="quick-chip" onClick={() => handleQuickAdd(p)}>
-              <span className="quick-chip-icon">{p.icon}</span>
+              <span className="quick-chip-icon"><WalletoIcon name={p.category || p.icon || 'shopping'} size={16} /></span>
               <span className="quick-chip-label">{p.label}</span>
               {p.amount ? <span className="quick-chip-amount">£{p.amount}</span> : null}
             </button>
@@ -317,7 +304,7 @@ const Dashboard = () => {
       <div className="dashboard-bento">
         {/* Balance card */}
         <div className="balance-card">
-          <span className="balance-card-bg-icon">💳</span>
+          <span className="balance-card-bg-icon"><WalletoIcon name="wallet" size={80} stroke="rgba(255,255,255,0.15)" /></span>
           <div>
             <p className="balance-label">Total Balance</p>
             {loading ? (
@@ -377,8 +364,8 @@ const Dashboard = () => {
           ) : (
             accounts.slice(0, 4).map((acc) => (
               <div className="account-row" key={acc._id || acc.name}>
-                <div className="account-row-icon">
-                  {acc.icon || '🏦'}
+                <div className="account-row-icon" style={{ background: getIconMeta(acc.type || 'bank').tileBg }}>
+                  <WalletoIcon name={acc.type || 'bank'} size={20} />
                 </div>
                 <div className="account-row-info">
                   <p className="account-row-name">{acc.name}</p>
@@ -517,7 +504,9 @@ const Dashboard = () => {
               const barColor  = isOver ? 'var(--error)' : isWarning ? '#f59e0b' : b.color;
               return (
                 <div key={b.name} className="budget-row">
-                  <span className="budget-row-icon">{b.icon}</span>
+                  <div className="budget-row-icon" style={{ background: getIconMeta(b.name).tileBg, width: 36, height: 36, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <WalletoIcon name={b.name} size={20} />
+                  </div>
                   <div className="budget-row-body">
                     <div className="budget-row-top">
                       <span className="budget-row-name">{b.name}</span>
@@ -542,7 +531,7 @@ const Dashboard = () => {
       {/* Activity strip */}
       {!loading && (lastActivity.lastVisit || lastActivity.lastUpdate) && (
         <div className="activity-strip">
-          <span className="activity-strip-icon">🕐</span>
+          <span className="activity-strip-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
           <div className="activity-strip-items">
             {lastActivity.lastVisit && (
               <span className="activity-strip-item">
@@ -584,13 +573,14 @@ const Dashboard = () => {
                 {/* Icon picker */}
                 <div className="form-group-sm">
                   <label className="form-label-sm">Icon</label>
-                  <div className="icon-picker">
+                  <div className="icon-picker icon-picker--svg">
                     {QUICK_ADD_ICONS.map((ic) => (
                       <button
                         key={ic} type="button"
-                        className={`icon-btn${presetForm.icon === ic ? ' icon-btn--active' : ''}`}
+                        className={`icon-btn icon-btn--svg${presetForm.icon === ic ? ' icon-btn--active' : ''}`}
                         onClick={() => setPresetForm((p) => ({ ...p, icon: ic }))}
-                      >{ic}</button>
+                        title={ic}
+                      ><WalletoIcon name={ic} size={18} /></button>
                     ))}
                   </div>
                 </div>
@@ -640,7 +630,7 @@ const Dashboard = () => {
                     >
                       <option value="">None</option>
                       {quickCats.map((c) => (
-                        <option key={c.name} value={c.name}>{c.icon} {c.name}</option>
+                        <option key={c.name} value={c.name}>{c.name}</option>
                       ))}
                     </select>
                   </div>
@@ -674,7 +664,7 @@ const Dashboard = () => {
                     >
                       <option value="">Default (primary)</option>
                       {quickAccounts.map((a) => (
-                        <option key={a._id} value={a.name}>{a.icon || '🏦'} {a.name}</option>
+                        <option key={a._id} value={a.name}>{a.name}</option>
                       ))}
                     </select>
                   </div>
@@ -707,8 +697,12 @@ const Dashboard = () => {
                       </span>
                     </div>
                     <div className="cat-manage-actions">
-                      <button className="action-btn" onClick={() => startEditPreset(p)} title="Edit">✏️</button>
-                      <button className="action-btn action-btn--delete" onClick={() => handlePresetDelete(p._id)} title="Delete">🗑️</button>
+                      <button className="action-btn" onClick={() => startEditPreset(p)} title="Edit">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                      </button>
+                      <button className="action-btn action-btn--delete" onClick={() => handlePresetDelete(p._id)} title="Delete">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -744,16 +738,18 @@ const Dashboard = () => {
               const typeNorm = tx.Type?.toUpperCase();
               const isIncome = typeNorm === 'INCOME';
               const isTransfer = typeNorm === 'TRANSFER';
-              const colorConf = TYPE_ICON_COLORS[typeNorm] || TYPE_ICON_COLORS.EXPENSE;
-              const emoji = isTransfer ? '🔄' : getCategoryEmoji(tx.Category);
+              const iconBg = isTransfer ? 'rgba(91,91,95,0.08)' : getIconMeta(tx.Category).tileBg;
               const amountClass = isIncome ? 'recent-item-amount--income' : isTransfer ? 'recent-item-amount--transfer' : 'recent-item-amount--expense';
               const sign = isIncome ? '+' : isTransfer ? '' : '−';
 
               return (
                 <div className="recent-item" key={tx._id}>
                   <div className="recent-item-left">
-                    <div className="recent-item-icon" style={{ background: colorConf.bg }}>
-                      {emoji}
+                    <div className="recent-item-icon" style={{ background: iconBg }}>
+                      {isTransfer
+                        ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                        : <WalletoIcon name={tx.Category} size={18} />
+                      }
                     </div>
                     <div className="recent-item-info">
                       <p className="recent-item-name">{tx.Category || 'Transaction'}</p>

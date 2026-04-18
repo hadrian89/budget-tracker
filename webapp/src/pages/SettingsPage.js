@@ -6,11 +6,18 @@ import './SettingsPage.css';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
+const TAB_ICONS = {
+  profile:     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
+  security:    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l8 4v5c0 4.4-3.4 8.5-8 10-4.6-1.5-8-5.6-8-10V7l8-4z"/></svg>,
+  preferences: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg>,
+  danger:      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+};
+
 const TABS = [
-  { id: 'profile',     label: 'Profile',      icon: '👤' },
-  { id: 'security',   label: 'Security',     icon: '🔒' },
-  { id: 'preferences',label: 'Preferences',  icon: '⚙️' },
-  { id: 'danger',     label: 'Danger Zone',  icon: '⚠️' },
+  { id: 'profile',     label: 'Profile' },
+  { id: 'security',   label: 'Security' },
+  { id: 'preferences',label: 'Preferences' },
+  { id: 'danger',     label: 'Danger Zone' },
 ];
 
 const CURRENCIES = [
@@ -116,6 +123,7 @@ function ProfileTab({ user, updateUser }) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
             required
+            disabled
           />
         </div>
         <div className="settings-form-footer">
@@ -282,7 +290,7 @@ function PreferencesTab({ user, updateUser }) {
         <div className="form-group">
           <label className="form-label">APPEARANCE</label>
           <div className="theme-selector">
-            {[['light', '☀️', 'Light'], ['dark', '🌙', 'Dark']].map(([val, icon, label]) => (
+            {[['light', <svg key="sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>, 'Light'], ['dark', <svg key="moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>, 'Dark']].map(([val, icon, label]) => (
               <button
                 key={val}
                 type="button"
@@ -351,7 +359,7 @@ function DangerTab({ user, logout }) {
       {showDialog && (
         <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowDialog(false)}>
           <div className="confirm-dialog confirm-dialog--danger">
-            <div className="confirm-dialog-icon">⚠️</div>
+            <div className="confirm-dialog-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
             <p className="confirm-title">Delete your account?</p>
             <p className="confirm-text">
               All your data will be permanently erased. To confirm, type your email address:
@@ -401,7 +409,7 @@ export default function SettingsPage() {
               className={`settings-nav-item${activeTab === t.id ? ' settings-nav-item--active' : ''}${t.id === 'danger' ? ' settings-nav-item--danger' : ''}`}
               onClick={() => setActiveTab(t.id)}
             >
-              <span className="settings-nav-icon">{t.icon}</span>
+              <span className="settings-nav-icon">{TAB_ICONS[t.id]}</span>
               <span>{t.label}</span>
             </button>
           ))}
