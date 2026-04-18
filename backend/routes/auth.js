@@ -181,14 +181,15 @@ async function findOrCreateGoogleUser({ googleId, email, name }) {
 router.post('/google', async (req, res) => {
   const { accessToken } = req.body;
   if (!accessToken) return res.status(400).json({ message: 'Access token required' });
-
+  console.log("Received Google access token:", accessToken) // Debug log
   try {
     const { status, body } = await httpsGet(
       'https://www.googleapis.com/oauth2/v3/userinfo',
       { Authorization: `Bearer ${accessToken}` }
     );
+    console.log("body",body)
     if (status !== 200) return res.status(401).json({ message: 'Invalid Google access token' });
-
+    
     const { sub: googleId, email, name } = body;
     if (!googleId) return res.status(401).json({ message: 'Could not retrieve Google profile' });
 

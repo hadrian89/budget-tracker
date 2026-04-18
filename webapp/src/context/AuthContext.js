@@ -92,7 +92,9 @@ export const AuthProvider = ({ children }) => {
 
   const oauthLogin = async (provider, accessToken) => {
     try {
+      console.log(`Attempting ${provider} OAuth login with access token:`, accessToken);  
       const response = await axiosInstance.post(`/api/auth/${provider}`, { accessToken });
+      console.log(`${provider} OAuth login response:`, response.data);
       const { token: newToken, user: userData } = response.data;
       persistAuth(newToken, userData);
       return { success: true };

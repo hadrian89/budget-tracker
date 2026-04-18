@@ -7,6 +7,8 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+    // Drop stale username unique index left over from an old schema version
+    await conn.connection.db.collection('users').dropIndex({ username: 1 }).catch(() => {});
   } catch (error) {
     console.error(`MongoDB connection error: ${error.message}`);
     process.exit(1);

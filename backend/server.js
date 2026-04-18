@@ -3,9 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// Connect to MongoDB
-connectDB();
-
 const app = express();
 
 // Middleware
@@ -65,9 +62,14 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Walleto API server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Walleto API server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}).catch((err) => {
+  console.error('Failed to connect to MongoDB:', err);
+  process.exit(1);
 });
 
 module.exports = app;
