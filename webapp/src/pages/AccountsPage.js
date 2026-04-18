@@ -140,7 +140,7 @@ export default function AccountsPage() {
       <div className="acc-page-header">
         <div>
           <h2 className="acc-page-title">Accounts</h2>
-          <p className="acc-page-subtitle">Total balance: <strong>{formatCurrency(totalBalance)}</strong></p>
+          <p className="acc-page-subtitle">TOTAL BALANCE · {formatCurrency(totalBalance)} GBP</p>
         </div>
         <button className="btn btn-primary" onClick={openAdd}>
           + Add Account
@@ -162,7 +162,7 @@ export default function AccountsPage() {
           {accounts.map((acc) => (
             <div key={acc._id} className="acc-card" style={{ '--acc-color': acc.color || '#6366f1' }}>
               <div className="acc-card-top">
-                <div className="acc-icon-wrap" style={{ background: (acc.color || '#6366f1') + '22' }}>
+                <div className="acc-icon-wrap">
                   <WalletoIcon name={TYPE_ICONS[acc.type] || acc.icon || 'bank'} size={24} className="acc-icon" />
                 </div>
                 <div className="acc-actions">

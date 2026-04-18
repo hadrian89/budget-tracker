@@ -1,5 +1,5 @@
 /* ============================================================
-   AccountsPage — Luminaire Design
+   AccountsPage
    ============================================================ */
 
 .accounts-page {
@@ -18,21 +18,19 @@
 
 .acc-page-title {
   font-family: 'Manrope', sans-serif;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--on-bg);
   margin-bottom: 4px;
 }
 
 .acc-page-subtitle {
-  font-size: 13px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--outline);
   font-family: 'Inter', sans-serif;
-}
-
-.acc-page-subtitle strong {
-  color: #00875a;
-  font-weight: 700;
 }
 
 /* ── Error ─────────────────────────────────────────────────── */
@@ -65,44 +63,42 @@
 /* ── Cards grid ────────────────────────────────────────────── */
 .acc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
 .acc-card {
   background: var(--surface-lowest);
-  border-radius: var(--radius-xl);
-  padding: 20px 20px 18px;
+  border-radius: 18px;
+  padding: 22px 22px 20px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
   cursor: default;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: border-color 0.18s, box-shadow 0.18s;
 }
 
 .acc-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  border-color: rgba(42, 20, 180, 0.18);
+  box-shadow: 0 4px 20px rgba(42, 20, 180, 0.06);
 }
 
 .acc-card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
+/* bare icon — no background wrapper */
 .acc-icon-wrap {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.acc-icon {
-  font-size: 22px;
+  background: none !important;
+  border-radius: 0;
 }
 
 .acc-actions {
@@ -156,11 +152,6 @@
   cursor: default;
 }
 
-.acc-action-btn--star-active:hover {
-  background: rgba(234, 179, 8, 0.12);
-  color: #ca8a04;
-}
-
 .acc-primary-badge {
   font-size: 10px;
   font-weight: 700;
@@ -174,15 +165,15 @@
 }
 
 .acc-card-body {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .acc-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--on-surface);
   font-family: 'Manrope', sans-serif;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -193,14 +184,15 @@
 }
 
 .acc-type-badge span {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   color: var(--outline);
-  background: var(--surface-low);
-  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 2px 8px;
   border-radius: var(--radius-full);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   font-family: 'Inter', sans-serif;
 }
 
@@ -219,19 +211,21 @@
 }
 
 .acc-currency {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--outline);
-  font-weight: 500;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
+  letter-spacing: 0.04em;
 }
 
+/* partial-width color bar, bottom-left */
 .acc-color-bar {
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 22px;
+  width: 56px;
   height: 3px;
-  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  border-radius: 2px 2px 0 0;
 }
 
 /* ── Modal ─────────────────────────────────────────────────── */
@@ -252,7 +246,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 24px 16px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   background: var(--surface-lowest);
@@ -279,35 +273,37 @@
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid rgba(15, 23, 42, 0.12);
+  border-top: 1px solid var(--border);
   position: sticky;
   bottom: 0;
   background: var(--surface-lowest);
   flex-shrink: 0;
 }
 
-/* ── Type selector ─────────────────────────────────────────── */
+/* ── Type selector (larger tiles) ─────────────────────────── */
 .acc-type-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 
 .acc-type-btn {
   background: var(--surface-low);
-  border: 2px solid transparent;
-  border-radius: var(--radius-md);
-  padding: 10px 6px;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  padding: 20px 8px 16px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   font-family: 'Inter', sans-serif;
   color: var(--outline);
   transition: all 0.15s;
+  min-height: 88px;
 }
 
 .acc-type-btn:hover {
@@ -317,12 +313,12 @@
 
 .acc-type-btn--active {
   border-color: var(--primary);
-  background: rgba(42, 20, 180, 0.08);
+  background: rgba(42, 20, 180, 0.06);
   color: var(--primary);
 }
 
 .acc-type-btn-icon {
-  font-size: 20px;
+  /* svg fills naturally */
 }
 
 /* ── Balance prefix input ──────────────────────────────────── */
@@ -369,7 +365,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
   flex-shrink: 0;
 }
 
@@ -419,7 +414,7 @@
   gap: 10px;
 }
 
-/* ── Subcat chips (used by categories modal) ───────────────── */
+/* ── Subcat chips ──────────────────────────────────────────── */
 .subcats-list {
   display: flex;
   flex-wrap: wrap;
@@ -452,9 +447,7 @@
   align-items: center;
 }
 
-.subcat-chip button:hover {
-  color: var(--error);
-}
+.subcat-chip button:hover { color: var(--error); }
 
 .subcat-add-row {
   display: flex;
@@ -464,14 +457,9 @@
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .accounts-page { padding: 16px; }
-
   .acc-grid { grid-template-columns: 1fr 1fr; }
-
   .acc-type-grid { grid-template-columns: repeat(2, 1fr); }
-
-  /* Always show account actions on touch */
   .acc-actions { opacity: 1; }
-
   .acc-modal { border-radius: var(--radius-xl); max-height: 92vh; }
   .confirm-dialog { padding: 20px; }
 }
@@ -483,9 +471,7 @@
 }
 
 /* ── Primary toggle ────────────────────────────────────────── */
-.acc-primary-toggle {
-  margin-bottom: 4px;
-}
+.acc-primary-toggle { margin-bottom: 4px; }
 
 .acc-primary-checkbox {
   display: flex;
@@ -498,11 +484,6 @@
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
   user-select: none;
-}
-
-.acc-primary-checkbox:has(input:disabled) {
-  opacity: 0.65;
-  cursor: default;
 }
 
 .acc-primary-checkbox--checked {
@@ -557,9 +538,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-.acc-primary-checkbox--checked .acc-primary-checkbox-title {
-  color: #92400e;
-}
+.acc-primary-checkbox--checked .acc-primary-checkbox-title { color: #92400e; }
 
 .acc-primary-checkbox-desc {
   font-size: 11.5px;

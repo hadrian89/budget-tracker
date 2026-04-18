@@ -50,6 +50,13 @@ const buildIconMap = (cats) => {
 
 const getCategoryIcon = (cat, iconMap) => iconMap[cat] || cat;
 
+const getWeekSubtitle = () => {
+  const now = new Date();
+  const month = now.toLocaleString('en-GB', { month: 'short' }).toUpperCase();
+  const year = now.getFullYear();
+  return `THIS WEEK · ${month} ${year}`;
+};
+
 // Group transactions by date
 const groupByDate = (txs) => {
   const groups = {};
@@ -203,10 +210,8 @@ const Transactions = () => {
       {/* Header */}
       <div className="tx-page-header">
         <div>
-          <h2 className="tx-page-title">Transactions</h2>
-          <p className="tx-page-subtitle">
-            {pagination.total.toLocaleString()} transaction{pagination.total !== 1 ? 's' : ''} found
-          </p>
+          <h2 className="tx-page-title">Recent Transactions</h2>
+          <p className="tx-page-subtitle">{getWeekSubtitle()}</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost btn-sm" onClick={handleExport} disabled={exporting}>
@@ -233,6 +238,28 @@ const Transactions = () => {
           <button type="button" className="tx-filter-clear" onClick={handleClear}>Clear</button>
         )}
       </form>
+
+      {/* Category chips */}
+      {categories.length > 0 && (
+        <div className="tx-cat-chips">
+          <button
+            className={`tx-cat-chip${appliedFilters.category === 'all' ? ' tx-cat-chip--active' : ''}`}
+            onClick={() => setAppliedFilters(f => ({ ...f, category: 'all' }))}
+          >
+            All
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c.name}
+              className={`tx-cat-chip${appliedFilters.category === c.name ? ' tx-cat-chip--active' : ''}`}
+              onClick={() => setAppliedFilters(f => ({ ...f, category: appliedFilters.category === c.name ? 'all' : c.name }))}
+            >
+              <WalletoIcon name={c.name} size={13} />
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Filters row */}
       <div className="tx-filters-row">
@@ -351,19 +378,18 @@ const Transactions = () => {
                     <div className="tx-item" key={tx._id}>
                       <div className="tx-item-icon" style={{ background: iconBg }}>
                         {isTransfer
-                          ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-                          : <WalletoIcon name={iconName} size={16} />
+                          ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                          : <WalletoIcon name={iconName} size={20} />
                         }
                       </div>
                       <div className="tx-item-info">
-                        <p className="tx-item-category">
-                          {tx.Category || 'Uncategorized'}
+                        <p className="tx-item-title">
+                          {tx.Notes || tx.Category || 'Uncategorized'}
+                        </p>
+                        <p className="tx-item-meta">
+                          {tx.Account}{tx.Category ? ` · ${tx.Category}` : ''}
                           {tx.Subcategory ? ` · ${tx.Subcategory}` : ''}
                         </p>
-                        <p className="tx-item-account">{tx.Account}</p>
-                        {tx.Notes && (
-                          <p className="tx-item-notes">{tx.Notes}</p>
-                        )}
                       </div>
                       <div className="tx-item-right">
                         <div className="tx-item-actions">
