@@ -8,7 +8,7 @@
   background: rgba(247, 249, 251, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(42, 20, 180, 0.06);
+  box-shadow: 0 1px 0 var(--outline-ghost);
   padding: 16px 32px;
   z-index: 40;
   display: flex;
@@ -19,7 +19,6 @@
 
 [data-theme="dark"] .header {
   background: rgba(14, 20, 34, 0.88);
-  border-bottom-color: rgba(108, 99, 255, 0.1);
 }
 
 .header-left {
@@ -29,7 +28,7 @@
 }
 
 .header-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 22px;
   color: var(--on-bg);
@@ -37,10 +36,12 @@
 }
 
 .header-subtitle {
-  font-size: 13px;
-  color: var(--outline);
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
+  font-size: 10px;
+  color: var(--outline-variant);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .header-right {
@@ -52,7 +53,7 @@
 .header-date {
   font-size: 13px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .header-user {
@@ -67,7 +68,7 @@
   border-radius: 50%;
   background: var(--gradient-primary);
   color: white;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 12px;
   display: flex;
@@ -80,5 +81,5 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }

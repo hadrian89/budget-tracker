@@ -8,14 +8,14 @@
   padding: 24px;
   box-shadow: var(--shadow-card);
   border: none;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
   flex: 1;
   min-width: 0;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(42, 20, 180, 0.1);
+  box-shadow: 0 12px 40px rgba(42, 20, 180, 0.1), 0 4px 16px rgba(15, 23, 42, 0.05);
 }
 
 .stat-card-inner {
@@ -27,31 +27,35 @@
 .stat-card-icon {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
+  border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 /* Color variants */
 .stat-card-icon--success {
-  background: rgba(0, 135, 90, 0.1);
-  color: #00875a;
+  background: var(--tile-bg-secondary);
+  color: #006c49;
 }
 
 .stat-card-icon--danger {
-  background: rgba(220, 38, 38, 0.1);
+  background: rgba(220, 38, 38, 0.08);
   color: var(--error);
 }
 
 .stat-card-icon--accent {
-  background: var(--primary-light);
+  background: var(--tile-bg-primary);
   color: var(--primary);
 }
 
 .stat-card-icon--warning {
-  background: rgba(71, 0, 171, 0.08);
+  background: var(--tile-bg-tertiary);
   color: var(--tertiary);
 }
 
@@ -61,22 +65,22 @@
 }
 
 .stat-card-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   color: var(--outline);
-  margin-bottom: 4px;
-  font-family: 'Inter', sans-serif;
+  margin-bottom: 6px;
 }
 
 .stat-card-value {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 28px;
   color: var(--on-bg);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -85,8 +89,9 @@
 .stat-card-trend {
   font-size: 12px;
   font-weight: 500;
-  margin-top: 4px;
-  font-family: 'Inter', sans-serif;
+  margin-top: 5px;
+  font-family: var(--font-body);
+  color: var(--outline);
 }
 
 /* Loading skeleton */

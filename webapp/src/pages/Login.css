@@ -54,14 +54,14 @@
 }
 
 .auth-brand-name {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: 20px;
   color: white;
 }
 
 .auth-left-headline {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 800;
   line-height: 1.2;
@@ -79,7 +79,7 @@
   color: rgba(255, 255, 255, 0.7);
   margin-top: 12px;
   line-height: 1.6;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .auth-left-image {
@@ -127,7 +127,7 @@
 }
 
 .auth-left-image-text {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
@@ -166,7 +166,7 @@
 }
 
 .auth-logo-text {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
   color: var(--primary);
@@ -174,7 +174,7 @@
 
 /* ── Form title ────────────────────────────────────────────── */
 .auth-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 30px;
   color: var(--on-surface);
@@ -186,7 +186,7 @@
   color: var(--on-surface-variant);
   margin-top: 6px;
   margin-bottom: 32px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Form ──────────────────────────────────────────────────── */
@@ -204,13 +204,13 @@
 }
 
 .auth-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--on-surface-variant);
+  letter-spacing: 0.14em;
+  color: var(--primary);
   margin-left: 2px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-mono);
 }
 
 .auth-input-wrapper {
@@ -227,7 +227,7 @@
   border-radius: 14px;
   font-size: 14px;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   transition: all 0.2s;
 }
 
@@ -279,7 +279,7 @@
 .auth-remember-label {
   font-size: 13px;
   color: var(--on-surface-variant);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   user-select: none;
 }
@@ -290,10 +290,10 @@
   padding: 14px;
   background: var(--gradient-primary);
   color: white;
-  border-radius: 14px;
+  border-radius: var(--radius-full);
   font-size: 16px;
   font-weight: 700;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   border: none;
   cursor: pointer;
   transition: all 0.2s;
@@ -338,7 +338,7 @@
   margin-top: 24px;
   font-size: 14px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .auth-footer a {
@@ -359,7 +359,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Background blobs (backward compat from Register) ─────── */
@@ -448,11 +448,11 @@
   width: 100%;
   padding: 12px 16px;
   border-radius: 14px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--outline-ghost);
   background: var(--surface-lowest);
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   color: var(--on-bg);
   transition: background 0.15s, box-shadow 0.15s;
@@ -485,7 +485,7 @@
   margin: 16px 0;
   color: var(--outline);
   font-size: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .auth-divider::before,
@@ -493,7 +493,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border);
+  background: var(--outline-ghost);
 }
 
 .auth-divider span {

@@ -2,7 +2,7 @@
    The Wealth Studio — Global Styles
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ── CSS Variables ─────────────────────────────────────────── */
 :root {
@@ -47,6 +47,18 @@
 
   /* Border */
   --border: var(--surface-container);
+  --outline-ghost: rgba(199, 196, 215, 0.4);
+  --ghost-border: 1px solid rgba(199, 196, 215, 0.4);
+
+  /* Fonts */
+  --font-display: 'Manrope', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Icon tile backgrounds (family-keyed) */
+  --tile-bg-primary:   #eeecf8;
+  --tile-bg-secondary: #e6f1ec;
+  --tile-bg-tertiary:  #efe8fb;
 
   /* Radii */
   --radius-card: 32px;
@@ -90,6 +102,13 @@
   --outline-variant: #3a4266;
 
   --border: #1c2540;
+  --outline-ghost: rgba(108, 99, 255, 0.12);
+  --ghost-border: 1px solid rgba(108, 99, 255, 0.12);
+
+  /* Icon tile backgrounds (dark) */
+  --tile-bg-primary:   rgba(108, 99, 255, 0.15);
+  --tile-bg-secondary: rgba(0, 108, 73, 0.18);
+  --tile-bg-tertiary:  rgba(71, 0, 171, 0.18);
 
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
   --shadow-float: 0 20px 60px -10px rgba(0, 0, 0, 0.6);
@@ -132,31 +151,54 @@ html {
 
 body {
   background: var(--bg);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.5;
   color: var(--on-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.01em;
 }
 
 /* ── Typography ────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6,
 .headline {
-  font-family: 'Manrope', sans-serif;
-  line-height: 1.25;
+  font-family: var(--font-display);
+  line-height: 1.2;
   color: var(--on-bg);
+  letter-spacing: -0.025em;
 }
 
-h1 { font-size: 2rem;     font-weight: 800; }
-h2 { font-size: 1.5rem;   font-weight: 700; }
-h3 { font-size: 1.125rem; font-weight: 700; }
+h1 { font-size: 2.5rem;   font-weight: 800; letter-spacing: -0.035em; }
+h2 { font-size: 1.75rem;  font-weight: 700; letter-spacing: -0.03em; }
+h3 { font-size: 1.25rem;  font-weight: 700; }
 h4 { font-size: 1rem;     font-weight: 700; }
 h5 { font-size: 0.875rem; font-weight: 600; }
 h6 { font-size: 0.75rem;  font-weight: 600; }
 
-p { line-height: 1.6; }
+p { line-height: 1.6; letter-spacing: -0.005em; }
+
+/* ── Mono utility ──────────────────────────────────────────── */
+.mono, .label-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--outline);
+}
+
+/* ── Eyebrow label ─────────────────────────────────────────── */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
 
 a {
   color: var(--primary);
@@ -177,7 +219,7 @@ a:hover { opacity: 0.75; }
 
 /* ── Buttons ───────────────────────────────────────────────── */
 button {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   border: none;
   outline: none;
@@ -189,37 +231,42 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
   font-size: 14px;
-  padding: 10px 20px;
-  border-radius: var(--radius-md);
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
 .btn-primary {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #2a14b4 0%, #4338ca 100%);
   color: white;
-  box-shadow: var(--shadow-primary);
+  box-shadow: 0 4px 16px rgba(42, 20, 180, 0.28);
 }
 .btn-primary:hover:not(:disabled) {
-  opacity: 0.9;
+  opacity: 0.92;
   transform: translateY(-1px);
-  box-shadow: 0 12px 32px rgba(42, 20, 180, 0.35);
+  box-shadow: 0 8px 24px rgba(42, 20, 180, 0.38);
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .btn-ghost {
   background: var(--surface-low);
   color: var(--primary);
+  box-shadow: none;
 }
 .btn-ghost:hover:not(:disabled) {
   background: var(--surface-container);
@@ -228,6 +275,7 @@ button {
 .btn-secondary {
   background: var(--surface-low);
   color: var(--on-surface-variant);
+  box-shadow: none;
 }
 .btn-secondary:hover:not(:disabled) {
   background: var(--surface-container);
@@ -237,13 +285,14 @@ button {
 .btn-danger {
   background: rgba(220, 38, 38, 0.08);
   color: var(--error);
+  box-shadow: none;
 }
 .btn-danger:hover:not(:disabled) {
   background: rgba(220, 38, 38, 0.14);
 }
 
 .btn-sm {
-  padding: 6px 14px;
+  padding: 6px 16px;
   font-size: 13px;
 }
 
@@ -284,7 +333,7 @@ button {
 
 /* ── Form elements ─────────────────────────────────────────── */
 input, select, textarea {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--on-surface);
 }
@@ -326,13 +375,13 @@ textarea:focus {
 .fw-700 { font-weight: 700; }
 .fw-600 { font-weight: 600; }
 
-/* ── Modal overlay (shared) ────────────────────────────────── */
+/* ── Modal overlay (shared) — Glassmorphism ────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -350,7 +399,7 @@ textarea:focus {
   box-shadow: var(--shadow-float);
 }
 .confirm-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   color: var(--on-surface);
@@ -386,27 +435,31 @@ textarea:focus {
 }
 
 .form-label-sm {
-  font-size: 11px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--on-surface-variant);
+  letter-spacing: 0.14em;
+  color: var(--primary);
 }
 
 .form-input-sm {
   background: var(--surface-low);
-  border: none;
+  border: 1px solid var(--outline-ghost);
   border-radius: var(--radius-md);
   padding: 10px 14px;
   font-size: 14px;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s, box-shadow 0.2s;
+  font-family: var(--font-body);
+  letter-spacing: -0.01em;
+  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   width: 100%;
 }
 .form-input-sm:focus {
   background: var(--surface-lowest);
-  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.18);
+  border-color: rgba(42, 20, 180, 0.35);
+  box-shadow: 0 0 0 4px rgba(42, 20, 180, 0.08);
+  outline: none;
 }
 
 .modal-close-btn {
@@ -429,6 +482,23 @@ textarea:focus {
   color: var(--primary);
 }
 
+/* ── Icon tile system (family-aware) ───────────────────────── */
+.icon-tile {
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+.icon-tile--sm  { width: 32px; height: 32px; border-radius: 8px; }
+.icon-tile--md  { width: 40px; height: 40px; border-radius: 11px; }
+.icon-tile--lg  { width: 48px; height: 48px; border-radius: 13px; }
+.icon-tile--xl  { width: 56px; height: 56px; border-radius: 14px; }
+
+.icon-tile--primary   { background: var(--tile-bg-primary); }
+.icon-tile--secondary { background: var(--tile-bg-secondary); }
+.icon-tile--tertiary  { background: var(--tile-bg-tertiary); }
+
 /* ── Icon / color pickers (shared) ────────────────────────── */
 .icon-picker {
   display: flex;
@@ -440,18 +510,19 @@ textarea:focus {
   height: 36px;
   border-radius: var(--radius-sm);
   background: var(--surface-low);
-  border: none;
+  border: 1px solid transparent;
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
 }
 .icon-btn:hover { background: var(--surface-container); }
 .icon-btn--active {
-  background: var(--primary);
-  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary);
+  background: var(--tile-bg-primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(42, 20, 180, 0.12);
 }
 
 /* SVG icon picker variant */
@@ -459,24 +530,24 @@ textarea:focus {
 .icon-btn--svg {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   background: var(--surface-low);
-  border: 1.5px solid transparent;
+  border: 1px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
   padding: 0;
 }
 .icon-btn--svg:hover {
-  background: var(--fill-tint);
-  border-color: var(--primary);
+  background: var(--tile-bg-primary);
+  border-color: rgba(42, 20, 180, 0.25);
 }
 .icon-btn--svg.icon-btn--active {
-  background: var(--fill-tint);
+  background: var(--tile-bg-primary);
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(42, 20, 180, 0.1);
 }
 
 .color-picker {

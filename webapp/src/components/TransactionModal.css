@@ -6,8 +6,8 @@
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.35);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,11 +45,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 24px 16px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 1px 0 var(--outline-ghost);
 }
 
 .modal-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   color: var(--on-surface);
@@ -97,21 +97,21 @@
 }
 
 .form-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--on-surface-variant);
-  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.14em;
+  color: var(--primary);
+  font-family: var(--font-mono);
 }
 
 .form-input {
   background: var(--surface-low);
-  border: none;
+  border: 1px solid var(--outline-ghost);
   border-radius: 12px;
   color: var(--on-surface);
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   padding: 12px 14px;
   width: 100%;
   transition: all 0.2s;
@@ -120,7 +120,8 @@
 
 .form-input:focus {
   background: var(--surface-lowest);
-  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.18);
+  border-color: transparent;
+  box-shadow: 0 0 0 4px rgba(42, 20, 180, 0.08), 0 0 0 1.5px var(--primary);
 }
 
 .form-input::placeholder {
@@ -150,7 +151,7 @@
   font-size: 14px;
   font-weight: 600;
   pointer-events: none;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
 }
 
 .form-input--prefixed {
@@ -164,7 +165,7 @@
   padding: 10px 14px;
   color: var(--error);
   font-size: 13px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -181,10 +182,10 @@
 /* ── Buttons ────────────────────────────────────────────────── */
 .btn {
   padding: 11px 22px;
-  border-radius: 12px;
+  border-radius: var(--radius-full);
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   transition: all 0.2s;
   display: inline-flex;
@@ -264,21 +265,21 @@
 }
 
 .form-label-sm {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--on-surface-variant);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--primary);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.14em;
+  font-family: var(--font-mono);
 }
 
 .form-input-sm {
   background: var(--surface-low);
-  border: none;
+  border: 1px solid var(--outline-ghost);
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 13px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   color: var(--on-surface);
   width: 100%;
   outline: none;
@@ -287,7 +288,8 @@
 
 .form-input-sm:focus {
   background: var(--surface-lowest);
-  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.15);
+  border-color: transparent;
+  box-shadow: 0 0 0 4px rgba(42, 20, 180, 0.08), 0 0 0 1.5px var(--primary);
 }
 
 .form-input-sm::placeholder {
@@ -300,7 +302,7 @@
   padding: 8px 12px;
   color: var(--error);
   font-size: 13px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Icon & Color pickers (shared) ──────────────────────────── */
@@ -512,7 +514,7 @@
 .date-display {
   flex: 1;
   text-align: center;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
   color: var(--on-surface);
@@ -530,12 +532,12 @@
 .date-quick-pill {
   padding: 5px 11px;
   border-radius: var(--radius-full);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--outline-ghost);
   background: var(--surface-lowest);
   color: var(--on-surface-variant);
   font-size: 11.5px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   white-space: nowrap;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
@@ -599,7 +601,7 @@
 }
 
 .amount-currency-symbol {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
   color: var(--outline);
@@ -608,7 +610,7 @@
 }
 
 .amount-big-input {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-size: 40px;
   font-weight: 800;
   color: var(--on-bg);
@@ -634,12 +636,12 @@
   flex: 1;
   padding: 7px 4px;
   border-radius: 8px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--outline-ghost);
   background: var(--surface-lowest);
   color: var(--on-surface-variant);
   font-size: 12px;
   font-weight: 700;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
@@ -694,7 +696,7 @@
 .cat-tile-name {
   font-size: 10px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   color: var(--on-surface-variant);
   text-align: center;
   line-height: 1.2;
@@ -716,12 +718,12 @@
 .subcat-pill {
   padding: 5px 12px;
   border-radius: var(--radius-full);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--outline-ghost);
   background: var(--surface-low);
   color: var(--on-surface-variant);
   font-size: 12px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   white-space: nowrap;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
@@ -756,7 +758,7 @@
   gap: 12px;
   padding: 11px 14px;
   border-radius: var(--radius-md);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--outline-ghost);
   background: var(--surface-low);
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
@@ -814,7 +816,7 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--on-bg);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -823,7 +825,7 @@
 .acc-radio-bal {
   font-size: 12px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .acc-radio-star {

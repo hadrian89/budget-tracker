@@ -54,12 +54,12 @@
 }
 
 .cat-bar-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
 }
 
 /* Center overlay label */
@@ -75,7 +75,7 @@
 }
 
 .cat-donut-expense {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: 20px;
   color: var(--on-bg);
@@ -85,7 +85,7 @@
 .cat-donut-income {
   font-size: 12px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   margin-top: 2px;
 }
 
@@ -94,7 +94,7 @@
   padding: 40px;
   color: var(--outline);
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Category list ─────────────────────────────────────────── */
@@ -136,11 +136,11 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .cat-list-amount {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 14px;
   color: var(--on-surface);
@@ -170,7 +170,7 @@
   font-size: 11px;
   font-weight: 700;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   min-width: 32px;
   text-align: right;
 }
@@ -184,13 +184,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
 }
 
 .cat-tooltip-icon  { font-size: 16px; }
 .cat-tooltip-name  { color: var(--on-surface-variant); font-weight: 500; }
-.cat-tooltip-val   { color: var(--on-surface); font-weight: 700; margin-left: 4px; font-family: 'Manrope', sans-serif; }
+.cat-tooltip-val   { color: var(--on-surface); font-weight: 700; margin-left: 4px; font-family: var(--font-display); }
 
 /* ── Manage modal ──────────────────────────────────────────── */
 .cat-modal {
@@ -210,12 +210,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 24px 16px;
-  border-bottom: 1px solid rgba(171,173,174,0.12);
+  border-bottom: 1px solid var(--outline-ghost);
   flex-shrink: 0;
 }
 
 .cat-modal-header h2 {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
   color: var(--on-surface);
@@ -223,17 +223,17 @@
 
 .cat-form-section {
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(171,173,174,0.12);
+  border-bottom: 1px solid var(--outline-ghost);
 }
 
 .cat-form-title {
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--primary);
   margin-bottom: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.14em;
 }
 
 .cat-form-row {
@@ -296,13 +296,13 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .cat-manage-subs {
   font-size: 11px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   display: block;
   margin-top: 2px;
   white-space: nowrap;
@@ -346,7 +346,7 @@
   border-radius: var(--radius-full);
   background: rgba(91,91,95,0.08);
   color: var(--on-surface-variant);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   white-space: nowrap;
 }
 

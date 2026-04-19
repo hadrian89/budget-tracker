@@ -15,21 +15,22 @@
 }
 
 .tx-page-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
-  font-size: 26px;
+  font-size: 28px;
+  letter-spacing: -0.03em;
   color: var(--on-bg);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .tx-page-subtitle {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--outline);
-  margin-top: 4px;
-  font-family: 'Inter', sans-serif;
+  color: var(--outline-variant);
+  margin-top: 6px;
 }
 
 /* ── Search bar ────────────────────────────────────────────── */
@@ -58,8 +59,9 @@
   outline: none;
   flex: 1;
   font-size: 14px;
+  letter-spacing: -0.01em;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .tx-search-input::placeholder {
@@ -82,7 +84,7 @@
   padding: 8px 12px;
   font-size: 13px;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s;
@@ -100,7 +102,7 @@
   padding: 8px 12px;
   font-size: 13px;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   box-shadow: var(--shadow-sm);
 }
 
@@ -117,7 +119,7 @@
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 4px 12px rgba(42, 20, 180, 0.25);
@@ -132,7 +134,7 @@
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -155,12 +157,12 @@
   gap: 5px;
   padding: 6px 12px;
   border-radius: var(--radius-full);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--outline-ghost);
   background: var(--surface-lowest);
   color: var(--on-surface-variant);
   font-size: 12px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   white-space: nowrap;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
@@ -196,7 +198,7 @@
 }
 
 .tx-summary-income {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
   color: #00875a;
@@ -208,14 +210,14 @@
 }
 
 .tx-summary-expense {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
   color: var(--tertiary);
 }
 
 .tx-summary-net {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
   color: var(--on-surface);
@@ -254,12 +256,12 @@
   align-items: flex-end;
   justify-content: space-between;
   padding: 12px 4px 6px;
-  border-bottom: 1px solid rgba(171,173,174,0.15);
+  border-bottom: 1px solid var(--outline-ghost);
   margin-bottom: 4px;
 }
 
 .tx-day-label {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
   color: var(--on-surface);
@@ -268,12 +270,12 @@
 .tx-day-date {
   font-size: 11px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   margin-top: 2px;
 }
 
 .tx-day-sum {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
 }
@@ -316,7 +318,7 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -326,7 +328,7 @@
 .tx-item-meta {
   font-size: 11px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -335,9 +337,9 @@
 }
 
 /* kept for backwards compat if referenced elsewhere */
-.tx-item-category { font-size: 13.5px; font-weight: 600; color: var(--on-surface); font-family: 'Inter', sans-serif; }
-.tx-item-account  { font-size: 11px; color: var(--outline); font-family: 'Inter', sans-serif; }
-.tx-item-notes    { font-size: 11px; color: var(--outline); font-family: 'Inter', sans-serif; margin-top: 2px; font-style: italic; }
+.tx-item-category { font-size: 13.5px; font-weight: 600; color: var(--on-surface); font-family: var(--font-body); }
+.tx-item-account  { font-size: 11px; color: var(--outline); font-family: var(--font-body); }
+.tx-item-notes    { font-size: 11px; color: var(--outline); font-family: var(--font-body); margin-top: 2px; font-style: italic; }
 
 .tx-item-right {
   text-align: right;
@@ -349,7 +351,7 @@
 }
 
 .tx-item-amount {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
 }
@@ -360,7 +362,7 @@
 .tx-item-time {
   font-size: 11px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .tx-item-actions {
@@ -385,7 +387,7 @@
 
 .tx-empty p {
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Pagination ────────────────────────────────────────────── */
@@ -401,7 +403,7 @@
 .tx-pagination-info {
   font-size: 13px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .tx-pagination-controls {
@@ -419,7 +421,7 @@
   color: var(--outline);
   font-size: 13px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   display: flex;
   align-items: center;

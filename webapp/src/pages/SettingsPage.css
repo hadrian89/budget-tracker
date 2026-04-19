@@ -20,12 +20,12 @@
   flex: 1;
   padding: 10px 0;
   border-radius: var(--radius-md);
-  border: 2px solid var(--border);
+  border: 2px solid var(--outline-ghost);
   background: var(--surface-low);
   color: var(--on-surface-variant);
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -42,7 +42,7 @@
 
 /* ── Header ────────────────────────────────────────────────── */
 .settings-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: 26px;
   color: var(--on-bg);
@@ -53,7 +53,7 @@
   font-size: 13px;
   color: var(--outline);
   margin-top: 4px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Layout ────────────────────────────────────────────────── */
@@ -70,7 +70,7 @@
   flex-direction: column;
   gap: 2px;
   background: var(--surface-low);
-  border: 1px solid var(--border);
+  border: 1px solid var(--outline-ghost);
   border-radius: var(--radius-lg);
   padding: 8px;
   position: sticky;
@@ -89,7 +89,7 @@
   font-size: 13.5px;
   font-weight: 500;
   color: var(--on-surface-variant);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   text-align: left;
   width: 100%;
   transition: background 0.15s, color 0.15s;
@@ -125,7 +125,7 @@
 /* ── Content panel ─────────────────────────────────────────── */
 .settings-content {
   background: var(--surface-low);
-  border: 1px solid var(--border);
+  border: 1px solid var(--outline-ghost);
   border-radius: var(--radius-lg);
   padding: 28px;
 }
@@ -134,11 +134,11 @@
 .settings-section-header {
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--outline-ghost);
 }
 
 .settings-section-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
   color: var(--on-bg);
@@ -148,7 +148,7 @@
 .settings-section-desc {
   font-size: 13px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Avatar row ────────────────────────────────────────────── */
@@ -174,21 +174,21 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-display);
 }
 
 .settings-avatar-name {
   font-weight: 600;
   font-size: 15px;
   color: var(--on-bg);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .settings-avatar-meta {
   font-size: 12px;
   color: var(--outline);
   margin-top: 2px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Form ──────────────────────────────────────────────────── */
@@ -208,7 +208,7 @@
   font-size: 12px;
   color: var(--outline);
   margin-top: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ── Password strength ─────────────────────────────────────── */
@@ -235,7 +235,7 @@
 .strength-label {
   font-size: 12px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   white-space: nowrap;
 }
 
@@ -248,7 +248,7 @@
   padding: 10px 14px;
   border-radius: var(--radius-md);
   font-size: 13.5px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   margin-bottom: 16px;
 }
 
@@ -293,14 +293,14 @@
   font-weight: 600;
   font-size: 14px;
   color: #b31b25;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   margin-bottom: 4px;
 }
 
 .danger-card-desc {
   font-size: 13px;
   color: var(--outline);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   max-width: 480px;
   line-height: 1.5;
 }
@@ -324,11 +324,11 @@
 }
 
 /* ── Shared button styles (reused from global) ─────────────── */
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; border: none; transition: opacity 0.15s, background 0.15s; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600; font-family: var(--font-body); cursor: pointer; border: none; transition: opacity 0.15s, background 0.15s; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .btn-primary  { background: var(--gradient-primary); color: #fff; box-shadow: var(--shadow-primary); }
 .btn-primary:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-.btn-ghost    { background: transparent; color: var(--on-bg); border: 1px solid var(--border); }
+.btn-ghost    { background: transparent; color: var(--on-bg); border: 1px solid var(--outline-ghost); }
 .btn-ghost:hover:not(:disabled)   { background: var(--surface-low); }
 .btn-danger   { background: var(--error); color: #fff; }
 .btn-danger:hover:not(:disabled)  { opacity: 0.88; }
@@ -337,16 +337,16 @@
 
 /* ── Shared form styles ────────────────────────────────────── */
 .form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--outline); font-family: 'Inter', sans-serif; }
-.form-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 14px; font-family: 'Inter', sans-serif; background: var(--surface-lowest); color: var(--on-bg); outline: none; transition: border-color 0.15s; width: 100%; box-sizing: border-box; }
-.form-input:focus { border-color: var(--primary); }
+.form-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; color: var(--primary); font-family: var(--font-mono); text-transform: uppercase; }
+.form-input { padding: 9px 12px; border: 1px solid var(--outline-ghost); border-radius: var(--radius-md); font-size: 14px; font-family: var(--font-body); background: var(--surface-lowest); color: var(--on-bg); outline: none; transition: border-color 0.15s, box-shadow 0.15s; width: 100%; box-sizing: border-box; }
+.form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(42, 20, 180, 0.08); }
 .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
 
 /* ── Modal overlay ─────────────────────────────────────────── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px; }
-.confirm-dialog { background: var(--surface-lowest); border-radius: var(--radius-lg); padding: 28px; width: 100%; max-width: 440px; box-shadow: var(--shadow-lg); }
-.confirm-title  { font-weight: 700; font-size: 17px; color: var(--on-bg); font-family: 'Manrope', sans-serif; }
-.confirm-text   { font-size: 13.5px; color: var(--outline); line-height: 1.55; margin-top: 6px; font-family: 'Inter', sans-serif; }
+.confirm-dialog { background: var(--surface-lowest); border-radius: var(--radius-lg); padding: 28px; width: 100%; max-width: 440px; box-shadow: var(--shadow-float); }
+.confirm-title  { font-weight: 700; font-size: 17px; color: var(--on-bg); font-family: var(--font-display); }
+.confirm-text   { font-size: 13.5px; color: var(--outline); line-height: 1.55; margin-top: 6px; font-family: var(--font-body); }
 .confirm-actions{ display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
 
 /* ── Responsive ────────────────────────────────────────────── */
