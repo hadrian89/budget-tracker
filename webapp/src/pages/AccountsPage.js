@@ -5,8 +5,10 @@ import WalletoIcon from '../components/WalletoIcon';
 import { ALL_ACCOUNT_KEYS } from '../data/icons';
 import './AccountsPage.css';
 
-const formatCurrency = (v) =>
-  `£${(v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const CURRENCY_SYMBOLS = { GBP: '£', USD: '$', EUR: '€', INR: '₹' };
+
+const formatCurrency = (v, symbol = '£') =>
+  `${symbol}${(v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const TYPE_ICONS = { bank: 'bank', cash: 'cash', card: 'card', investment: 'investment' };
 const TYPE_LABELS = { bank: 'Bank', cash: 'Cash', card: 'Card', investment: 'Investment' };
@@ -22,6 +24,7 @@ const emptyForm = { name: '', type: 'bank', balance: '', currency: 'GBP', color:
 export default function AccountsPage() {
   const { user } = useAuth();
   const gbpToInr = user?.settings?.gbpToInr || 125.25;
+  const currencySymbol = CURRENCY_SYMBOLS[user?.settings?.currency] || '£';
   const toGBP = (acc) => {
     const bal = acc.balance || 0;
     return (acc.currency || 'GBP').toUpperCase() === 'INR' ? bal / gbpToInr : bal;
@@ -140,7 +143,7 @@ export default function AccountsPage() {
       <div className="acc-page-header">
         <div>
           <h2 className="acc-page-title">Accounts</h2>
-          <p className="acc-page-subtitle">TOTAL BALANCE · {formatCurrency(totalBalance)} GBP</p>
+          <p className="acc-page-subtitle">TOTAL BALANCE · {formatCurrency(totalBalance, currencySymbol)} {user?.settings?.currency || 'GBP'}</p>
         </div>
         <button className="btn btn-primary" onClick={openAdd}>
           + Add Account
@@ -202,7 +205,7 @@ export default function AccountsPage() {
               </div>
 
               <div className="acc-card-footer">
-                <span className="acc-balance">{formatCurrency(acc.balance)}</span>
+                <span className="acc-balance">{formatCurrency(acc.balance, currencySymbol)}</span>
                 <span className="acc-currency">{acc.currency || 'GBP'}</span>
               </div>
 
@@ -345,7 +348,7 @@ export default function AccountsPage() {
                 <div>
                   <p className="acc-preview-name">{form.name || 'Account name'}</p>
                   <p className="acc-preview-balance" style={{ color: form.color }}>
-                    {formatCurrency(parseFloat(form.balance) || 0)}
+                    {formatCurrency(parseFloat(form.balance) || 0, currencySymbol)}
                   </p>
                 </div>
               </div>

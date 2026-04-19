@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import axiosInstance from '../api/axios';
 import WalletoIcon, { getIconMeta } from './WalletoIcon';
+import { useAuth } from '../context/AuthContext';
 import './TransactionModal.css';
+
+const CURRENCY_SYMBOLS = { GBP: '£', USD: '$', EUR: '€', INR: '₹' };
 
 const CloseIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -70,6 +73,8 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
 
   const isEditing = !!transaction;
   const dateInputRef = useRef(null);
+  const { user } = useAuth();
+  const currencySymbol = CURRENCY_SYMBOLS[user?.settings?.currency] || '£';
 
   // Load accounts and categories when modal opens
   useEffect(() => {
@@ -432,7 +437,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
           <div className="form-group">
             <label className="form-label">Amount *</label>
             <div className="amount-display-wrap">
-              <span className="amount-currency-symbol">£</span>
+              <span className="amount-currency-symbol">{currencySymbol}</span>
               <input
                 type="text"
                 inputMode="decimal"

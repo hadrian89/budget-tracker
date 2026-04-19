@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../api/axios';
 import './Sidebar.css';
+
+const CURRENCY_SYMBOLS = { GBP: '£', USD: '$', EUR: '€', INR: '₹' };
 
 const DashboardIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -52,12 +55,16 @@ const LogoutIcon = () => (
   </svg>
 );
 
-const BrandIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="1" x2="12" y2="23" />
-    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-  </svg>
-);
+const CurrencyLogo = ({ primary }) => {
+  const sym1 = CURRENCY_SYMBOLS[primary] || '£';
+  const sym2 = primary === 'INR' ? '£' : '₹';
+  return (
+    <svg width="28" height="22" viewBox="0 0 28 22" aria-hidden="true">
+      <text x="0" y="18" fontSize="19" fontWeight="800" fill="white" fontFamily="Georgia,'Times New Roman',serif">{sym1}</text>
+      <text x="17" y="15" fontSize="13" fontWeight="700" fill="rgba(255,255,255,0.5)" fontFamily="Georgia,'Times New Roman',serif">{sym2}</text>
+    </svg>
+  );
+};
 
 const BillsIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -91,6 +98,32 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   const isDark = user?.settings?.theme === 'dark';
+  const currency = user?.settings?.currency || 'GBP';
+  const primarySymbol = CURRENCY_SYMBOLS[currency] || '£';
+
+  // Update browser favicon when primary currency changes
+  useEffect(() => {
+    try {
+      const size = 64;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#2a14b4';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, 14);
+      ctx.fill();
+      ctx.fillStyle = 'white';
+      ctx.font = `bold 40px Georgia, serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(primarySymbol, size / 2, size / 2 + 2);
+      const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
+      link.rel = 'icon';
+      link.href = canvas.toDataURL('image/png');
+      document.head.appendChild(link);
+    } catch (_) {}
+  }, [primarySymbol]);
 
   const toggleTheme = async () => {
     const next = isDark ? 'light' : 'dark';
@@ -113,7 +146,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
       <div className="sidebar-logo">
         <div className="sidebar-logo-icon-wrap">
-          <BrandIcon />
+          <CurrencyLogo primary={currency} />
         </div>
         <span className="sidebar-logo-text">Walleto</span>
       </div>
