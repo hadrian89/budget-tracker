@@ -473,6 +473,271 @@
   .modal { max-height: 95vh; }
 }
 
+/* ── Date picker ────────────────────────────────────────────── */
+.date-picker-wrap {
+  background: var(--surface-low);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--surface-lowest);
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.date-nav-btn:hover {
+  background: rgba(42, 20, 180, 0.08);
+  color: var(--primary);
+}
+
+.date-display {
+  flex: 1;
+  text-align: center;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--on-surface);
+  cursor: pointer;
+  user-select: none;
+}
+
+.date-quick-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.date-quick-pill {
+  padding: 5px 11px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border);
+  background: var(--surface-lowest);
+  color: var(--on-surface-variant);
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.date-quick-pill:hover {
+  border-color: rgba(42, 20, 180, 0.3);
+  color: var(--primary);
+}
+
+.date-quick-pill--active {
+  border-color: var(--primary);
+  background: rgba(42, 20, 180, 0.07);
+  color: var(--primary);
+}
+
+.date-calendar-btn {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: var(--surface-lowest);
+  color: var(--outline);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.date-calendar-btn:hover {
+  background: rgba(42, 20, 180, 0.08);
+  color: var(--primary);
+}
+
+.date-hidden-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ── Amount display ─────────────────────────────────────────── */
+.amount-display-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: var(--surface-low);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.15s;
+}
+
+.amount-display-wrap:focus-within {
+  box-shadow: 0 0 0 2px rgba(42, 20, 180, 0.2);
+}
+
+.amount-currency-symbol {
+  font-family: 'Manrope', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--outline);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.amount-big-input {
+  font-family: 'Manrope', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--on-bg);
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: center;
+  letter-spacing: -0.02em;
+  min-width: 0;
+}
+
+.amount-big-input::placeholder {
+  color: var(--outline-variant);
+}
+
+.amount-presets {
+  display: flex;
+  gap: 6px;
+}
+
+.amount-preset-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--surface-lowest);
+  color: var(--on-surface-variant);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.amount-preset-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(42, 20, 180, 0.05);
+}
+
+/* ── Category tile grid ────────────────────────────────────── */
+.cat-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
+}
+
+.cat-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 4px 7px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  background: var(--surface-low);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  min-width: 0;
+}
+
+.cat-tile:hover {
+  border-color: rgba(42, 20, 180, 0.2);
+  background: var(--surface-lowest);
+}
+
+.cat-tile--active {
+  border-color: var(--primary);
+  background: rgba(42, 20, 180, 0.06);
+}
+
+.cat-tile-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cat-tile-name {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: var(--on-surface-variant);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.cat-tile--active .cat-tile-name {
+  color: var(--primary);
+}
+
+/* ── Subcategory pill chips ─────────────────────────────────── */
+.subcat-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.subcat-pill {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border);
+  background: var(--surface-low);
+  color: var(--on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.subcat-pill:hover {
+  border-color: rgba(42, 20, 180, 0.25);
+  color: var(--on-surface);
+}
+
+.subcat-pill--active {
+  border-color: var(--primary);
+  background: rgba(42, 20, 180, 0.07);
+  color: var(--primary);
+}
+
 /* ── Account radio cards ───────────────────────────────────── */
 .acc-radio-list {
   display: block;

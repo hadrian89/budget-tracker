@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axiosInstance from '../api/axios';
 import WalletoIcon, { getIconMeta } from './WalletoIcon';
 import './TransactionModal.css';
@@ -10,13 +10,37 @@ const CloseIcon = () => (
   </svg>
 );
 
+const ChevronLeft = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+const ChevronRight = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9 18 15 12 9 6" />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
 // Extract YYYY-MM-DD from any date string (strips time)
 const toDateOnly = (str) => {
   if (!str) return '';
   return String(str).split('T')[0].split(' ')[0];
 };
 
-const nowDate = () => new Date().toISOString().slice(0, 10);
+const nowDate = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
 const initialForm = {
   Date: nowDate(),
@@ -45,6 +69,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
   const [subcategories, setSubcategories] = useState([]);
 
   const isEditing = !!transaction;
+  const dateInputRef = useRef(null);
 
   // Load accounts and categories when modal opens
   useEffect(() => {
@@ -101,6 +126,61 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setError('');
+  };
+
+  const handleAmountChange = (e) => {
+    let raw = e.target.value.replace(/[^0-9.]/g, '');
+    const parts = raw.split('.');
+    if (parts.length > 2) raw = parts[0] + '.' + parts.slice(1).join('');
+    if (parts[1] !== undefined && parts[1].length > 2) raw = parts[0] + '.' + parts[1].slice(0, 2);
+    setForm((p) => ({ ...p, Amount: raw }));
+    setError('');
+  };
+
+  const addPreset = (n) => {
+    setForm((p) => {
+      const current = parseFloat(p.Amount) || 0;
+      return { ...p, Amount: (current + n).toFixed(2).replace(/\.00$/, '') };
+    });
+  };
+
+  const fmtDisplay = (v) => {
+    if (!v && v !== 0) return '';
+    const [int, dec] = String(v).split('.');
+    const formatted = int.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return dec !== undefined ? `${formatted}.${dec}` : formatted;
+  };
+
+  const toLocalISO = (d) => {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const shiftDate = (days) => {
+    const d = new Date(form.Date + 'T00:00:00');
+    d.setDate(d.getDate() + days);
+    setForm((p) => ({ ...p, Date: toLocalISO(d) }));
+  };
+
+  const setQuickDate = (offsetDays) => {
+    const d = new Date();
+    d.setDate(d.getDate() - offsetDays);
+    setForm((p) => ({ ...p, Date: toLocalISO(d) }));
+  };
+
+  const getDateOffset = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selected = new Date(form.Date + 'T00:00:00');
+    return Math.round((today - selected) / 86400000);
+  };
+
+  const fmtDateDisplay = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
   };
 
   const handleSubmit = async (e) => {
@@ -218,15 +298,43 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
 
           {/* Date picker */}
           <div className="form-group">
-            <label className="form-label">Date & Time *</label>
-            <input
-              type="date"
-              name="Date"
-              className="form-input"
-              value={form.Date}
-              onChange={handleChange}
-              required
-            />
+            <label className="form-label">Date *</label>
+            <div className="date-picker-wrap">
+              <div className="date-nav-row">
+                <button type="button" className="date-nav-btn" onClick={() => shiftDate(-1)}>
+                  <ChevronLeft />
+                </button>
+                <span className="date-display" onClick={() => dateInputRef.current?.showPicker?.()}>
+                  {fmtDateDisplay(form.Date)}
+                </span>
+                <button type="button" className="date-nav-btn" onClick={() => shiftDate(1)}>
+                  <ChevronRight />
+                </button>
+              </div>
+              <div className="date-quick-row">
+                {[['Today', 0], ['Yesterday', 1], ['2 days ago', 2]].map(([label, offset]) => (
+                  <button
+                    key={label}
+                    type="button"
+                    className={`date-quick-pill${getDateOffset() === offset ? ' date-quick-pill--active' : ''}`}
+                    onClick={() => setQuickDate(offset)}
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button type="button" className="date-calendar-btn" onClick={() => dateInputRef.current?.showPicker?.()} title="Pick a date">
+                  <CalendarIcon />
+                </button>
+                <input
+                  ref={dateInputRef}
+                  type="date"
+                  value={form.Date}
+                  onChange={(e) => setForm((p) => ({ ...p, Date: e.target.value }))}
+                  className="date-hidden-input"
+                  required
+                />
+              </div>
+            </div>
           </div>
 
           {/* Account — for non-transfer show only primaries (fallback: all); for transfer show all */}
@@ -320,83 +428,81 @@ const TransactionModal = ({ isOpen, onClose, transaction, onSuccess, prefill }) 
             </div>
           )}
 
-          {/* Amount + Currency */}
-          <div className="modal-row">
-            <div className="form-group">
-              <label className="form-label">Amount *</label>
-              <div className="form-input-prefix">
-                <span className="form-prefix">£</span>
-                <input
-                  type="number"
-                  name="Amount"
-                  className="form-input form-input--prefixed"
-                  value={form.Amount}
-                  onChange={handleChange}
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                  required
-                />
-              </div>
+          {/* Amount */}
+          <div className="form-group">
+            <label className="form-label">Amount *</label>
+            <div className="amount-display-wrap">
+              <span className="amount-currency-symbol">£</span>
+              <input
+                type="text"
+                inputMode="decimal"
+                className="amount-big-input"
+                value={fmtDisplay(form.Amount)}
+                onChange={handleAmountChange}
+                onFocus={(e) => e.target.select()}
+                placeholder="0.00"
+                autoComplete="off"
+                required
+              />
             </div>
-            {/* <div className="form-group">
-              <label className="form-label">Currency</label>
-              <select
-                name="Currency"
-                className="form-input form-select"
-                value={form.Currency}
-                onChange={handleChange}
-              >
-                <option value="GBP">GBP (£)</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="INR">INR (₹)</option>
-              </select>
-            </div> */}
+            <div className="amount-presets">
+              {[5, 10, 20, 50, 100, 500].map((n) => (
+                <button key={n} type="button" className="amount-preset-btn" onClick={() => addPreset(n)}>
+                  +{n}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Category + Subcategory */}
-          <div className="modal-row">
-            <div className="form-group">
-              <label className="form-label">Category</label>
-              <select
-                name="Category"
-                className="form-input form-select"
-                value={form.Category}
-                onChange={handleChange}
-              >
-                <option value="">Select category...</option>
-                {categories.map((cat) => (
-                  <option key={cat.name} value={cat.name}>{cat.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Subcategory</label>
-              {subcategories.length > 0 ? (
-                <select
-                  name="Subcategory"
-                  className="form-input form-select"
-                  value={form.Subcategory}
-                  onChange={handleChange}
-                >
-                  <option value="">None</option>
-                  {subcategories.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  name="Subcategory"
-                  className="form-input"
-                  value={form.Subcategory}
-                  onChange={handleChange}
-                  placeholder="Optional"
-                />
-              )}
+          {/* Category grid */}
+          <div className="form-group">
+            <label className="form-label">Category</label>
+            <div className="cat-tile-grid">
+              {categories.map((cat) => {
+                const active = form.Category === cat.name;
+                const meta = getIconMeta(cat.name);
+                return (
+                  <button
+                    key={cat.name}
+                    type="button"
+                    className={`cat-tile${active ? ' cat-tile--active' : ''}`}
+                    onClick={() => setForm((p) => ({ ...p, Category: cat.name, Subcategory: '' }))}
+                  >
+                    <span className="cat-tile-icon" style={{ background: meta.tileBg }}>
+                      <WalletoIcon name={cat.name} size={18} />
+                    </span>
+                    <span className="cat-tile-name">{cat.name}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {/* Subcategory chips — only shown when category has subcategories */}
+          {subcategories.length > 0 && (
+            <div className="form-group">
+              <label className="form-label">Subcategory</label>
+              <div className="subcat-chip-row">
+                <button
+                  type="button"
+                  className={`subcat-pill${!form.Subcategory ? ' subcat-pill--active' : ''}`}
+                  onClick={() => setForm((p) => ({ ...p, Subcategory: '' }))}
+                >
+                  None
+                </button>
+                {subcategories.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    className={`subcat-pill${form.Subcategory === s ? ' subcat-pill--active' : ''}`}
+                    onClick={() => setForm((p) => ({ ...p, Subcategory: s }))}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Notes */}
           <div className="form-group">
